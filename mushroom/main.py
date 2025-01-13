@@ -4,7 +4,7 @@ to the next step which is to build a machine learning model.
 """
 
 import pandas as pd
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier
 

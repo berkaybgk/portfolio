@@ -3,54 +3,53 @@
 {% block title %}Home - My Portfolio{% endblock %}
 
 {% block content %}
+<style>
+    .btn-custom {
+            background-color: #128b96; /* Custom orange */
+            border-color: #000000; /* Custom orange */
+            color: white; /* Text color */
+    }
+
+    .btn-custom:hover {
+        background-color: #c2db70; /* Custom orange */
+        border-color: #000000; /* Custom orange */
+        color: #000000; /* Text color */
+    }
+
+    .section-spacing {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .profile-section {
+        margin-bottom: 100px; /* Adjust as needed */
+    }
+</style>
+
 <div class="container">
-    <!-- Hero Section -->
-    <section class="text-center my-5">
-        <h1>Welcome to My Portfolio</h1>
-        <p class="lead">Showcasing my Data Science Projects and Interactive Chatbot App</p>
-        <a href="#projects" class="btn btn-primary btn-lg">Explore My Projects</a>
+
+    <!-- Profile Section -->
+    <section class="profile-section text-center">
+        <h1>Welcome to My Portfolio Website</h1>
+        <p class="lead">I am a junior computer engineering student from Istanbul, Turkey.</p>
+        <p class="lead">I am currently studying at Boğaziçi University, and my current interests lie in data science, AI and software engineering.</p>
+        <p class="lead">I am passionate about applying my skills in areas which blend these.</p>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="my-5">
+    <!-- DS Section -->
+    <section id="projects" class="my-5 text-center">
         <h2 class="mb-4">Data Science Projects</h2>
-        <div class="row">
-            <!-- Example Project Cards -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Project 1</h5>
-                        <p class="card-text">A brief description of Project 1.</p>
-                        <a href="#" class="btn btn-outline-primary">View Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Project 2</h5>
-                        <p class="card-text">A brief description of Project 2.</p>
-                        <a href="#" class="btn btn-outline-primary">View Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Project 3</h5>
-                        <p class="card-text">A brief description of Project 3.</p>
-                        <a href="#" class="btn btn-outline-primary">View Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <p>Trial projects on open data sets. The results are shared in a nice way.</p>
+        <a class="btn btn-custom btn-lg" href="{% url 'ds_projects' %}">Check the Projects</a>
     </section>
 
     <!-- Chatbot Section -->
     <section id="chatbot" class="my-5 text-center">
-        <h2 class="mb-4">Interactive Chatbot App</h2>
-        <p>Stay tuned for my upcoming interactive chatbot app!</p>
-        <button class="btn btn-secondary btn-lg" disabled>Coming Soon</button>
+        <h2 class="mb-4">Fusion Chatbot App</h2>
+        <p>A smart assistant which allows you to talk to PDFs. No more scrolling through pages!</p>
+<!--        <a class="btn btn-custom btn-lg" href="{% url 'fusion' %}">Coming Soon</a>-->
+        <a class="btn btn-custom btn-lg">Coming Soon</a>
     </section>
+
 </div>
 {% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}My Data Science Projects{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<style>
+    .custom-card-img {
+        height: 360px;
+        object-fit: cover;
+    }
+</style>
+
+<div class="container my-5">
+    <h1 class="text-center mb-4">Data Science Projects</h1>
+    <p class="text-center text-muted mb-5">Explore my work with data science, including analysis, visualization, and model development.</p>
+
+    <div class="row">
+
+        <!-- Project 1 -->
+        <div class="col-md-6 col-lg-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <img src="{% static 'website/images/mushrooms.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
+                <div class="card-body" style="">
+                    <h5 class="card-title">Project Title 1</h5>
+                    <p class="card-text">A brief description of the first project. This could involve dataset exploration or model building.</p>
+                    <a href="{% url 'project_detail' project_name='mushroom' %}" class="btn btn-primary">View Project</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="col-md-6 col-lg-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <img src="{% static 'website/images/crime.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
+                <div class="card-body">
+                    <h5 class="card-title">Project Title 2</h5>
+                    <p class="card-text">A brief description of the second project. This could involve dataset exploration or model building.</p>
+                    <a href="{% url 'project_detail' project_name='crime' %}" class="btn btn-primary">View Project</a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}

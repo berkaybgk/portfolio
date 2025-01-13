@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Project Detail - My Portfolio{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Project Title and Description -->
+    <h1>{{ project_name }}</h1>
+    <p>{{ project_description }}</p>
+    <!-- Add the clickable link -->
+    <p>
+        For more details, visit:
+        <a href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ url }}</a>
+    </p>
+
+
+    <!-- Tabs for Switching between Content -->
+    <ul class="nav nav-tabs" id="projectTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="true">Dashboard</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="analysis-tab" data-bs-toggle="tab" href="#analysis" role="tab" aria-controls="analysis" aria-selected="false">Data Analysis</a>
+
+    </ul>
+
+    <div class="tab-content mt-4" id="projectTabContent">
+        <!-- Dashboard Tab -->
+        <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+            <h3>Data Dashboard</h3>
+            <!-- Insert your data dashboard here -->
+            <div id="dashboard-container">
+                <!-- Placeholder for dashboard content -->
+            </div>
+        </div>
+
+        <!-- Code for the Analysis -->
+        <div class="tab-pane fade" id="analysis" role="tabpanel" aria-labelledby="analysis-tab">
+            <h3>Data Analysis</h3>
+
+            <!-- eda, main and eval -->
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Exploratory Data Analysis</h4>
+                    <p>{{ eda }}</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Main Analysis</h4>
+                    <p>{{ main }}</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Evaluation</h4>
+                    <p>{{ eval }}</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
