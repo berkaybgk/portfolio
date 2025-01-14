@@ -21,13 +21,37 @@ def parse_analysis_content(ds_project_folder_path):
         try:
             with open(file_path, "r", encoding="utf-8") as file:
                 data = json.load(file)
-                # Extract code cell content, handling cases where "source" is a list
-                content = "\n".join(
-                    "".join(cell["source"]) if isinstance(cell["source"], list) else cell["source"]
-                    for cell in data.get("cells", [])
-                    if cell["cell_type"] == "code"
-                )
-                return content
+
+                # Initialize content list
+                content_parts = []
+
+                # Process each cell
+                for cell in data.get("cells", []):
+                    # Extract cell content
+                    cell_content = "".join(cell["source"]) if isinstance(cell["source"], list) else cell["source"]
+
+                    if cell_content.strip():  # Only process non-empty cells
+                        # Format content based on cell type
+                        if cell["cell_type"] != "code":
+                            # Split content into lines, add comment markers to each line
+                            formatted_lines = []
+                            for line in cell_content.split('\n'):
+                                if line.strip():  # Only add markers to non-empty lines
+                                    formatted_lines.append(f"/* {line} */")
+                                else:
+                                    formatted_lines.append(line)  # Keep empty lines as is
+                            cell_content = '\n'.join(formatted_lines)
+
+                        content_parts.append(cell_content)
+                        content_parts.append("\n" + "-" * 136 + "\n")  # Add separator line
+
+                # Join all parts and remove the last separator
+                final_content = "".join(content_parts)
+                if final_content.endswith("-" * 136 + "\n"):
+                    final_content = final_content[:-137]
+
+                return final_content
+
         except Exception as e:
             print(f"Error parsing notebook content at {file_path}: {e}")
             return None
@@ -55,19 +79,3 @@ def parse_analysis_content(ds_project_folder_path):
         print(f"Error parsing analysis content: {e}")
 
     return eda_content, main_content, eval_content
-
-
-
-if __name__ == '__main__':
-    # Test the function
-    eda, main, eval = parse_analysis_content('/Users/berkaybgk/Desktop/cs related/python_files/datamata/mushroom/')
-
-    print("EDA Content:")
-    print(eda)
-
-    print("\nMain Content:")
-    print(main)
-
-    print("\nEvaluation Content:")
-    print(eval)
-

@@ -15,3 +15,4 @@ def parse_ds_project_info(readme_file_path):
     url = sections[2].strip().strip("**").strip()
 
     return title, description, url
+

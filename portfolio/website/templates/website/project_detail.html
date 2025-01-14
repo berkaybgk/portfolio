@@ -1,63 +1,172 @@
 {% extends 'base.html' %}
 
-{% block title %}Project Detail - My Portfolio{% endblock %}
+{% block title %}{{ project_name }} - Project Detail{% endblock %}
+
+{% block extra_head %}
+<!-- Prism.js CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<style>
+    .project-header {
+        background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+        color: white;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .disclaimer {
+        background: #c2db70;
+        color: black;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .project-header .btn-light {
+        background: white;
+        color: #343a40;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .project-header .btn-light:hover {
+        background: #c2db70;
+        color: #343a40;
+    }
+
+    .code-section {
+        background: white;
+        border: none;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .code-section-header {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 10px 10px 0 0;
+        /*display: flex;*/
+        align-items: center;
+    }
+
+    .code-section-header h2 {
+        color: #343a40;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .code-section-content {
+        padding: 1.5rem;
+    }
+
+    pre {
+        background: #1e1e1e !important;
+        padding: 1.5rem !important;
+        border-radius: 6px !important;
+        margin: 0 !important;
+        overflow-x: auto;
+    }
+
+    code {
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+        font-size: 0.9rem !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Custom scrollbar for code blocks */
+    pre::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    pre::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    pre::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    pre::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container">
-
-    <!-- Project Title and Description -->
-    <h1>{{ project_name }}</h1>
-    <p>{{ project_description }}</p>
-    <!-- Add the clickable link -->
-    <p>
-        For more details, visit:
-        <a href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ url }}</a>
-    </p>
-
-
-    <!-- Tabs for Switching between Content -->
-    <ul class="nav nav-tabs" id="projectTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="true">Dashboard</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="analysis-tab" data-bs-toggle="tab" href="#analysis" role="tab" aria-controls="analysis" aria-selected="false">Data Analysis</a>
-
-    </ul>
-
-    <div class="tab-content mt-4" id="projectTabContent">
-        <!-- Dashboard Tab -->
-        <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-            <h3>Data Dashboard</h3>
-            <!-- Insert your data dashboard here -->
-            <div id="dashboard-container">
-                <!-- Placeholder for dashboard content -->
-            </div>
+<div class="container py-4">
+    <!-- Project Header -->
+    <div class="project-header">
+        <h1 class="display-5 fw-bold">{{ project_name }}</h1>
+        <p class="lead mb-4">{{ project_description }}</p>
+        {% if url %}
+        <div class="text-center">
+            <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="btn btn-light">
+                For more information, visit the data set page.
+            </a>
         </div>
-
-        <!-- Code for the Analysis -->
-        <div class="tab-pane fade" id="analysis" role="tabpanel" aria-labelledby="analysis-tab">
-            <h3>Data Analysis</h3>
-
-            <!-- eda, main and eval -->
-            <div class="row">
-                <div class="col-md-4">
-                    <h4>Exploratory Data Analysis</h4>
-                    <p>{{ eda }}</p>
-                </div>
-                <div class="col-md-4">
-                    <h4>Main Analysis</h4>
-                    <p>{{ main }}</p>
-                </div>
-                <div class="col-md-4">
-                    <h4>Evaluation</h4>
-                    <p>{{ eval }}</p>
-                </div>
-            </div>
-
-        </div>
-
+        {% endif %}
     </div>
 
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+        <h2 class="h4">Disclaimer</h2>
+        <p>To see the visualizations and the plots, please visit the repository.</p>
+        <div class="text-center">
+            <a href="https://github.com/berkaybgk/portfolio" class="btn btn-light">Repository of the project in GitHub</a>
+        </div>
+    </div>
+
+    <!-- EDA Section -->
+    <div class="code-section">
+        <div class="code-section-header">
+            <h2 class="h4" style="margin-top: 1rem">Exploratory Data Analysis</h2>
+            <p>The Jupyter Notebook is given, each cell is separated with trailing '-'s.</p>
+        </div>
+        <div class="code-section-content">
+            <pre><code class="language-python">{{ eda }}</code></pre>
+        </div>
+    </div>
+
+
+    <!-- Main Analysis Section -->
+    <div class="code-section">
+        <div class="code-section-header">
+            <h2 class="h4">Model Development</h2>
+        </div>
+        <div class="code-section-content">
+            <pre><code class="language-python">{{ main }}</code></pre>
+        </div>
+    </div>
+
+    <!-- Evaluation Section -->
+    <div class="code-section">
+        <div class="code-section-header">
+            <h2 class="h4" style="margin-top: 1rem">Evaluation</h2>
+            <p>The Jupyter Notebook is given, each cell is separated with trailing '-'s.</p>
+        </div>
+        <div class="code-section-content">
+            <pre><code class="language-python">{{ eval }}</code></pre>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Prism.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
+<script>
+    // Initialize syntax highlighting
+    document.addEventListener('DOMContentLoaded', (event) => {
+        Prism.highlightAll();
+    });
+</script>
 {% endblock %}
