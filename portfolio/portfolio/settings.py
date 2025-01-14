@@ -29,7 +29,15 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'ec2-54-210-182-168.compute-1.amazonaws.com']
+ALLOWED_HOSTS = [
+    'ec2-54-210-182-168.compute-1.amazonaws.com',
+    'localhost',
+    '127.0.0.1',
+]
+
+# Add these settings if not present
+USE_X_FORWARDED_HOST = False
+USE_X_FORWARDED_PORT = False
 
 
 # Application definition
@@ -105,7 +113,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Keep your existing STATICFILES_DIRS
 STATICFILES_DIRS = [BASE_DIR / "website/static"]
+
+# Add or update STATIC_ROOT
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Make sure you have STATIC_URL defined
+STATIC_URL = 'static/'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
