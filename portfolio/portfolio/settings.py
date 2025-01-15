@@ -34,7 +34,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'berkaybgk.site',
-    'www.berkaybgk.site'
+    'www.berkaybgk.site',
+    '54.210.182.168'
 ]
 
 # Add these settings if not present
