@@ -3,21 +3,64 @@
 {% block title %}Contact - berkaybgk{% endblock %}
 
 {% block content %}
-<div class="container">
+<style>
+    .contact-btn {
+        min-width: 160px;
+        transition: transform 0.2s;
+    }
 
+    .contact-btn:hover {
+        transform: translateY(-3px);
+    }
+
+    .contact-item {
+        font-size: 1.2rem;
+        color: #666;
+    }
+
+    .lead-text {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>
+
+<!-- Add Font Awesome in the head section of your base template if not already present -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<div class="container">
     <!-- Profile Section -->
-    <section class="profile-section text-center">
-        <h1>Contact</h1>
-        <p class="lead">I am a junior computer engineering student from Istanbul, Turkey.</p>
-        <p class="lead">I am currently studying at Boğaziçi University, and my current interests lie in data science, AI and software engineering.</p>
-        <p class="lead">I am passionate about applying my skills in areas which blend these.</p>
+    <section class="profile-section text-center py-5">
+        <h1 class="mb-4">Contact</h1>
+        <div class="lead-text mb-5">
+            <p class="lead mb-3">I am a junior computer engineering student from Istanbul, Turkey.</p>
+            <p class="lead mb-3">I am currently studying at Boğaziçi University, and my current interests lie in data science, AI and software engineering.</p>
+            <p class="lead">I am passionate about applying my skills in areas which blend these.</p>
+        </div>
     </section>
 
     <!-- Information -->
     <section id="info" class="my-5 text-center">
-        <p>e-mail: berkaybugragok@gmail.com</p>
-        <p>github: https://github.com/berkaybgk</p>
-    </section>
+        <div class="contact-item mb-4">
+            <i class="fas fa-envelope fa-lg me-2"></i>
+            <a href="mailto:berkaybugragok@gmail.com" class="text-decoration-none">
+                berkaybugragok@gmail.com
+            </a>
+        </div>
 
+        <div class="d-flex justify-content-center gap-3">
+            <a href="https://github.com/berkaybgk" target="_blank"
+               class="btn btn-dark btn-lg contact-btn">
+                <i class="fab fa-github me-2"></i>
+                GitHub
+            </a>
+
+            <a href="https://www.linkedin.com/in/berkay-bugra-gok-755414219/"
+               target="_blank"
+               class="btn btn-primary btn-lg contact-btn">
+                <i class="fab fa-linkedin me-2"></i>
+                LinkedIn
+            </a>
+        </div>
+    </section>
 </div>
 {% endblock %}
