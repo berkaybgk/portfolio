@@ -38,11 +38,6 @@ ALLOWED_HOSTS = [
     '54.210.182.168'
 ]
 
-# Add these settings if not present
-USE_X_FORWARDED_HOST = False
-USE_X_FORWARDED_PORT = False
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -148,3 +143,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
+# These are also important for working with Cloudflare
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+
+# Recommended additional security settings
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
