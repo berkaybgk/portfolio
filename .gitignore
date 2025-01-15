@@ -1,3 +1,6 @@
 earthquake/
-.*
+.env
 *.pem
+.venv
+.idea
+
