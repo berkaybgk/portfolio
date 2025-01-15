@@ -30,12 +30,12 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'ec2-54-210-182-168.compute-1.amazonaws.com',
+    # 'ec2-54-210-182-168.compute-1.amazonaws.com',
     'localhost',
     '127.0.0.1',
     'berkaybgk.site',
     'www.berkaybgk.site',
-    '54.210.182.168'
+    # '54.210.182.168'
 ]
 
 # Application definition
@@ -139,8 +139,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Security settings
 # TODO: Uncomment the following lines when you have a valid SSL certificate
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
