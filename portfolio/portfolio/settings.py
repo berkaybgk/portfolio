@@ -33,6 +33,8 @@ ALLOWED_HOSTS = [
     'ec2-54-210-182-168.compute-1.amazonaws.com',
     'localhost',
     '127.0.0.1',
+    'berkaybgk.site',
+    'www.berkaybgk.site'
 ]
 
 # Add these settings if not present
