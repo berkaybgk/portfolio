@@ -35,7 +35,7 @@ jobs:
           ssh -i ~/.ssh/ec2_key.pem ubuntu@ec2-54-210-182-168.compute-1.amazonaws.com '
             cd /home/ubuntu/portfolio &&
             git pull origin main &&
-            source venv/bin/activate &&
+            source .venv/bin/activate &&
             pip install -r requirements.txt &&
             cd portfolio &&
             python3 manage.py migrate &&
