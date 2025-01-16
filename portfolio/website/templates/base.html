@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +10,10 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <!-- Add this line to enable extra_head block -->
-    {% block extra_head %}{% endblock %}
+    {% block extra_head %}
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+
+    {% endblock %}
 
     <style>
         body {
