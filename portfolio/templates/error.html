@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ error_code }} - {{ error_message }}{% endblock %}
+
+{% block content %}
+<style>
+    .error-container {
+        min-height: 70vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .error-code {
+        font-size: 8rem;
+        font-weight: bold;
+        color: #128b96;
+        margin-bottom: 1rem;
+        line-height: 1;
+    }
+
+    .error-message {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 2rem;
+    }
+
+    .error-description {
+        color: #666;
+        margin-bottom: 2rem;
+        max-width: 600px;
+    }
+
+    .home-button {
+        background-color: #128b96;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .home-button:hover {
+        background-color: #c2db70;
+        color: #000;
+        text-decoration: none;
+    }
+</style>
+
+<div class="error-container">
+    <div class="error-code">{{ error_code }}</div>
+    <h1 class="error-message">{{ error_message }}</h1>
+    <p class="error-description">{{ error_description }}</p>
+    <a href="{% url 'home' %}" class="home-button">Return to Home</a>
+</div>
+{% endblock %}

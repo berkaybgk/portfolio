@@ -71,7 +71,7 @@ ROOT_URLCONF = 'portfolio.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -152,3 +152,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+# Exception handling
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'portfolio.exception_handler.custom_exception_handler',
+}
