@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.shortcuts import render
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,3 +26,29 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page=''), name='logout'),
 ]
+
+
+def custom_error_view(request, error_code, error_message, error_description):
+    return render(request, 'error.html', {
+        'error_code': error_code,
+        'error_message': error_message,
+        'error_description': error_description,
+    })
+
+# Specific error views
+def custom_404_view(request, exception):
+    return custom_error_view(request, 404, "Page Not Found", "The page you were looking for doesn't exist.")
+
+def custom_500_view(request):
+    return custom_error_view(request, 500, "Server Error", "Something went wrong on our end. Please try again later.")
+
+def custom_403_view(request, exception):
+    return custom_error_view(request, 403, "Forbidden", "You don't have permission to access this page.")
+
+def custom_400_view(request, exception):
+    return custom_error_view(request, 400, "Bad Request", "The server could not process your request.")
+
+handler404 = 'portfolio.urls.custom_404_view'
+handler500 = 'portfolio.urls.custom_500_view'
+handler403 = 'portfolio.urls.custom_403_view'
+handler400 = 'portfolio.urls.custom_400_view'

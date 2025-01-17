@@ -42,13 +42,21 @@ class ProjectDetailView(APIView):
         project_folder_path = os.path.join(settings.BASE_DIR, '..')
         project_folder_path = os.path.join(project_folder_path, project_name)
 
-        if not os.path.isdir(project_folder_path):
-            raise Http404("Project not found")
+        try:
+            if not os.path.isdir(project_folder_path):
+                raise Http404("Project not found")
 
-        readme_file_path = os.path.join(project_folder_path, 'readme.md')
+            readme_file_path = os.path.join(project_folder_path, 'readme.md')
 
-        if not os.path.isfile(readme_file_path):
-            raise Http404("Readme file not found for this project")
+            if not os.path.isfile(readme_file_path):
+                raise Http404("Readme file not found for this project")
+
+        except Http404 as e:
+            return render(request, 'error.html', {
+                'error_code': 404,
+                'error_message': str(e),
+                'error_description': 'The requested resource was not found.',
+            })
 
         project_name, project_description, url = parse_ds_project_info(readme_file_path)
         eda, main, eval_content = parse_analysis_content(project_folder_path)
