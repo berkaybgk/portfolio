@@ -11,6 +11,34 @@
         height: 360px;
         object-fit: cover;
     }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 70px; /* Make space for the button */
+    }
+
+    .project-btn-wrapper {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+    }
+
+    .btn-custom {
+        background-color: #128b96;
+        border: none;
+    }
+
+    .btn-custom:hover {
+        background-color: #0e6f78;
+    }
 </style>
 
 <div class="container my-5">
@@ -18,34 +46,35 @@
     <p class="text-center text-muted mb-5">Explore my work with data science, including analysis, visualization, and model development.</p>
 
     <div class="row">
-
         <!-- Project 1 -->
         <div class="col-md-6 col-lg-6 mb-4">
             <div class="card shadow-sm h-100">
                 <img src="{% static 'website/images/mushrooms.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
-                <div class="card-body" style="">
+                <div class="card-body">
                     <h5 class="card-title">Mushroom Classification</h5>
                     <p class="card-text">An open dataset which includes descriptions of hypothetical samples corresponding to 23 species of
                         gilled mushrooms in the Agaricus and Lepiota Family Mushroom drawn from The Audubon Society Field Guide to North American
                         Mushrooms (1981). Each species is identified as definitely edible, definitely poisonous, or of unknown edibility and not recommended.</p>
-                    <a href="{% url 'project_detail' project_name='mushroom' %}" class="btn btn-primary" style="background-color: #128b96">View Project</a>
+                    <div class="project-btn-wrapper">
+                        <a href="{% url 'project_detail' project_name='mushroom' %}" class="btn btn-primary btn-custom">View Project</a>
+                    </div>
                 </div>
             </div>
         </div>
 
-<!--        &lt;!&ndash; Project 2 &ndash;&gt;-->
-<!--        <div class="col-md-6 col-lg-6 mb-4">-->
-<!--            <div class="card shadow-sm h-100">-->
-<!--                <img src="{% static 'website/images/crime.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">-->
-<!--                <div class="card-body">-->
-<!--                    <h5 class="card-title">Project Title 2</h5>-->
-<!--                    <p class="card-text">A brief description of the second project. This could involve dataset exploration or model building.</p>-->
-<!--                    <a href="{% url 'project_detail' project_name='crime' %}" class="btn btn-primary" style="background-color: #128b96">View Project</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-
+        <!-- Project 2 -->
+        <div class="col-md-6 col-lg-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <img src="{% static 'website/images/crime.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
+                <div class="card-body">
+                    <h5 class="card-title">Project Title 2</h5>
+                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <div class="project-btn-wrapper">
+                        <a href="{% url 'project_detail' project_name='crime' %}" class="btn btn-primary btn-custom">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

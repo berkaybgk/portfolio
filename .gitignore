@@ -3,5 +3,5 @@ earthquake/
 *.pem
 .venv
 .idea
+portfolio/db.sqlite3
 db.sqlite3
-

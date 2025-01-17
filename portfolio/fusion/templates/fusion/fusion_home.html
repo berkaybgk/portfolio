@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Fusion Chatbot - berkaybgk{% endblock %}
+
+{% block content %}
+<style>
+    .btn-custom {
+        background-color: #128b96;
+        border-color: #000000;
+        color: white;
+    }
+
+    .btn-custom:hover {
+        background-color: #c2db70;
+        border-color: #000000;
+        color: #000000;
+    }
+
+    .chat-container {
+        height: 75vh;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+        overflow-y: auto;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .message {
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-radius: 15px;
+        max-width: 70%;
+    }
+
+    .user-message {
+        background-color: #128b96;
+        color: white;
+        margin-left: auto;
+    }
+
+    .bot-message {
+        background-color: #e9ecef;
+        color: #212529;
+        margin-right: auto;
+    }
+
+    .input-group {
+        margin-top: 20px;
+    }
+
+    .chat-header {
+        margin-bottom: 30px;
+    }
+
+    .file-upload-section {
+        height: 100%;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+    }
+
+    .chat-section {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .main-container {
+        margin-top: 20px;
+    }
+
+    .upload-status {
+        margin-top: 20px;
+        font-size: 0.9em;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Chat Header -->
+    <div class="chat-header text-center">
+        <h1>Fusion Chatbot</h1>
+        <p class="lead">Upload your PDF and start chatting!</p>
+    </div>
+
+    <div class="row main-container">
+        <!-- File Upload Section - Left Side -->
+        <div class="col-md-3">
+            <div class="file-upload-section">
+                <h4>Upload PDF</h4>
+                <form method="post" enctype="multipart/form-data" id="pdf-upload-form">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <input type="file" class="form-control" id="pdf-file" name="pdf-file" accept=".pdf">
+                    </div>
+                    <button class="btn btn-custom w-100">Upload PDF</button>
+                </form>
+
+                <!-- Uploaded PDFs of the user -->
+                <div class="upload-status">
+                    <h5>Uploaded PDFs</h5>
+                    <ul id="uploaded-pdfs">
+                        <!-- Uploaded PDFs will be dynamically inserted here -->
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- Chat Interface - Right Side -->
+        <div class="col-md-9">
+            <div class="chat-section">
+                <div class="chat-container" id="chat-messages">
+                    <!-- Messages will be dynamically inserted here -->
+                    <div class="message bot-message">
+                        Hello! I'm ready to help you with your PDF documents. Please upload a PDF to get started.
+                    </div>
+                </div>
+
+                <!-- Message Input -->
+                <div class="input-group">
+                    <input type="text" class="form-control" id="message-input" placeholder="Type your message here...">
+                    <button class="btn btn-custom" type="button" id="send-button">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
