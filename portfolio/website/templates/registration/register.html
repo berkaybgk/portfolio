@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block extra_head %}
+<style>
+    .register-container {
+        max-width: 400px;
+        margin: 4rem auto;
+    }
+
+    .register-header {
+        background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+        color: white;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .register-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-control {
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .form-control:focus {
+        border-color: #c2db70;
+        box-shadow: 0 0 0 0.2rem rgba(194, 219, 112, 0.25);
+        outline: none;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #495057;
+        font-weight: 500;
+    }
+
+    .form-text {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .btn-register {
+        background: #343a40;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        width: 100%;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-register:hover {
+        background: #495057;
+        color: white;
+    }
+
+    .register-footer {
+        margin-top: 1.5rem;
+        text-align: center;
+        color: #6c757d;
+    }
+
+    .register-footer a {
+        color: #343a40;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .register-footer a:hover {
+        color: #c2db70;
+    }
+
+    .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: none;
+        border-radius: 6px;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    /* Add to your existing CSS */
+    .register-form input {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .register-form input:focus {
+        color: #212529;
+        background-color: #fff;
+        border-color: #c2db70;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(194, 219, 112, 0.25);
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="register-container">
+        <div class="register-header">
+            <h1 class="h3 mb-0">Create an Account</h1>
+        </div>
+
+        <div class="register-form">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="form-text">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn-register">Create Account</button>
+            </form>
+
+            <div class="register-footer">
+                <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

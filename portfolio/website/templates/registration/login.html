@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block extra_head %}
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 4rem auto;
+    }
+
+    .login-header {
+        background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+        color: white;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .login-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-control {
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #c2db70;
+        box-shadow: 0 0 0 0.2rem rgba(194, 219, 112, 0.25);
+    }
+
+    .btn-login {
+        background: #343a40;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        width: 100%;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-login:hover {
+        background: #495057;
+        color: white;
+    }
+
+    .login-footer {
+        margin-top: 1.5rem;
+        text-align: center;
+        color: #6c757d;
+    }
+
+    .login-footer a {
+        color: #343a40;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .login-footer a:hover {
+        color: #c2db70;
+    }
+
+    .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: none;
+        border-radius: 6px;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-container">
+        <!-- Login Header -->
+        <div class="login-header">
+            <h1 class="h3 mb-0">Welcome Back</h1>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-form">
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                Your username and password didn't match. Please try again.
+            </div>
+            {% endif %}
+
+            {% if next %}
+                {% if user.is_authenticated %}
+                <div class="alert alert-danger">
+                    Your account doesn't have access to this page. To proceed,
+                    please login with an account that has access.
+                </div>
+                {% endif %}
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                
+                <!-- Username field -->
+                <div class="form-group">
+                    <label for="id_username" class="form-label">Username</label>
+                    <input type="text" name="username" id="id_username" class="form-control" 
+                           autocapitalize="none" autocomplete="username" maxlength="150" required>
+                </div>
+
+                <!-- Password field -->
+                <div class="form-group">
+                    <label for="id_password" class="form-label">Password</label>
+                    <input type="password" name="password" id="id_password" class="form-control" 
+                           autocomplete="current-password" required>
+                </div>
+
+                <button type="submit" class="btn btn-login">Log In</button>
+
+                <input type="hidden" name="next" value="{{ next }}">
+            </form>
+
+            <!-- Login Footer -->
+            <div class="login-footer">
+                <p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

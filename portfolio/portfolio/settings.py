@@ -27,15 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    # 'ec2-54-210-182-168.compute-1.amazonaws.com',
     'localhost',
     '127.0.0.1',
     'berkaybgk.site',
     'www.berkaybgk.site',
-    # '54.210.182.168'
 ]
 
 # Application definition
@@ -49,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'website',
+    'fusion'
 ]
 
 MIDDLEWARE = [
@@ -59,6 +58,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://www.berkaybgk.site',
 ]
 
 ROOT_URLCONF = 'portfolio.urls'
@@ -80,7 +83,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'portfolio.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -111,13 +113,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Keep your existing STATICFILES_DIRS
 STATICFILES_DIRS = [BASE_DIR / "website/static"]
 
-# Add or update STATIC_ROOT
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Make sure you have STATIC_URL defined
 STATIC_URL = 'static/'
 
 
@@ -141,10 +140,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-# These are also important for working with Cloudflare
 USE_X_FORWARDED_HOST = True
 USE_X_FORWARDED_PORT = True
 
-# Recommended additional security settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Authentication settings
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+

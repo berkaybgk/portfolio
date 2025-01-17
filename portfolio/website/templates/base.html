@@ -12,7 +12,6 @@
     <!-- Add this line to enable extra_head block -->
     {% block extra_head %}
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
-
     {% endblock %}
 
     <style>
@@ -31,7 +30,72 @@
         .navbar-custom .nav-link:hover {
             color: #c2db70;
         }
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-greeting {
+            color: #c2db70;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        .auth-buttons .btn {
+            padding: 0.375rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .btn-login {
+            background-color: transparent;
+            border: 1px solid #c2db70;
+            color: #c2db70;
+        }
+        .btn-login:hover {
+            background-color: #c2db70;
+            color: #343a40;
+        }
+        .btn-register {
+            background-color: #c2db70;
+            border: 1px solid #c2db70;
+            color: #343a40;
+        }
+        .btn-register:hover {
+            background-color: #b1c964;
+            border-color: #b1c964;
+        }
+        .btn-logout {
+            background-color: transparent;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+        .btn-logout:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+        @media (max-width: 991.98px) {
+            .user-menu {
+                margin-top: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .auth-buttons {
+                display: flex;
+                gap: 0.5rem;
+                width: 100%;
+            }
+            .auth-buttons .btn {
+                flex: 1;
+            }
+        }
     </style>
+</head>
+<body>
+    {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... head content remains the same ... -->
 </head>
 <body>
     <!-- Navbar -->
@@ -43,7 +107,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'index' %}">Home</a>
                     </li>
@@ -51,9 +115,32 @@
                         <a class="nav-link" href="{% url 'contact' %}">Contact</a>
                     </li>
                 </ul>
+                {% if request.path != '/login/' and request.path != '/register/' %}
+                    <div class="user-menu">
+                        {% if user.is_authenticated %}
+                            <p class="user-greeting">Welcome, {{ user.username }}</p>
+                            <div class="auth-buttons">
+                                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-logout">Logout</button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="auth-buttons">
+                                <a href="{% url 'login' %}" class="btn btn-login">Login</a>
+                                <a href="{% url 'register' %}" class="btn btn-register">Register</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </nav>
+
+    <!-- Rest of the template remains the same -->
+
+</body>
+</html>
 
     <!-- Content -->
     <div class="container mt-5">

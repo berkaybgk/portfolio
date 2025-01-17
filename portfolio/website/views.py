@@ -1,10 +1,14 @@
-from rest_framework.views import APIView
+from rest_framework.views import APIView, View
 import os
-from django.shortcuts import render
 from django.conf import settings
 from django.http import Http404
 from .misc.parse_ds_project_info import parse_ds_project_info
 from .misc.parse_analysis_content import parse_analysis_content
+from django.shortcuts import render, redirect
+
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
 
 
 class HomeView(APIView):
@@ -60,3 +64,20 @@ class ProjectDetailView(APIView):
         }
 
         return render(request, 'website/project_detail.html', context)
+
+
+class RegisterView(View):
+    template_name = 'registration/register.html'
+
+    def get(self, request):
+        form = UserCreationForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Registration successful. Please log in.')
+            return redirect('login')
+
+        return render(request, self.template_name, {'form': form})

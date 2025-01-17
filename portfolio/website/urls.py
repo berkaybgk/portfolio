@@ -1,5 +1,5 @@
-from django.urls import path
-from .views import HomeView, IndexView, ChatbotAppView, DSProjectsView, ContactView, ProjectDetailView
+from django.urls import path, include
+from .views import HomeView, IndexView, ChatbotAppView, DSProjectsView, ContactView, ProjectDetailView, RegisterView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),                         # Home Page
@@ -8,4 +8,6 @@ urlpatterns = [
     path('fusion/', ChatbotAppView.as_view(), name='fusion'),            # Chatbot App
     path('contact/', ContactView.as_view(), name='contact'),             # Contact Page
     path('projects/<str:project_name>/', ProjectDetailView.as_view(), name='project_detail'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('', include('django.contrib.auth.urls')),  # This includes login, logout, etc.
 ]
