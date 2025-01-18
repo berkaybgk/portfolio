@@ -156,6 +156,24 @@
         opacity: 1;
     }
 
+    .message {
+        margin: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        max-width: 70%;
+    }
+
+    .user-message {
+        background-color: #007bff;
+        color: white;
+        margin-left: auto;
+    }
+
+    .bot-message {
+        background-color: #f0f0f0;
+        margin-right: auto;
+    }
+
 </style>
 
 <div class="container-fluid">
@@ -165,6 +183,7 @@
         <p class="lead">Upload your PDF and start chatting!</p>
     </div>
 
+    <!-- Replace only the row section containing the upload and chat interface -->
     <div class="row main-container">
         <!-- File Upload Section - Left Side -->
         <div class="col-md-3">
@@ -178,6 +197,7 @@
                 </h4>
                 <form method="post" enctype="multipart/form-data" id="pdf-upload-form">
                     {% csrf_token %}
+                    <input type="hidden" name="action" value="upload_pdf">
                     <div class="mb-3">
                         <label for="pdf-name" class="form-label">PDF Name</label>
                         <input type="text" class="form-control" id="pdf-name" name="pdf-name" required>
@@ -212,7 +232,6 @@
                         {% endif %}
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -227,23 +246,36 @@
                 </div>
 
                 <!-- Message Input -->
-                <div class="input-group">
-                    <input type="text" class="form-control" id="message-input" placeholder="Type your message here..." disabled>
-                    <button class="btn btn-custom" type="button" id="send-button" disabled>Send</button>
-                </div>
+                <form id="chat-form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="send_message">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="message-input" name="message"
+                               placeholder="Type your message here..."
+                               {% if not uploaded_pdfs %}disabled{% endif %}>
+                        <button class="btn btn-custom" type="submit" id="send-button"
+                                {% if not uploaded_pdfs %}disabled{% endif %}>Send</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
 </div>
 
 <script>
+// PDF Upload handling
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('pdf-upload-form');
     const statusMessage = document.getElementById('upload-status-message');
 
     function showStatus(message, isError = false) {
         statusMessage.textContent = message;
-        statusMessage.className = isError ? 'status-error' : 'status-success';
+        statusMessage.style.backgroundColor = isError ? '#f8d7da' : '#d4edda';
+        statusMessage.style.color = isError ? '#721c24' : '#155724';
+        statusMessage.style.padding = '10px';
+        statusMessage.style.borderRadius = '4px';
+        statusMessage.style.marginTop = '10px';
         statusMessage.style.display = 'block';
 
         // Hide the message after 5 seconds
@@ -257,17 +289,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData(this);
 
-        // Debug: log form data
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
-
         // Disable form while uploading
         const submitButton = form.querySelector('button[type="submit"]');
         submitButton.disabled = true;
         submitButton.innerHTML = 'Uploading...';
 
-        fetch('', {
+        fetch(window.location.href, {
             method: 'POST',
             body: formData,
             headers: {
@@ -279,10 +306,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();
+            return response.json().catch(error => {
+                throw new Error('Invalid JSON response from server');
+            });
         })
         .then(data => {
-            console.log('Response:', data);  // Debug: log response
+            console.log('Server response:', data);  // Debug log
+
             if (data.success) {
                 showStatus('PDF uploaded successfully!');
                 form.reset();
@@ -298,13 +328,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const pdfItem = document.createElement('div');
                 pdfItem.className = 'pdf-item';
+                pdfItem.setAttribute('data-pdf-name', data.data.pdf_name);
                 pdfItem.innerHTML = `
                     <strong>${data.data.pdf_name}</strong>
-                    <button class="delete-pdf-btn" onclick="deletePDF('{{ pdf_name }}')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                    <button class="delete-pdf-btn" onclick="deletePDF('${data.data.pdf_name}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 `;
                 container.appendChild(pdfItem);
+
+                // Enable the chat input if it was disabled
+                document.getElementById('message-input').disabled = false;
+                document.getElementById('send-button').disabled = false;
             } else {
                 showStatus(data.error || 'Upload failed. Please try again.', true);
             }
@@ -320,6 +355,61 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Chat handling - Only execute if jQuery is available
+if (typeof jQuery !== 'undefined') {
+    $(document).ready(function() {
+        // Handle chat form submission
+        $('#chat-form').on('submit', function(e) {
+            e.preventDefault();
+
+            const messageInput = $('#message-input');
+            const message = messageInput.val().trim();
+
+            if (!message) return;
+
+            // Add user message to chat immediately
+            appendMessage('user', message);
+            messageInput.val('').focus();
+
+            // Send message to server
+            $.ajax({
+                url: window.location.href,
+                type: 'POST',
+                data: $(this).serialize(),
+                headers: {
+                    'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        appendMessage('bot', response.data.response);
+                    } else {
+                        appendMessage('bot', 'Sorry, there was an error processing your message.');
+                    }
+                },
+                error: function() {
+                    appendMessage('bot', 'Sorry, there was an error communicating with the server.');
+                }
+            });
+        });
+
+        // Function to append messages to the chat
+        function appendMessage(sender, message) {
+            const messageDiv = $('<div>', {
+                class: `message ${sender}-message`
+            }).text(message);
+
+            $('#chat-messages').append(messageDiv);
+
+            // Scroll to bottom
+            const chatContainer = $('#chat-messages');
+            chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
+        }
+    });
+} else {
+    console.warn('jQuery is not loaded. Chat functionality will be limited.');
+}
 
 function deletePDF(pdfName) {
     if (confirm('Are you sure you want to delete this PDF?')) {
