@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import HomeView, IndexView, ChatbotAppView, DSProjectsView, ContactView, ProjectDetailView, RegisterView
+from .views import HomeView, IndexView, DSProjectsView, ContactView, ProjectDetailView, RegisterView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),                         # Home Page

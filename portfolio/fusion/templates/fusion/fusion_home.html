@@ -75,6 +75,39 @@
         margin-top: 20px;
         font-size: 0.9em;
     }
+
+    .pdf-list {
+        margin-top: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .pdf-item {
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    #upload-status-message {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        display: none;
+    }
+
+    .status-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .status-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
 </style>
 
 <div class="container-fluid">
@@ -92,20 +125,35 @@
                 <form method="post" enctype="multipart/form-data" id="pdf-upload-form">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <input type="file" class="form-control" id="pdf-file" name="pdf-file" accept=".pdf">
+                        <label for="pdf-name" class="form-label">PDF Name</label>
+                        <input type="text" class="form-control" id="pdf-name" name="pdf-name" required>
                     </div>
-                    <button class="btn btn-custom w-100">Upload PDF</button>
+                    <div class="mb-3">
+                        <label for="pdf-description" class="form-label">Description</label>
+                        <textarea class="form-control" id="pdf-description" name="pdf-description" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pdf-file" class="form-label">Select PDF</label>
+                        <input type="file" class="form-control" id="pdf-file" name="pdf-file" accept=".pdf" required>
+                    </div>
+                    <button type="submit" class="btn btn-custom w-100">Upload PDF</button>
                 </form>
+                <div id="upload-status-message"></div>
 
-                <!-- Uploaded PDFs of the user -->
-                <div class="upload-status">
-                    <h5>Uploaded PDFs</h5>
-                    <ul id="uploaded-pdfs">
-                        <!-- Uploaded PDFs will be dynamically inserted here -->
-                    </ul>
+                <div class="pdf-list">
+                    <h5 class="mt-4">Your PDFs</h5>
+                    <div id="pdf-list-container">
+                        {% if uploaded_pdfs %}
+                            {% for pdf_name in uploaded_pdfs %}
+                                <div class="pdf-item">
+                                    <strong>{{ pdf_name }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No PDFs uploaded yet.</p>
+                        {% endif %}
+                    </div>
                 </div>
-
-
             </div>
         </div>
 
@@ -121,11 +169,96 @@
 
                 <!-- Message Input -->
                 <div class="input-group">
-                    <input type="text" class="form-control" id="message-input" placeholder="Type your message here...">
-                    <button class="btn btn-custom" type="button" id="send-button">Send</button>
+                    <input type="text" class="form-control" id="message-input" placeholder="Type your message here..." disabled>
+                    <button class="btn btn-custom" type="button" id="send-button" disabled>Send</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('pdf-upload-form');
+    const statusMessage = document.getElementById('upload-status-message');
+
+    function showStatus(message, isError = false) {
+        statusMessage.textContent = message;
+        statusMessage.className = isError ? 'status-error' : 'status-success';
+        statusMessage.style.display = 'block';
+
+        // Hide the message after 5 seconds
+        setTimeout(() => {
+            statusMessage.style.display = 'none';
+        }, 5000);
+    }
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        // Debug: log form data
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+
+        // Disable form while uploading
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.innerHTML = 'Uploading...';
+
+        fetch('', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response:', data);  // Debug: log response
+            if (data.success) {
+                showStatus('PDF uploaded successfully!');
+                form.reset();
+
+                // Add the new PDF to the list
+                const container = document.getElementById('pdf-list-container');
+
+                // Remove "No PDFs uploaded yet" message if it exists
+                const noPdfsMessage = container.querySelector('.text-muted');
+                if (noPdfsMessage) {
+                    noPdfsMessage.remove();
+                }
+
+                const pdfItem = document.createElement('div');
+                pdfItem.className = 'pdf-item';
+                pdfItem.innerHTML = `
+                    <strong>${data.data.pdf_name}</strong>
+                    <p class="mb-0 small">${data.data.description}</p>
+                `;
+                container.appendChild(pdfItem);
+            } else {
+                showStatus(data.error || 'Upload failed. Please try again.', true);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showStatus('An error occurred during upload. Please try again.', true);
+        })
+        .finally(() => {
+            // Re-enable form
+            submitButton.disabled = false;
+            submitButton.innerHTML = 'Upload PDF';
+        });
+    });
+});
+
+</script>
 {% endblock %}
