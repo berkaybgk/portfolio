@@ -40,7 +40,7 @@ class VectorDbUtils:
         client = self.get_client()
         for collection in client.list_collections():
             if collection.name.endswith(f"_{username}") and not collection.name.startswith("description"):
-                user_pdfs.append(collection.name.strip(f"_{username}"))
+                user_pdfs.append(collection.name.split(f"_{username}")[0])
 
         del client
         return user_pdfs
@@ -59,9 +59,9 @@ class VectorDbUtils:
         del client
         return collection.query(query_texts=search_query, n_results=n_results)
 
-    def delete_collection(self, collection_name, username):
+    def delete_collection(self, pdf_name, username):
         client = self.get_client()
-        collection_name = f"{collection_name}_{username}"
+        collection_name = f"{pdf_name}_{username}"
         client.delete_collection(collection_name)
 
         # Delete the collection from description collection

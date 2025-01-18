@@ -2,7 +2,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.core.files.uploadedfile import UploadedFile
 import json
 from .rag.main import handle_pdf_upload
 from .rag.vector_db_utils import VectorDbUtils
@@ -84,7 +83,6 @@ class FusionView(LoginRequiredMixin, View):
                         'success': True,
                         'data': {
                             'pdf_name': pdf_name,
-                            'description': pdf_description
                         }
                     })
 
@@ -104,3 +102,44 @@ class FusionView(LoginRequiredMixin, View):
                 })
 
         return render(request, self.template_name)
+
+
+class DeletePDFView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        try:
+            # Parse the JSON data from request body
+            data = json.loads(request.body)
+            pdf_name = data.get('pdf_name')
+
+            if not pdf_name:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'PDF name is required'
+                })
+
+            try:
+
+                vector_db = VectorDbUtils()
+                vector_db.delete_collection(pdf_name, request.user.username)
+
+                return JsonResponse({
+                    'success': True,
+                    'message': f'Successfully deleted {pdf_name}'
+                })
+
+            except Exception as e:
+                return JsonResponse({
+                    'success': False,
+                    'error': f'Error deleting from vector database: {str(e)}'
+                })
+
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'success': False,
+                'error': 'Invalid JSON data'
+            })
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': f'Unexpected error: {str(e)}'
+            })
