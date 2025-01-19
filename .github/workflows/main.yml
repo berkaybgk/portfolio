@@ -40,6 +40,7 @@ jobs:
             cd portfolio &&
             python3 manage.py makemigrations &&
             python3 manage.py migrate &&
+            rm -rf /home/ubuntu/portfolio/portfolio/staticfiles &&
             python3 manage.py collectstatic --noinput &&
             sudo systemctl restart gunicorn &&
             sudo systemctl restart nginx

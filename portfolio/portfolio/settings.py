@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-STATICFILES_DIRS = [BASE_DIR / "website/static"]
+STATICFILES_DIRS = [BASE_DIR]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
