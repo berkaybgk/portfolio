@@ -162,6 +162,39 @@
         margin-right: 4rem;
     }
 
+    .loading-spinner {
+        margin: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        text-align: center;
+        color: #668284;
+    }
+
+    .typing-indicator {
+        display: inline-block;
+        margin-left: 5px;
+    }
+
+    .typing-indicator span {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: #668284;
+        border-radius: 50%;
+        margin: 0 2px;
+        animation: bounce 1.4s infinite ease-in-out;
+    }
+
+    .typing-indicator span:nth-child(1) { animation-delay: 0s; }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+        0%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-8px); }
+    }
+
 </style>
 
 <div class="container-fluid">
@@ -245,6 +278,7 @@
 const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const chatContainerRef = useRef(null);
   const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
@@ -295,6 +329,15 @@ const ChatInterface = () => {
     formData.append('action', 'send_message');
     formData.append('message', newMessage);
 
+    // Add user message immediately
+    setMessages(prev => [...prev, {
+      type: 'user',
+      content: newMessage,
+      timestamp: new Date().toISOString()
+    }]);
+    setNewMessage('');
+    setIsLoading(true);
+
     try {
       const response = await fetch(window.location.href, {
         method: 'POST',
@@ -308,18 +351,20 @@ const ChatInterface = () => {
       const data = await response.json();
       if (data.success) {
         setMessages(prev => [...prev, {
-          type: 'user',
-          content: newMessage,
-          timestamp: new Date().toISOString()
-        }, {
           type: 'bot',
           content: data.data.response,
           timestamp: new Date().toISOString()
         }]);
-        setNewMessage('');
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      setMessages(prev => [...prev, {
+        type: 'bot',
+        content: 'Sorry, there was an error processing your message.',
+        timestamp: new Date().toISOString()
+      }]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -331,6 +376,16 @@ const ChatInterface = () => {
             {msg.content}
           </div>
         ))}
+        {isLoading && (
+          <div className="loading-spinner">
+            <i className="fas fa-robot"></i>
+            <div className="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        )}
       </div>
       <form onSubmit={handleSubmit} className="chat-form">
         <div className="input-group">
@@ -340,21 +395,20 @@ const ChatInterface = () => {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type your message here..."
-            disabled={!document.querySelectorAll('.pdf-item').length}
+            disabled={!document.querySelectorAll('.pdf-item').length || isLoading}
           />
           <button
             className="btn btn-custom"
             type="submit"
-            disabled={!document.querySelectorAll('.pdf-item').length}
+            disabled={!document.querySelectorAll('.pdf-item').length || isLoading}
           >
-            Send
+            {isLoading ? <i className="fas fa-spinner fa-spin"></i> : 'Send'}
           </button>
         </div>
       </form>
     </div>
   );
 };
-
 // Initialize React Chat Component
 const chatRoot = document.getElementById('chat-root');
 if (chatRoot) {

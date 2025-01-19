@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -118,6 +118,19 @@ class FusionView(LoginRequiredMixin, View):
                             'error': 'Message cannot be empty'
                         })
 
+                    # Add a delay for 3 seconds if the users last message is within 2 seconds
+                    last_message = Chat.objects.filter(user=request.user).order_by('-timestamp').first()
+
+                    if last_message:
+                        current_time = datetime.now(timezone.utc)  # Get current time in UTC
+
+                        time_since_last = current_time - last_message.timestamp
+                        if time_since_last.total_seconds() < 3:
+                            return JsonResponse({
+                                'success': False,
+                                'error': 'Please wait 2 seconds between messages',
+                            })
+
                     # Save the message to the database
                     chat = Chat.objects.create(
                         user=request.user,
@@ -204,7 +217,8 @@ def get_messages(request):
         if request.user.username != request.GET.get('user'):
             raise PermissionDenied
 
-        messages = Chat.objects.filter(user=request.user).order_by('timestamp')
+        # Get the last 100 messages and reverse them
+        messages = Chat.objects.filter(user=request.user).order_by('timestamp')[:100]
 
         message_list = []
 

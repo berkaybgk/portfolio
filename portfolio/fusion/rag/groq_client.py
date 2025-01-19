@@ -16,9 +16,9 @@ class GroqClient:
                 "role": "system",
                 "content": "You are an expert in teaching and assisting with classes. "
                            "The user will ask you questions about classes and you will answer them. "
-                           "Be very concise and clear in your answers. Proive short and concise answers but convince "
+                           "Be very concise and clear in your answers. Provide short and concise answers but convince "
                            "the user that you actually know about the things he asks. If the question is not related to classes, "
-                            "say that you don't know the answer. Don't introduce yourself and don't ask questions. "
+                           "say that you don't know the answer. Don't introduce yourself and don't ask questions. "
             },
             {
                 "role": "user",

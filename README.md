@@ -33,7 +33,7 @@ python -c 'from django.core.management.utils import get_random_secret_key; print
 4. Create a `.env` file in the root directory of the project and add the following line:
 
 ```bash
-SECRET_KEY= <your_secret_key>
+DJANGO_SECRET_KEY= <your_secret_key>
 ```
 
 5. Run the Django migrations:
