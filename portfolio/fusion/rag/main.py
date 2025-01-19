@@ -1,5 +1,6 @@
 from pprint import pprint
 from dotenv import load_dotenv
+from ..models import Chat
 
 # load the environment variables
 load_dotenv()
@@ -8,8 +9,6 @@ load_dotenv()
 from .vector_db_utils import VectorDbUtils
 from .pdf_utils import PDFUtils
 
-# gq = GroqClient()
-
 pdf_utils = PDFUtils()
 
 def handle_pdf_upload(username, pdf_name, pdf_description, pdf_file):
@@ -17,8 +16,7 @@ def handle_pdf_upload(username, pdf_name, pdf_description, pdf_file):
 
     pdf_name_valid = vector_db.check_pdf_name(pdf_name, username)
 
-    if not pdf_name_valid:
-        print("PDF already exists.")
+    if not pdf_name_valid: # Pdf name already exists
         return False
 
     chunks = pdf_utils.get_chunks_from_pdf(1000, pdf_file, pdf_path=None)
@@ -33,10 +31,20 @@ def handle_pdf_upload(username, pdf_name, pdf_description, pdf_file):
     return True
 
 
-if __name__ == "__main__":
-    # check the collection names
-    # pprint(vector_db.client.list_collections())
-    pass
+def handle_message(user, current_message):
+
+    # Get the last 5 messages
+    chat_messages = Chat.objects.filter(user=user).order_by('-timestamp')[:5]
+
+    user_messages = list(chat_messages.values_list('message', flat=True))
+    ai_responses = list(chat_messages.values_list('response', flat=True))
+
+    last_messages = list(zip(user_messages, ai_responses))
+
+
+
+    return "Hello, I am an AI assistant. How can I help you today?"
+
 
 
 

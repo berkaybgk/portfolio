@@ -1,6 +1,9 @@
 from datetime import datetime
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
+from django.core.cache import cache
 from django.views import View
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -9,7 +12,7 @@ import json
 from .models import Chat
 from .rag.main import handle_pdf_upload
 from .rag.vector_db_utils import VectorDbUtils
-
+from .rag.main import handle_message
 
 class FusionView(LoginRequiredMixin, View):
     template_name = 'fusion/fusion_home.html'
@@ -121,9 +124,8 @@ class FusionView(LoginRequiredMixin, View):
                         user=request.user,
                         message=message,
                         timestamp=datetime.now(),
-                        response='This is a placeholder response'
+                        response=handle_message(request.user, message)
                     )
-                    print(message)
 
                     return JsonResponse({
                         'success': True,
@@ -144,8 +146,6 @@ class FusionView(LoginRequiredMixin, View):
                 'error': 'Invalid action specified'
             })
 
-        # If not an AJAX request, render the template
-        # TODO
         vdb = VectorDbUtils()
         uploaded_pdfs_by_user = vdb.get_users_pdfs(request.user.username)
         return render(request, self.template_name, {
@@ -193,8 +193,18 @@ class DeletePDFView(LoginRequiredMixin, View):
             })
 
 
+@login_required
 def get_messages(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+
+        # Check if user is authenticated
+        if not request.user.is_authenticated:
+            raise PermissionDenied
+
+        # Return permission denied if the user in the request is not the same as the logged in user
+        if request.user.username != request.GET.get('user'):
+            raise PermissionDenied
+
         messages = Chat.objects.filter(user=request.user).order_by('timestamp')
 
         message_list = []

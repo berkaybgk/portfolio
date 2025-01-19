@@ -27,3 +27,4 @@ class GroqClient:
         ],
             model=self.model
         ).choices[0].message.content
+

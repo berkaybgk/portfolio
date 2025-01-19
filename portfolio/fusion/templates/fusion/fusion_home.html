@@ -5,7 +5,7 @@
 {% block content %}
 <style>
     .btn-custom {
-        background-color: #128b96;
+        background-color: #668284;
         border-color: #000000;
         color: white;
     }
@@ -31,18 +31,6 @@
         padding: 10px 15px;
         border-radius: 15px;
         max-width: 70%;
-    }
-
-    .user-message {
-        background-color: #128b96;
-        color: white;
-        margin-left: auto;
-    }
-
-    .bot-message {
-        background-color: #e9ecef;
-        color: #212529;
-        margin-right: auto;
     }
 
     .input-group {
@@ -164,14 +152,14 @@
     }
 
     .user-message {
-        background-color: #007bff;
+        background-color: #128b96;
         color: white;
-        margin-left: auto;
+        margin-left: 30rem;
     }
 
     .bot-message {
-        background-color: #f0f0f0;
-        margin-right: auto;
+        background-color: #c2db70;
+        margin-right: 4rem;
     }
 
 </style>
@@ -183,7 +171,6 @@
         <p class="lead">Upload your PDF and start chatting!</p>
     </div>
 
-    <!-- Replace only the row section containing the upload and chat interface -->
     <div class="row main-container">
         <!-- File Upload Section - Left Side -->
         <div class="col-md-3">
@@ -237,6 +224,7 @@
 
         <!-- Chat Interface - Right Side -->
         <div class="col-md-9">
+            <div data-username="{{ request.user.username }}" style="display: none;"></div>
             <div id="chat-root"></div>
         </div>
 
@@ -282,22 +270,22 @@ const ChatInterface = () => {
     return () => window.removeEventListener('pdfListUpdated', handlePdfUpdate);
     }, []);
 
-  const fetchMessages = async () => {
-    try {
-      const response = await fetch('/get-messages/', {
-        method: 'GET',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
+    const fetchMessages = async () => {
+        try {
+            const response = await fetch(`/get-messages/?user=${encodeURIComponent(document.querySelector('[data-username]').dataset.username)}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            });
+            const data = await response.json();
+            if (data.success) {
+                setMessages(data.messages);
+            }
+        } catch (error) {
+            console.error('Error fetching messages:', error);
         }
-      });
-      const data = await response.json();
-      if (data.success) {
-        setMessages(data.messages);
-      }
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
-  };
+    };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
