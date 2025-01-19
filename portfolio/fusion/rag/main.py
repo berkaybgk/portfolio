@@ -5,11 +5,12 @@ from ..models import Chat
 # load the environment variables
 load_dotenv()
 
-# from .groq_client import GroqClient
+from .groq_client import GroqClient
 from .vector_db_utils import VectorDbUtils
 from .pdf_utils import PDFUtils
 
 pdf_utils = PDFUtils()
+gq = GroqClient()
 
 def handle_pdf_upload(username, pdf_name, pdf_description, pdf_file):
     vector_db = VectorDbUtils()
@@ -33,20 +34,20 @@ def handle_pdf_upload(username, pdf_name, pdf_description, pdf_file):
 
 def handle_message(user, current_message):
 
-    # Get the last 5 messages
-    chat_messages = Chat.objects.filter(user=user).order_by('-timestamp')[:5]
+    try:
+        # Get the last 5 messages
+        chat_messages = Chat.objects.filter(user=user).order_by('-timestamp')[:5]
 
-    user_messages = list(chat_messages.values_list('message', flat=True))
-    ai_responses = list(chat_messages.values_list('response', flat=True))
+        user_messages = list(chat_messages.values_list('message', flat=True))
+        ai_responses = list(chat_messages.values_list('response', flat=True))
 
-    last_messages = list(zip(user_messages, ai_responses))
+        last_messages = list(zip(user_messages, ai_responses))
+    except Exception as e:
+        return "Sorry, I am having trouble since I am unable to retrieve the last messages. This is a temporary issue."
 
+    gq_response = gq.get_response(current_message)
 
-
-    return "Hello, I am an AI assistant. How can I help you today?"
-
-
-
+    return gq_response
 
 
 

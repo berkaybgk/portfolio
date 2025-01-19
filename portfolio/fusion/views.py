@@ -3,7 +3,6 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.core.cache import cache
 from django.views import View
 from django.shortcuts import render
 from django.http import JsonResponse
