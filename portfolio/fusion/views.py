@@ -5,6 +5,8 @@ from django.views import View
 from django.shortcuts import render
 from django.http import JsonResponse
 import json
+
+from .models import Chat
 from .rag.main import handle_pdf_upload
 from .rag.vector_db_utils import VectorDbUtils
 
@@ -107,13 +109,30 @@ class FusionView(LoginRequiredMixin, View):
             elif action == 'send_message':
                 try:
                     message = request.POST.get('message')
-                    # Handle chat message logic here
+
+                    if not message:
+                        return JsonResponse({
+                            'success': False,
+                            'error': 'Message cannot be empty'
+                        })
+
+                    # Save the message to the database
+                    chat = Chat.objects.create(
+                        user=request.user,
+                        message=message,
+                        timestamp=datetime.now(),
+                        response='This is a placeholder response'
+                    )
+                    print(message)
+
                     return JsonResponse({
                         'success': True,
                         'data': {
-                            'response': 'Message received'  # TODO: Replace with actual chatbot response
+                            'response': chat.response,
+                            'timestamp': chat.timestamp.isoformat()
                         }
                     })
+
                 except Exception as e:
                     return JsonResponse({
                         'success': False,
@@ -126,6 +145,7 @@ class FusionView(LoginRequiredMixin, View):
             })
 
         # If not an AJAX request, render the template
+        # TODO
         vdb = VectorDbUtils()
         uploaded_pdfs_by_user = vdb.get_users_pdfs(request.user.username)
         return render(request, self.template_name, {
@@ -171,3 +191,31 @@ class DeletePDFView(LoginRequiredMixin, View):
                 'success': False,
                 'error': f'Unexpected error: {str(e)}'
             })
+
+
+def get_messages(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        messages = Chat.objects.filter(user=request.user).order_by('timestamp')
+
+        message_list = []
+
+        # Create two entries for each Chat object
+        for msg in messages:
+            # Add user message
+            message_list.append({
+                'type': 'user',
+                'content': msg.message,
+                'timestamp': msg.timestamp.isoformat()
+            })
+            # Add bot response
+            message_list.append({
+                'type': 'bot',
+                'content': msg.response,
+                'timestamp': msg.timestamp.isoformat()
+            })
+
+        return JsonResponse({
+            'success': True,
+            'messages': message_list
+        })
+    return JsonResponse({'success': False, 'error': 'Invalid request'})

@@ -237,32 +237,148 @@
 
         <!-- Chat Interface - Right Side -->
         <div class="col-md-9">
-            <div class="chat-section">
-                <div class="chat-container" id="chat-messages">
-                    <!-- Messages will be dynamically inserted here -->
-                    <div class="message bot-message">
-                        Hello! I'm ready to help you with your PDF documents. Please upload a PDF to get started.
-                    </div>
-                </div>
-
-                <!-- Message Input -->
-                <form id="chat-form" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="send_message">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="message-input" name="message"
-                               placeholder="Type your message here..."
-                               {% if not uploaded_pdfs %}disabled{% endif %}>
-                        <button class="btn btn-custom" type="submit" id="send-button"
-                                {% if not uploaded_pdfs %}disabled{% endif %}>Send</button>
-                    </div>
-                </form>
-            </div>
+            <div id="chat-root"></div>
         </div>
+
     </div>
 
 </div>
 
+<!-- First: React and ReactDOM scripts -->
+<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+<script>
+    const { useState, useEffect, useRef } = React;
+</script>
+
+<!-- Second: React component -->
+<script type="text/babel">
+const ChatInterface = () => {
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+  const chatContainerRef = useRef(null);
+  const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  useEffect(() => {
+    // Load initial messages when component mounts
+    fetchMessages();
+  }, []);
+
+  useEffect(() => {
+    // Scroll to bottom when messages update
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    const handlePdfUpdate = () => {
+        // Re-render will automatically update the disabled state
+        setMessages(prevMessages => [...prevMessages]);
+    };
+
+    window.addEventListener('pdfListUpdated', handlePdfUpdate);
+    return () => window.removeEventListener('pdfListUpdated', handlePdfUpdate);
+    }, []);
+
+  const fetchMessages = async () => {
+    try {
+      const response = await fetch('/get-messages/', {
+        method: 'GET',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        }
+      });
+      const data = await response.json();
+      if (data.success) {
+        setMessages(data.messages);
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!newMessage.trim()) return;
+
+    const formData = new FormData();
+    formData.append('action', 'send_message');
+    formData.append('message', newMessage);
+
+    try {
+      const response = await fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setMessages(prev => [...prev, {
+          type: 'user',
+          content: newMessage,
+          timestamp: new Date().toISOString()
+        }, {
+          type: 'bot',
+          content: data.data.response,
+          timestamp: new Date().toISOString()
+        }]);
+        setNewMessage('');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+
+  return (
+    <div className="chat-section">
+      <div className="chat-container" ref={chatContainerRef}>
+        {messages.map((msg, index) => (
+          <div key={index} className={`message ${msg.type}-message`}>
+            {msg.content}
+          </div>
+        ))}
+      </div>
+      <form onSubmit={handleSubmit} className="chat-form">
+        <div className="input-group">
+          <input
+            type="text"
+            className="form-control"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type your message here..."
+            disabled={!document.querySelectorAll('.pdf-item').length}
+          />
+          <button
+            className="btn btn-custom"
+            type="submit"
+            disabled={!document.querySelectorAll('.pdf-item').length}
+          >
+            Send
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+// Initialize React Chat Component
+const chatRoot = document.getElementById('chat-root');
+if (chatRoot) {
+  ReactDOM.render(React.createElement(ChatInterface), chatRoot);
+}
+</script>
+
+<!-- Third: Babel for JSX transformation -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+
+<!-- Fourth: PDF related scripts -->
 <script>
 // PDF Upload handling
 document.addEventListener('DOMContentLoaded', function() {
@@ -306,9 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json().catch(error => {
-                throw new Error('Invalid JSON response from server');
-            });
+            return response.json();
         })
         .then(data => {
             console.log('Server response:', data);  // Debug log
@@ -337,9 +451,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 container.appendChild(pdfItem);
 
-                // Enable the chat input if it was disabled
-                document.getElementById('message-input').disabled = false;
-                document.getElementById('send-button').disabled = false;
+                // Trigger a window event that our React component can listen to
+                window.dispatchEvent(new Event('pdfListUpdated'));
             } else {
                 showStatus(data.error || 'Upload failed. Please try again.', true);
             }
@@ -356,61 +469,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Chat handling - Only execute if jQuery is available
-if (typeof jQuery !== 'undefined') {
-    $(document).ready(function() {
-        // Handle chat form submission
-        $('#chat-form').on('submit', function(e) {
-            e.preventDefault();
 
-            const messageInput = $('#message-input');
-            const message = messageInput.val().trim();
-
-            if (!message) return;
-
-            // Add user message to chat immediately
-            appendMessage('user', message);
-            messageInput.val('').focus();
-
-            // Send message to server
-            $.ajax({
-                url: window.location.href,
-                type: 'POST',
-                data: $(this).serialize(),
-                headers: {
-                    'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                success: function(response) {
-                    if (response.success) {
-                        appendMessage('bot', response.data.response);
-                    } else {
-                        appendMessage('bot', 'Sorry, there was an error processing your message.');
-                    }
-                },
-                error: function() {
-                    appendMessage('bot', 'Sorry, there was an error communicating with the server.');
-                }
-            });
-        });
-
-        // Function to append messages to the chat
-        function appendMessage(sender, message) {
-            const messageDiv = $('<div>', {
-                class: `message ${sender}-message`
-            }).text(message);
-
-            $('#chat-messages').append(messageDiv);
-
-            // Scroll to bottom
-            const chatContainer = $('#chat-messages');
-            chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
-        }
-    });
-} else {
-    console.warn('jQuery is not loaded. Chat functionality will be limited.');
-}
-
+// PDF Delete handling
 function deletePDF(pdfName) {
     if (confirm('Are you sure you want to delete this PDF?')) {
         fetch('/delete-pdf/', {
