@@ -28,11 +28,11 @@ jobs:
           chmod 600 ~/.ssh/ec2_key.pem
 
       - name: Add EC2 host to known_hosts
-        run: ssh-keyscan -H ec2-54-243-20-161.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+        run: ssh-keyscan -H 3.233.127.111 >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
         run: |
-          ssh -i ~/.ssh/ec2_key.pem ubuntu@ec2-54-243-20-161.compute-1.amazonaws.com '
+          ssh -i ~/.ssh/ec2_key.pem ubuntu@3.233.127.111 '
             cd /home/ubuntu/portfolio &&
             git pull origin main &&
             source .venv/bin/activate &&
@@ -48,7 +48,7 @@ jobs:
 
       - name: Check App Status
         run: |
-          ssh -i ~/.ssh/ec2_key.pem ubuntu@ec2-54-243-20-161.compute-1.amazonaws.com '
+          ssh -i ~/.ssh/ec2_key.pem ubuntu@3.233.127.111 '
             sudo systemctl status gunicorn --no-pager &&
             curl -I https://berkaybgk.site/
           '
