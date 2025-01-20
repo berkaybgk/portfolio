@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 
 from django.contrib.auth.decorators import login_required
@@ -12,6 +13,8 @@ from .models import Chat
 from .rag.main import handle_pdf_upload
 from .rag.vector_db_utils import VectorDbUtils
 from .rag.main import handle_message
+from django.conf import settings
+
 
 class FusionView(LoginRequiredMixin, View):
     template_name = 'fusion/fusion_home.html'
@@ -38,6 +41,13 @@ class FusionView(LoginRequiredMixin, View):
                             'error': 'No file was uploaded'
                         })
 
+                    # Add size validation (4MB)
+                    if pdf_file.size > 4 * 1024 * 1024:
+                        return JsonResponse({
+                            'success': False,
+                            'error': 'File size must be under 4MB'
+                        })
+
                     # Get other form data
                     pdf_name = request.POST.get('pdf-name')
                     if not pdf_name:
@@ -62,14 +72,14 @@ class FusionView(LoginRequiredMixin, View):
                             'error': 'File must be a PDF'
                         })
 
-                    # Create a temporary file
-                    from tempfile import NamedTemporaryFile
-                    import shutil
+                    # Save directly to persist directory
+                    persist_dir = os.path.join(settings.BASE_DIR, 'persist', 'pdfs')
+                    os.makedirs(persist_dir, exist_ok=True)
 
-                    with NamedTemporaryFile(delete=False) as tmp_file:
-                        for chunk in pdf_file.chunks():
-                            tmp_file.write(chunk)
-                        tmp_file_path = tmp_file.name
+                    pdf_path = os.path.join(persist_dir, f"{pdf_name}_{username}.pdf")
+
+                    with open(pdf_path, 'wb') as destination:
+                        destination.write(pdf_file.read())
 
                     try:
                         # Call PDF handling function
@@ -77,10 +87,12 @@ class FusionView(LoginRequiredMixin, View):
                             username=username,
                             pdf_name=pdf_name,
                             pdf_description=pdf_description,
-                            pdf_file=tmp_file_path
+                            pdf_path=pdf_path
                         )
 
                         if not upload_success:
+                            if os.path.exists(pdf_path):
+                                os.unlink(pdf_path)
                             return JsonResponse({
                                 'success': False,
                                 'error': 'A PDF with this name already exists'
@@ -94,10 +106,9 @@ class FusionView(LoginRequiredMixin, View):
                         })
 
                     finally:
-                        # Clean up the temporary file
-                        import os
-                        if os.path.exists(tmp_file_path):
-                            os.unlink(tmp_file_path)
+                        # Clean up the file after handle_pdf_upload is done
+                        if os.path.exists(pdf_path):
+                            os.unlink(pdf_path)
 
                 except Exception as e:
                     import traceback

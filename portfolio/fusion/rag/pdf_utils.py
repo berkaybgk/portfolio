@@ -30,4 +30,9 @@ class PDFUtils:
         chunks = [pdf_text[i:i+chunk_size] for i in range(0, len(pdf_text), chunk_size)]
         return chunks
 
+    @staticmethod
+    def get_chunks_from_text(chunk_size, text):
+        chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
+        return chunks
+
 

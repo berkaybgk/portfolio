@@ -12,7 +12,7 @@ from .pdf_utils import PDFUtils
 pdf_utils = PDFUtils()
 gq = GroqClient()
 
-def handle_pdf_upload(username, pdf_name, pdf_description, pdf_file):
+def handle_pdf_upload(username, pdf_name, pdf_description, pdf_path=None):
     vector_db = VectorDbUtils()
 
     pdf_name_valid = vector_db.check_pdf_name(pdf_name, username)
@@ -20,7 +20,13 @@ def handle_pdf_upload(username, pdf_name, pdf_description, pdf_file):
     if not pdf_name_valid: # Pdf name already exists
         return False
 
-    chunks = pdf_utils.get_chunks_from_pdf(1000, pdf_file, pdf_path=None)
+    if pdf_path is None:
+        return False
+
+    # Get the text from the pdf
+    pdf_file_content = pdf_utils.read_pdf(pdf_path)
+
+    chunks = pdf_utils.get_chunks_from_text(1000, pdf_file_content)
 
     # Add the contents of the pdf to its own collection
     vector_db.create_collection(pdf_name, username)
