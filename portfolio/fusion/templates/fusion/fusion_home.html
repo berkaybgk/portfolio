@@ -26,13 +26,6 @@
         margin-bottom: 20px;
     }
 
-    .message {
-        margin-bottom: 15px;
-        padding: 10px 15px;
-        border-radius: 15px;
-        max-width: 70%;
-    }
-
     .input-group {
         margin-top: 20px;
     }
@@ -226,6 +219,12 @@
                         <label for="pdf-description" class="form-label">Description</label>
                         <textarea class="form-control" id="pdf-description" name="pdf-description" rows="7"
                                   placeholder="Pay attention to writing good and concise descriptions for your PDFs as they will be used to determine the required resources to answer your questions." required></textarea>
+                        <style>
+                            #pdf-description::placeholder {
+                                opacity: 0.75; /* You can adjust this value between 0 and 1 */
+                                color: #6c757d; /* Bootstrap's default text-muted color */
+                            }
+                        </style>
                     </div>
                     <div class="mb-3">
                         <label for="pdf-file" class="form-label">Select PDF</label>

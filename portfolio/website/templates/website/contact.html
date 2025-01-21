@@ -4,63 +4,160 @@
 
 {% block content %}
 <style>
-    .contact-btn {
-        min-width: 160px;
-        transition: transform 0.2s;
+    :root {
+        --primary: #128b96;
+        --secondary: #c2db70;
+        --dark: #090909;
     }
 
-    .contact-btn:hover {
-        transform: translateY(-3px);
+    .profile-section {
+        background: linear-gradient(135deg, rgba(18,139,150,0.1) 0%, rgba(194,219,112,0.1) 100%);
+        border-radius: 15px;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2.5rem;
+        text-align: center;
     }
 
-    .contact-item {
-        font-size: 1.2rem;
-        color: #666;
+    .welcome-title {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        color: var(--primary);
     }
 
-    .lead-text {
+    .lead {
+        font-size: 1.3rem;
+        font-weight: 300;
         max-width: 800px;
-        margin: 0 auto;
+        margin: 0 auto 0.75rem;
+        color: #1e1e1e;
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .contact-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.75rem;
+        box-shadow: 0 3px 5px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: center;
+    }
+
+    .contact-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .contact-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+        color: var(--primary);
+    }
+
+    .contact-title {
+        font-size: 1.4rem;
+        margin-bottom: 0.75rem;
+        color: var(--dark);
+    }
+
+    .contact-link {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+    }
+
+    .contact-link:hover {
+        background-color: var(--secondary);
+        color: var(--dark);
+        transform: scale(1.02);
+    }
+
+    .email-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .email-link:hover {
+        color: var(--secondary);
+    }
+
+    @media (max-width: 768px) {
+        .contact-grid {
+            grid-template-columns: 1fr;
+        }
+        .profile-section {
+            padding: 2rem 1.5rem;
+        }
+        .welcome-title {
+            font-size: 2rem;
+        }
     }
 </style>
 
-<!-- Add Font Awesome in the head section of your base template if not already present -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
 <div class="container">
-    <!-- Profile Section -->
-    <section class="profile-section text-center py-5">
-        <h1 class="mb-4">Contact</h1>
-        <div class="lead-text mb-5">
-            <p class="lead mb-3">I am a junior computer engineering student from Istanbul, Turkey.</p>
-            <p class="lead mb-3">I am currently studying at Boğaziçi University, and my current interests lie in data science, AI and software engineering.</p>
-            <p class="lead">I am passionate about applying my skills in areas which blend these.</p>
-        </div>
-    </section>
-
-    <!-- Information -->
-    <section id="info" class="my-5 text-center">
-        <div class="contact-item mb-4">
-            <i class="fas fa-envelope fa-lg me-2"></i>
-            <a href="mailto:berkaybugragok@gmail.com" class="text-decoration-none">
-                berkaybugragok@gmail.com
-            </a>
-        </div>
-
-        <div class="d-flex justify-content-center gap-3">
-            <a href="https://github.com/berkaybgk" target="_blank"
-               class="btn btn-dark btn-lg contact-btn">
-                <i class="fab fa-github me-2"></i>
-                GitHub
-            </a>
-
-            <a href="https://www.linkedin.com/in/berkay-bugra-gok-755414219/"
-               target="_blank"
-               class="btn btn-primary btn-lg contact-btn">
-                <i class="fab fa-linkedin me-2"></i>
-                LinkedIn
+    <section class="profile-section" data-aos="fade-up">
+        <h1 class="welcome-title">Get in Touch</h1>
+        <p class="lead">
+            I am a junior computer engineering student from Istanbul, Turkey, currently studying at Boğaziçi University.
+        </p>
+        <p class="lead">
+            My interests lie in data science, AI, and software engineering, and I'm passionate about applying my skills in areas which blend these.
+        </p>
+        <div class="mt-4">
+            <a href="mailto:berkaybugragok@gmail.com" class="email-link">
+                <i class="fas fa-envelope me-2"></i>berkaybugragok@gmail.com
             </a>
         </div>
     </section>
+
+    <div class="contact-grid">
+        <div class="contact-card" data-aos="fade-up">
+            <i class="fab fa-github contact-icon"></i>
+            <h2 class="contact-title">GitHub</h2>
+            <p>Check out my projects and contributions on GitHub</p>
+            <a href="https://github.com/berkaybgk" target="_blank" class="contact-link">
+                <i class="fab fa-github"></i>
+                View Profile
+            </a>
+        </div>
+
+        <div class="contact-card" data-aos="fade-up" data-aos-delay="100">
+            <i class="fab fa-linkedin contact-icon"></i>
+            <h2 class="contact-title">LinkedIn</h2>
+            <p>Connect with me on LinkedIn</p>
+            <a href="https://www.linkedin.com/in/berkay-bugra-gok-755414219/" target="_blank" class="contact-link">
+                <i class="fab fa-linkedin"></i>
+                Connect
+            </a>
+        </div>
+    </div>
 </div>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 50
+    });
+</script>
 {% endblock %}
