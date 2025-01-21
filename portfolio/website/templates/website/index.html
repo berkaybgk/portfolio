@@ -7,7 +7,7 @@
     :root {
         --primary: #128b96;
         --secondary: #c2db70;
-        --dark: #343a40;
+        --dark: #090909;
     }
 
     .profile-section {
@@ -19,18 +19,18 @@
     }
 
     .welcome-title {
-        font-size: 2.25rem;
+        font-size: 2.5rem;
         font-weight: 600;
         margin-bottom: 1.25rem;
         color: var(--primary);
     }
 
     .lead {
-        font-size: 1.1rem;
+        font-size: 1.5rem;
         font-weight: 300;
-        max-width: 800px;
+        max-width: 1000px;
         margin: 0 auto 0.75rem;
-        color: var(--dark);
+        color: #1e1e1e;
     }
 
     .projects-grid {
@@ -60,7 +60,7 @@
     }
 
     .section-title {
-        font-size: 1.4rem;
+        font-size: 1.8rem;
         margin-bottom: 0.75rem;
         color: var(--dark);
     }
@@ -112,14 +112,14 @@
     <div class="project-card" data-aos="fade-up">
         <p class="fas fa-chart-bar section-icon"></p>
         <h2 class="section-title">Data Science Projects</h2>
-        <p>Explore my collection of analytical projects using open datasets. Each project showcases different aspects of data science.</p>
+        <p style="font-size: 1.2rem">Explore my collection of data science trial projects in which I play with the data and apply ML methods on open data sets.</p>
         <a class="btn-custom" href="{% url 'ds_projects' %}">View Projects</a>
     </div>
 
     <div class="project-card" data-aos="fade-up" data-aos-delay="100">
         <p class="fas fa-robot section-icon"></p>
         <h2 class="section-title">Fusion Chatbot App</h2>
-        <p>Experience the future of document interaction with our AI-powered PDF assistant. Simply upload your documents and start a natural conversation!</p>
+        <p style="font-size: 1.2rem">Experience the future of document interaction with my AI-powered PDF assistant. Simply upload your documents and chat with them!</p>
         <a class="btn-custom" href="{% url 'fusion' %}">Try the App</a>
     </div>
 </div>
