@@ -4,51 +4,133 @@
 
 {% block content %}
 <style>
-    .btn-custom {
-            background-color: #128b96; /* Custom orange */
-            border-color: #000000; /* Custom orange */
-            color: white; /* Text color */
-    }
-
-    .btn-custom:hover {
-        background-color: #c2db70; /* Custom orange */
-        border-color: #000000; /* Custom orange */
-        color: #000000; /* Text color */
-    }
-
-    .section-spacing {
-        margin-top: 50px;
-        margin-bottom: 50px;
+    :root {
+        --primary: #128b96;
+        --secondary: #c2db70;
+        --dark: #343a40;
     }
 
     .profile-section {
-        margin-bottom: 100px; /* Adjust as needed */
+        background: linear-gradient(135deg, rgba(18,139,150,0.1) 0%, rgba(194,219,112,0.1) 100%);
+        border-radius: 15px;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2.5rem;
+        text-align: center;
+    }
+
+    .welcome-title {
+        font-size: 2.25rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        color: var(--primary);
+    }
+
+    .lead {
+        font-size: 1.1rem;
+        font-weight: 300;
+        max-width: 800px;
+        margin: 0 auto 0.75rem;
+        color: var(--dark);
+    }
+
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .project-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.75rem;
+        box-shadow: 0 3px 5px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .project-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .section-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+        color: var(--primary);
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+        margin-bottom: 0.75rem;
+        color: var(--dark);
+    }
+
+    .btn-custom {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.6rem 1.25rem;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin-top: 0.75rem;
+    }
+
+    .btn-custom:hover {
+        background-color: var(--secondary);
+        color: var(--dark);
+        transform: scale(1.02);
+    }
+
+    @media (max-width: 768px) {
+        .projects-grid {
+            grid-template-columns: 1fr;
+        }
+        .profile-section {
+            padding: 2rem 1.5rem;
+        }
+        .welcome-title {
+            font-size: 2rem;
+        }
     }
 </style>
 
-<div class="container">
+<section class="profile-section" data-aos="fade-up">
+    <h1 class="welcome-title">Welcome to My Portfolio</h1>
+    <p class="lead">
+        I am a junior computer engineering student from Istanbul, Turkey, currently studying at Boğaziçi University.
+    </p>
+    <p class="lead">
+        My interests lie in data science, AI, and software engineering, and I'm passionate about creating solutions that blend these disciplines together.
+    </p>
+</section>
 
-    <!-- Profile Section -->
-    <section class="profile-section text-center">
-        <h1>Welcome to My Portfolio Website</h1>
-        <p class="lead">I am a junior computer engineering student from Istanbul, Turkey.</p>
-        <p class="lead">I am currently studying at Boğaziçi University, and my current interests lie in data science, AI and software engineering.</p>
-        <p class="lead">I am passionate about applying my skills in areas which blend these.</p>
-    </section>
+<div class="projects-grid">
+    <div class="project-card" data-aos="fade-up">
+        <p class="fas fa-chart-bar section-icon"></p>
+        <h2 class="section-title">Data Science Projects</h2>
+        <p>Explore my collection of analytical projects using open datasets. Each project showcases different aspects of data science.</p>
+        <a class="btn-custom" href="{% url 'ds_projects' %}">View Projects</a>
+    </div>
 
-    <!-- DS Section -->
-    <section id="projects" class="my-5 text-center">
-        <h2 class="mb-4">Data Science Projects</h2>
-        <p>Trial projects on open data sets. The work is shared in a nice way.</p>
-        <a class="btn btn-custom btn-lg" href="{% url 'ds_projects' %}">Check the Projects</a>
-    </section>
-
-    <!-- Chatbot Section -->
-    <section id="chatbot" class="my-5 text-center">
-        <h2 class="mb-4">Fusion Chatbot App</h2>
-        <p>A smart assistant which allows you to talk to PDFs. No more scrolling through pages!</p>
-        <a class="btn btn-custom btn-lg" href="{% url 'fusion' %}">Go to the App</a>
-    </section>
-
+    <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+        <p class="fas fa-robot section-icon"></p>
+        <h2 class="section-title">Fusion Chatbot App</h2>
+        <p>Experience the future of document interaction with our AI-powered PDF assistant. Simply upload your documents and start a natural conversation!</p>
+        <a class="btn-custom" href="{% url 'fusion' %}">Try the App</a>
+    </div>
 </div>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 50
+    });
+</script>
 {% endblock %}
