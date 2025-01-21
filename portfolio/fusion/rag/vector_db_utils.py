@@ -1,5 +1,4 @@
 import chromadb
-from chromadb import Settings
 import uuid
 
 
@@ -45,6 +44,16 @@ class VectorDbUtils:
         del client
         return user_pdfs
 
+    def get_description_collection(self, username):
+        client = self.get_client()
+        collection_name = f"description_{username}"
+        try:
+            collection = client.get_collection(collection_name)
+        except Exception as e:
+            client.create_collection(collection_name)
+            collection = client.get_collection(collection_name)
+        del client
+        return collection
     def get_collection(self, pdf_name, username):
         client = self.get_client()
         collection_name = f"{pdf_name}_{username}"
@@ -77,8 +86,6 @@ class VectorDbUtils:
         description_collection.delete(ids=[collection_name])
         del client
 
-
-
     def add_to_description_collection(self, username, file_name, description):
         client = self.get_client()
         collection_name = f"description_{username}"
@@ -96,7 +103,6 @@ class VectorDbUtils:
         )
         del client
 
-
     def check_pdf_name(self, pdf_name, username):
         client = self.get_client()
         collection_name = f"{pdf_name}_{username}"
@@ -107,7 +113,6 @@ class VectorDbUtils:
         except Exception as e:
             return True
 
-
     def clear_all_collections(self):
         client = self.get_client()
         collections = client.list_collections()
@@ -115,14 +120,47 @@ class VectorDbUtils:
             client.delete_collection(collection.name)
         del client
 
+    def get_all_documents(self, collection_name):
+        client = self.get_client()
+        collection = client.get_collection(collection_name)
+        documents = collection.get(limit=100)
+        del client
+        return documents
+
 
 
 if __name__ == "__main__":
     vdb = VectorDbUtils()
 
+    dummy_files = [
+        "pdf1",
+        "pdf2",
+        "pdf3",
+    ]
+    dummy_description = [
+        "This pdf contains information about operating systems",
+        "This pdf contains information about databases",
+        "This pdf contains information about programming languages",
+    ]
+
+    client = vdb.get_client()
+    client.get_or_create_collection("test_berkaybgk")
+
+    collection = client.get_collection("test_berkaybgk")
+
+    collection.add(
+        ids = dummy_files,
+        documents=dummy_description
+    )
+
+    descriptions = collection.get(limit=100)
+    files = descriptions.get("ids")
+    descriptions = descriptions.get("documents")
+
+
     # print(vdb.client.get_settings())
 
-    print(vdb.get_client().list_collections())
+    # print(vdb.get_client().list_collections())
     #
     # try:
     #     vdb.client.get_collection("new_collection")
@@ -132,3 +170,9 @@ if __name__ == "__main__":
     # print(vdb.client.list_collections())
 
     # vdb.client.reset()
+
+    # docs = vdb.get_all_documents("description_berkaybgk")
+    # print(docs)
+
+
+

@@ -2,23 +2,28 @@ from crewai.tools import BaseTool
 from pydantic import BaseModel, Field
 from typing import Type
 from typing import Any
+from .vector_db_utils import VectorDbUtils
 
-class DeterminePDFInput(BaseModel):
+class GetPDFDescriptionsInput(BaseModel):
+    username: str = Field(..., description="The username of the user, must be exact character by character")
     question: str = Field(..., description="The question of the user")
-    available_pdfs: dict = Field(..., description="The available PDFs that contain the information related to the user's question")
 
-class DeterminePDF(BaseTool):
-    name: str = "determine_pdf"
-    description: str = "Determine the PDF that contains the information related to the user's question"
-    args_schema: Type[BaseModel] = DeterminePDFInput
+class GetAvailableDescriptions(BaseTool):
+    name: str = "get_pdfs_descriptions"
+    description: str = "Get the available PDFs and their descriptions"
+    args_schema: Type[BaseModel] = GetPDFDescriptionsInput
 
-    def _run(self, argument: DeterminePDFInput) -> Any:
-        pdfs = argument.available_pdfs
-        question = argument.question
+    def _run(self, argument: GetPDFDescriptionsInput) -> Any:
+        vdb = VectorDbUtils()
 
-        for pdf, content in pdfs.items():
-            for word in question.split():
-                if word.lower() in content.split("about")[1].lower():
-                    return pdf, content
+        description_collection = vdb.get_description_collection(argument.username)
 
-        return "No PDF found"
+        related_pdfs = description_collection.query(
+            query_texts=argument.question,
+            n_results=8
+        )
+
+        pdf_names = related_pdfs.get("ids", [])
+        pdf_descriptions = related_pdfs.get("documents", [])
+
+        return zip(pdf_names, pdf_descriptions)
