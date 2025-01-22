@@ -1,4 +1,3 @@
-earthquake/
 .env
 *.pem
 .venv
@@ -7,3 +6,4 @@ portfolio/db.sqlite3
 db.sqlite3
 portfolio/.chromadb_persist
 .chromadb_persist
+.ipynb_checkpoints
