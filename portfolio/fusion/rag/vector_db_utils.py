@@ -77,8 +77,6 @@ class VectorDbUtils:
         description_collection.delete(ids=[collection_name])
         del client
 
-
-
     def add_to_description_collection(self, username, file_name, description):
         client = self.get_client()
         collection_name = f"description_{username}"
@@ -114,6 +112,25 @@ class VectorDbUtils:
         for collection in collections:
             client.delete_collection(collection.name)
         del client
+
+    def get_chunks_of_user(self, username):
+        client = self.get_client()
+        collections = client.list_collections()
+        user_collections = []
+        for collection in collections:
+            if collection.name.endswith(f"_{username}") and not collection.name.startswith("description"):
+                user_collections.append(collection)
+        del client
+
+        chunks_from_collections = {}
+        for collection in user_collections:
+            results = collection.query(query_texts=[""], n_results=10)
+            ids = results.get("ids")
+            docs = results.get("documents")
+            chunks_from_collections[collection.name.split(f"_{username}")[0]] = (ids, docs)
+
+        return chunks_from_collections
+
 
 
 

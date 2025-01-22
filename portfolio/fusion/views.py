@@ -253,3 +253,17 @@ def get_messages(request):
             'messages': message_list
         })
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
+class UserPDFContentsView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+
+        vdb = VectorDbUtils()
+
+        # Get the pdfs of the user
+        user_pdfs = vdb.get_chunks_of_user(request.user.username)
+
+        return JsonResponse({
+            'success': True,
+            'data': user_pdfs
+        })
