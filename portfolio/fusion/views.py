@@ -32,6 +32,7 @@ class FusionView(LoginRequiredMixin, View):
             action = request.POST.get('action')
 
             if action == 'upload_pdf':
+                # TODO: more than 1.2MB causes crash, need to fix
                 try:
                     # Get the file from request.FILES
                     pdf_file = request.FILES.get('pdf-file')
