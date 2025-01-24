@@ -46,7 +46,25 @@
     <p class="text-center text-muted mb-5">Explore my work with data science, including analysis, visualization, and model development.</p>
 
     <div class="row">
+
         <!-- Project 1 -->
+        <div class="col-md-6 col-lg-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <img src="{% static 'website/images/earthquake.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
+                <div class="card-body">
+                    <h5 class="card-title">Earthquake Analysis and Prediction</h5>
+                    <p class="card-text">By using the earthquake data for Turkey after year 1990, I have tried to come up with a model that can predict
+                        if a significant earthquake will occur in the following 2 weeks. I first tried a few different ML methods, but I couldn't
+                        achieve a significant result. Then I tried to use the LSTM model and got pretty good results which I am happy to share.
+                    </p>
+                    <div class="project-btn-wrapper">
+                        <a href="{% url 'project_detail' project_name='earthquake' %}" class="btn btn-primary btn-custom">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 2 -->
         <div class="col-md-6 col-lg-6 mb-4">
             <div class="card shadow-sm h-100">
                 <img src="{% static 'website/images/mushrooms.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
@@ -62,19 +80,8 @@
             </div>
         </div>
 
-        <!-- Project 2 -->
-        <div class="col-md-6 col-lg-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <img src="{% static 'website/images/crime.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
-                <div class="card-body">
-                    <h5 class="card-title">Project Title 2</h5>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    <div class="project-btn-wrapper">
-                        <a href="{% url 'project_detail' project_name='crime' %}" class="btn btn-primary btn-custom">View Project</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+
     </div>
 </div>
 {% endblock %}

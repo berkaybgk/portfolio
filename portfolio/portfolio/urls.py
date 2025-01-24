@@ -48,7 +48,11 @@ def custom_403_view(request, exception):
 def custom_400_view(request, exception):
     return custom_error_view(request, 400, "Bad Request", "The server could not process your request.")
 
+def custom_502_view(request):
+    return custom_error_view(request, 502, "Bad Gateway", "The server received an invalid response from an upstream server.")
+
 handler404 = 'portfolio.urls.custom_404_view'
 handler500 = 'portfolio.urls.custom_500_view'
 handler403 = 'portfolio.urls.custom_403_view'
 handler400 = 'portfolio.urls.custom_400_view'
+handler502 = 'portfolio.urls.custom_502_view'

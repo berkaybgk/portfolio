@@ -54,6 +54,7 @@ class VectorDbUtils:
             collection = client.get_collection(collection_name)
         del client
         return collection
+
     def get_collection(self, pdf_name, username):
         client = self.get_client()
         collection_name = f"{pdf_name}_{username}"
@@ -127,40 +128,33 @@ class VectorDbUtils:
         del client
         return documents
 
+    def get_chunks_of_user(self, username):
+        client = self.get_client()
+        collections = client.list_collections()
+        user_collections = []
+        for collection in collections:
+            if collection.name.endswith(f"_{username}") and not collection.name.startswith("description"):
+                user_collections.append(collection)
+        del client
+
+        chunks_from_collections = {}
+        for collection in user_collections:
+            results = collection.query(query_texts=[""], n_results=10)
+            ids = results.get("ids")
+            docs = results.get("documents")
+            chunks_from_collections[collection.name.split(f"_{username}")[0]] = (ids, docs)
+
+        return chunks_from_collections
+
+
 
 
 if __name__ == "__main__":
     vdb = VectorDbUtils()
 
-    dummy_files = [
-        "pdf1",
-        "pdf2",
-        "pdf3",
-    ]
-    dummy_description = [
-        "This pdf contains information about operating systems",
-        "This pdf contains information about databases",
-        "This pdf contains information about programming languages",
-    ]
-
-    client = vdb.get_client()
-    client.get_or_create_collection("test_berkaybgk")
-
-    collection = client.get_collection("test_berkaybgk")
-
-    collection.add(
-        ids = dummy_files,
-        documents=dummy_description
-    )
-
-    descriptions = collection.get(limit=100)
-    files = descriptions.get("ids")
-    descriptions = descriptions.get("documents")
-
-
     # print(vdb.client.get_settings())
 
-    # print(vdb.get_client().list_collections())
+    print(vdb.get_client().list_collections())
     #
     # try:
     #     vdb.client.get_collection("new_collection")
@@ -170,9 +164,3 @@ if __name__ == "__main__":
     # print(vdb.client.list_collections())
 
     # vdb.client.reset()
-
-    # docs = vdb.get_all_documents("description_berkaybgk")
-    # print(docs)
-
-
-

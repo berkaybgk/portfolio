@@ -155,29 +155,36 @@
         </div>
     </div>
 
-    <!-- Tabs Navigation -->
+    <!-- Only show tabs navigation if at least one content exists -->
+    {% if eda or main or eval %}
     <ul class="nav nav-tabs" id="projectTabs" role="tablist">
+        {% if eda %}
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="eda-tab" data-bs-toggle="tab" data-bs-target="#eda" type="button" role="tab" aria-controls="eda" aria-selected="true">
+            <button class="nav-link {% if eda %}active{% endif %}" id="eda-tab" data-bs-toggle="tab" data-bs-target="#eda" type="button" role="tab" aria-controls="eda" aria-selected="{% if eda %}true{% else %}false{% endif %}">
                 Exploratory Data Analysis
             </button>
         </li>
+        {% endif %}
+        {% if main %}
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="model-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="model" aria-selected="false">
+            <button class="nav-link {% if not eda and main %}active{% endif %}" id="model-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="model" aria-selected="{% if not eda and main %}true{% else %}false{% endif %}">
                 Model Development
             </button>
         </li>
+        {% endif %}
+        {% if eval %}
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="eval-tab" data-bs-toggle="tab" data-bs-target="#eval" type="button" role="tab" aria-controls="eval" aria-selected="false">
+            <button class="nav-link {% if not eda and not main and eval %}active{% endif %}" id="eval-tab" data-bs-toggle="tab" data-bs-target="#eval" type="button" role="tab" aria-controls="eval" aria-selected="{% if not eda and not main and eval %}true{% else %}false{% endif %}">
                 Evaluation
             </button>
         </li>
+        {% endif %}
     </ul>
 
     <!-- Tabs Content -->
     <div class="tab-content" id="projectTabsContent">
-        <!-- EDA Tab -->
-        <div class="tab-pane fade show active" id="eda" role="tabpanel" aria-labelledby="eda-tab">
+        {% if eda %}
+        <div class="tab-pane fade {% if eda %}show active{% endif %}" id="eda" role="tabpanel" aria-labelledby="eda-tab">
             <div class="code-section">
                 <div class="code-section-header">
                     <h2 class="h4">Exploratory Data Analysis</h2>
@@ -188,9 +195,10 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
-        <!-- Model Development Tab -->
-        <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="model-tab">
+        {% if main %}
+        <div class="tab-pane fade {% if not eda and main %}show active{% endif %}" id="model" role="tabpanel" aria-labelledby="model-tab">
             <div class="code-section">
                 <div class="code-section-header">
                     <h2 class="h4">Model Development</h2>
@@ -200,9 +208,10 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
-        <!-- Evaluation Tab -->
-        <div class="tab-pane fade" id="eval" role="tabpanel" aria-labelledby="eval-tab">
+        {% if eval %}
+        <div class="tab-pane fade {% if not eda and not main and eval %}show active{% endif %}" id="eval" role="tabpanel" aria-labelledby="eval-tab">
             <div class="code-section">
                 <div class="code-section-header">
                     <h2 class="h4">Evaluation</h2>
@@ -213,7 +222,16 @@
                 </div>
             </div>
         </div>
+        {% endif %}
+
+        {% if not eda and not main and not eval %}
+        <div class="alert alert-info">
+            No content available for this project.
+        </div>
+        {% endif %}
     </div>
+    {% endif %}
+
 </div>
 {% endblock %}
 

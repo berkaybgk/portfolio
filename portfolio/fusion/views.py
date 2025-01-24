@@ -32,6 +32,7 @@ class FusionView(LoginRequiredMixin, View):
             action = request.POST.get('action')
 
             if action == 'upload_pdf':
+                # TODO: more than 1.2MB causes crash, need to fix
                 try:
                     # Get the file from request.FILES
                     pdf_file = request.FILES.get('pdf-file')
@@ -253,3 +254,17 @@ def get_messages(request):
             'messages': message_list
         })
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
+class UserPDFContentsView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+
+        vdb = VectorDbUtils()
+
+        # Get the pdfs of the user
+        user_pdfs = vdb.get_chunks_of_user(request.user.username)
+
+        return JsonResponse({
+            'success': True,
+            'data': user_pdfs
+        })
