@@ -5,6 +5,8 @@ import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+import joblib
+
 
 def find_largest_nearby_earthquake(data, row):
     """
@@ -128,9 +130,6 @@ def load_and_preprocess(csv_path):
     for col in ["nst", "gap", "magNst", "rms"]:
         df[col] = df[col].fillna(df[col].median())
 
-    # Large gap values are likely errors
-    df.drop(df[df["gap"] > 200].index, inplace=True)
-
     # We can drop the id, updated, type, place, magNst, status, net, locationSource,
     # and magSource columns as they are not informative
     df.drop(columns=["id", "updated", "type", "place", "magNst",
@@ -151,14 +150,14 @@ def load_and_preprocess(csv_path):
     # Create the target variable
     for i in range(len(df) - 1):
         current_time = df.loc[i, 'time']
-        # Filter events within the next two weeks
-        mask = (df['time'] > current_time) & (df['time'] <= current_time + pd.Timedelta(weeks=2))
-        # Check if any significant earthquake occurs in that period
-        if (df.loc[mask, 'mag'] >= 5.0).any():
-            df.at[i, 'target'] = 1
+        # Filter events within the next two weeks and within 0.5 degrees proximity
+        mask = (df['time'] > current_time) & (df['time'] <= current_time + pd.Timedelta(weeks=2)) & (
+                    np.abs(df['latitude'] - df.loc[i, 'latitude']) <= 1) & (
+                           np.abs(df['longitude'] - df.loc[i, 'longitude']) <= 1)
 
-    # Drop the last two weeks since we cannot define the target for them
-    df = df.iloc[:-14].reset_index(drop=True)
+        # If there is at least one significant earthquake, set the target to 1
+        if df[mask]['mag'].max() >= 5.0:
+            df.loc[i, 'target'] = 1
 
     return df
 
@@ -199,7 +198,6 @@ def split_with_sequence(df, sequence_length=365*3):
 
     sequences, targets = create_sequences(data, features, sequence_length)
 
-    # Determine split index
     split_index = int(len(sequences) * 0.8)
 
     # Split sequences and targets
@@ -212,6 +210,9 @@ def split_with_sequence(df, sequence_length=365*3):
     scaler = MinMaxScaler()
     X_train = scaler.fit_transform(X_train.reshape(-1, X_train.shape[-1])).reshape(X_train.shape)
     X_test = scaler.transform(X_test.reshape(-1, X_test.shape[-1])).reshape(X_test.shape)
+
+    # Save the scaler
+    joblib.dump(scaler, "scaler.pkl")
 
     # Convert to tensors
     X_train = torch.tensor(X_train, dtype=torch.float)
@@ -284,7 +285,7 @@ def main(df, sequence_length=365*3, num_epochs=15):
     model.to(device)
 
     # Optimizer
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0003)
 
     for epoch in range(num_epochs):
         model.train()
@@ -331,17 +332,50 @@ def main(df, sequence_length=365*3, num_epochs=15):
     f1 = f1_score(all_labels, predicted, zero_division=0)
     conf_matrix = confusion_matrix(all_labels, predicted)
 
+    print("Evaluation Metrics:")
     print(f'Accuracy: {accuracy:.4f}')
     print(f'Precision: {precision:.4f}')
     print(f'Recall: {recall:.4f}')
     print(f'F1 Score: {f1:.4f}')
+    print()
     print('Confusion Matrix:')
     print(conf_matrix)
+
+    # Extract the last two weeks of data based on the 'time' column
+    last_time = df['time'].max()
+    two_weeks_ago = last_time - pd.Timedelta(weeks=2)
+    last_two_weeks = df[df['time'] >= two_weeks_ago]
+
+    # If no rows found or no test predictions match, return empty or partial results
+    if len(last_two_weeks) == 0 or len(all_outputs) == 0:
+        print("Warning: No data found for the last two weeks or no test predictions available.")
+        return df.iloc[0:0]  # Return empty DataFrame with same columns
+
+    # Create a new DataFrame with predictions
+    result_df = last_two_weeks.copy()
+
+    # Select the last few predictions from test data
+    num_last_predictions = len(last_two_weeks)
+    start_idx = len(all_outputs) - num_last_predictions
+
+    result_df['actual_label'] = y_test[-num_last_predictions:].numpy()
+    result_df['predicted_prob'] = all_outputs[start_idx:]
+    result_df['predicted_label'] = [1 if x >= 0.5 else 0 for x in result_df['predicted_prob']]
+
+    return result_df
 
 
 if __name__ == "__main__":
 
     earthquake_df = load_and_preprocess("resources/90_25_turkey.csv")
 
-    main(earthquake_df, sequence_length=365*3, num_epochs=12)
+    prediction_results = main(earthquake_df, sequence_length=1000, num_epochs=12)
+
+    print()
+    for i in range(len(prediction_results)):
+        print(f"The earthquake at", prediction_results.iloc[i]['time']
+              , f"with coordinates {prediction_results.iloc[i]['latitude']}/{prediction_results.iloc[i]['longitude']}"
+              , "is predicted to have a significant earthquake within the next two weeks:"
+              , prediction_results.iloc[i]['predicted_label'])
+
 
