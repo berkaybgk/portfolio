@@ -38,6 +38,7 @@ class ContactView(APIView):
 
 class ProjectDetailView(APIView):
     def get(self, request, project_name, format=None):
+        project_endpoint = project_name
 
         project_folder_path = os.path.join(settings.BASE_DIR, '..')
         project_folder_path = os.path.join(project_folder_path, project_name)
@@ -63,6 +64,7 @@ class ProjectDetailView(APIView):
 
         # Prepare context to send to the template
         context = {
+            'project_endpoint': project_endpoint,
             'project_name': project_name,
             'project_description': project_description,
             'url': url,
