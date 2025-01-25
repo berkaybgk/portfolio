@@ -5,12 +5,11 @@ from ..models import Chat
 # load the environment variables
 load_dotenv()
 
-from .groq_client import GroqClient
+from .agentic_utils import QuestionAnsweringCrew
 from .vector_db_utils import VectorDbUtils
 from .pdf_utils import PDFUtils
 
 pdf_utils = PDFUtils()
-gq = GroqClient()
 
 def handle_pdf_upload(username, pdf_name, pdf_description, pdf_path=None):
     vector_db = VectorDbUtils()
@@ -51,9 +50,16 @@ def handle_message(user, current_message):
     except Exception as e:
         return "Sorry, I am having trouble since I am unable to retrieve the last messages. This is a temporary issue."
 
-    gq_response = gq.get_response(current_message)
+    # Agentic part
+    print("Creating the crew")
+    crew_client = QuestionAnsweringCrew()
+    crew = crew_client.crew()
 
-    return gq_response
+    print("Entering the crew")
+    crew_output = crew.kickoff(current_message)
+    print("Exiting the crew")
+
+    return crew_output.raw
 
 
 

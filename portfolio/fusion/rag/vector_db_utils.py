@@ -62,6 +62,12 @@ class VectorDbUtils:
         del client
         return collection
 
+    def get_collection_by_collection_name(self, collection_name):
+        client = self.get_client()
+        collection = client.get_collection(collection_name)
+        del client
+        return collection
+
     def get_chunks(self, collection_name, username, n_results, search_query):
         client = self.get_client()
         collection_name = f"{collection_name}_{username}"

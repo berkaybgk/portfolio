@@ -29,4 +29,26 @@ class GroqClient:
             model=self.model
         ).choices[0].message.content
 
+    def get_answering_results(self, user_message, answer_material):
+        return self.client.chat.completions.create(
+            messages=[
+            {
+                "role": "system",
+                "content": "You are an expert in answering questions. You will be provided with a question and additional material "
+                           "to help you answer the question. You will use the material to answer the question in a concise and clear manner. "
+                           "If the question is not related to the material, say that you don't know the answer. "
+                           "Don't introduce yourself, don't ask questions, and don't provide any information that doesn't take place in the material. "
+                           "Try to keep your answers concise and clear."
+            },
+            {
+                "role": "user",
+                "content": f"{user_message}",
+            },
+            {
+                "role": "system",
+                "content": f"These are the materials you have to answer the question: {answer_material}",
+            }
+        ],
+            model=self.model
+        ).choices[0].message.content
 
