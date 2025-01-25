@@ -1,5 +1,4 @@
 import chromadb
-from chromadb import Settings
 import uuid
 
 
@@ -44,6 +43,17 @@ class VectorDbUtils:
 
         del client
         return user_pdfs
+
+    def get_description_collection(self, username):
+        client = self.get_client()
+        collection_name = f"description_{username}"
+        try:
+            collection = client.get_collection(collection_name)
+        except Exception as e:
+            client.create_collection(collection_name)
+            collection = client.get_collection(collection_name)
+        del client
+        return collection
 
     def get_collection(self, pdf_name, username):
         client = self.get_client()
@@ -94,7 +104,6 @@ class VectorDbUtils:
         )
         del client
 
-
     def check_pdf_name(self, pdf_name, username):
         client = self.get_client()
         collection_name = f"{pdf_name}_{username}"
@@ -105,13 +114,19 @@ class VectorDbUtils:
         except Exception as e:
             return True
 
-
     def clear_all_collections(self):
         client = self.get_client()
         collections = client.list_collections()
         for collection in collections:
             client.delete_collection(collection.name)
         del client
+
+    def get_all_documents(self, collection_name):
+        client = self.get_client()
+        collection = client.get_collection(collection_name)
+        documents = collection.get(limit=100)
+        del client
+        return documents
 
     def get_chunks_of_user(self, username):
         client = self.get_client()

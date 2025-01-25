@@ -1,6 +1,7 @@
 import groq
 import os
 from dotenv import load_dotenv
+from crewai import Agent
 
 load_dotenv()
 
@@ -27,4 +28,5 @@ class GroqClient:
         ],
             model=self.model
         ).choices[0].message.content
+
 

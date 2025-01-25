@@ -1,35 +1,54 @@
 # Import packages
-from required_tools import DeterminePDFInput, DeterminePDF
+from required_tools import GetAvailableDescriptions, MakeInternetSearch
+from crewai import Agent, Crew, Process, Task, LLM
+from pydantic import BaseModel
+
+class Pdf_Name(BaseModel):
+    pdf_name: str
 
 class AgenticUtils:
-    def __init__(self, model_name):
-        self.model_name = model_name
+    def __init__(self):
+        self.llm = LLM(model="llama-3.1-8b-instant")
 
-        self.available_pdfs = {
-            "pdf1": "This pdf contains information about operating systems",
-            "pdf2": "This pdf contains information about databases",
-            "pdf3": "This pdf contains information about programming languages",
-        }
-
-        self.determine_pdf_tool = DeterminePDF()
-
-    def get_answering_pdf(self, question):
-        return self.determine_pdf_tool.run(DeterminePDFInput(question=question, available_pdfs=self.available_pdfs))
-
-
-
-if __name__ == "__main__":
-
-    agentic_utils = AgenticUtils("llama3-8b-8192")
-
-    question = "What is the best programming language to learn?"
-
-    pdf, content = agentic_utils.get_answering_pdf(question)
-
-    print(f"The PDF that contains the information related to the question '{question}' is: {pdf, content}")
+    def get_resource_extractor_agent(self):
+        agent = Agent(
+            role="Resource Extractor",
+            goal="Getting information from either the user's previously shared files or the internet which will help answer the user's question.",
+            backstory="You will have access to the files of the user and their descriptions which will help you "
+                      "determine if there are any PDFs that contain the information that can answer the user's question."
+                      "You can also use the internet to search for information if no PDFs are found to answer the question.",
+            llm=self.llm,
+            max_iter=3,
+            tools=[GetAvailableDescriptions, MakeInternetSearch]
+        )
+        return agent
 
 
 
+"""
+from typing import Optional, Tuple, Union
+
+def validate_json_output(result: str) -> Tuple[bool, Union[Dict[str, Any], str]]:
+    ""Validate and parse JSON output.""
+    try:
+        # Try to parse as JSON
+        data = json.loads(result)
+        return (True, data)
+    except json.JSONDecodeError as e:
+        return (False, {
+            "error": "Invalid JSON format",
+            "code": "JSON_ERROR",
+            "context": {"line": e.lineno, "column": e.colno}
+        })
+
+task = Task(
+    description="Generate a JSON report",
+    expected_output="A valid JSON object",
+    agent=analyst,
+    guardrail=validate_json_output,
+    max_retries=3  # Limit retry attempts
+)
+"""
 
 
 
