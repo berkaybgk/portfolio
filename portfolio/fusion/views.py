@@ -42,11 +42,11 @@ class FusionView(LoginRequiredMixin, View):
                             'error': 'No file was uploaded'
                         })
 
-                    # Add size validation (4MB), also to the nginx config
-                    if pdf_file.size > 2 * 1024 * 1024:
+                    # Add size validation (0.5), also to the nginx config
+                    if pdf_file.size > 0.5 * 1024 * 1024:
                         return JsonResponse({
                             'success': False,
-                            'error': 'File size must be under 2MB'
+                            'error': 'File size must be under 0.5MB'
                         })
 
                     # Get other form data

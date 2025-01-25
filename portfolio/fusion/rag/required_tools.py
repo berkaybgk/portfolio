@@ -10,7 +10,7 @@ class GetPDFDescriptionsInput(BaseModel):
 
 class GetAvailableDescriptions(BaseTool):
     name: str = "get_pdfs_descriptions"
-    description: str = "Get the available PDFs and their descriptions"
+    description: str = "Get the available PDF names and their descriptions about their content"
     args_schema: Type[BaseModel] = GetPDFDescriptionsInput
 
     def _run(self, argument: GetPDFDescriptionsInput) -> Any:
@@ -20,10 +20,22 @@ class GetAvailableDescriptions(BaseTool):
 
         related_pdfs = description_collection.query(
             query_texts=argument.question,
-            n_results=8
+            n_results=3
         )
 
         pdf_names = related_pdfs.get("ids", [])
         pdf_descriptions = related_pdfs.get("documents", [])
 
         return zip(pdf_names, pdf_descriptions)
+
+
+class InternetSearchInput(BaseModel):
+    question: str = Field(..., description="The key question to search the internet for, which will then help answer the user's question")
+
+class MakeInternetSearch(BaseTool):
+    name: str = "make_internet_search"
+    description: str = "Searches the internet to find an answer for a given key question"
+    args_schema: Type[BaseModel] = InternetSearchInput
+
+    def _run(self, argument: GetPDFDescriptionsInput) -> Any:
+        return f"Searching the internet for the question: {argument.question}"
