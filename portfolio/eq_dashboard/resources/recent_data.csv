@@ -1,0 +1,6 @@
+time,latitude,longitude,depth,mag,magType,nst,gap,dmin,rms,net,id,updated,place,type,horizontalError,depthError,magError,magNst,status,locationSource,magSource
+2025-01-21T20:38:43.979Z,39.4575,26.2668,10,5,mww,118,22,0.628,0.62,us,us6000plhn,2025-01-23T11:12:34.025Z,"6 km SW of Behram, Turkey",earthquake,5.26,1.844,0.053,34,reviewed,us,us
+2025-01-10T04:08:52.038Z,36.0139,35.9272,10,4.1,mb,30,97,1.005,1.05,us,us6000pj44,2025-01-10T17:27:52.787Z,"17 km SW of Uzunbağ, Turkey",earthquake,4.21,1.815,0.197,7,reviewed,us,us
+2025-01-08T01:30:04.511Z,39.8848,41.8817,10,4.5,mb,63,58,1.337,0.9,us,us6000pii1,2025-01-08T01:49:45.040Z,"20 km ESE of Pasinler, Turkey",earthquake,4.8,1.883,0.087,39,reviewed,us,us
+2025-01-06T08:46:56.069Z,36.5712,26.7736,148.141,4.4,mb,48,62,1.144,0.63,us,us6000pi4u,2025-01-07T13:26:40.040Z,"25 km SW of Kéfalos, Greece",earthquake,6.55,8.117,0.139,15,reviewed,us,us
+2025-01-06T01:30:34.279Z,36.0601,28.0709,10,4.2,mb,59,108,0.158,0.63,us,us6000pi3c,2025-01-23T23:21:01.892Z,"6 km SE of Lárdos, Greece",earthquake,4.24,1.839,0.084,40,reviewed,us,us

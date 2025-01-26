@@ -47,7 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'website',
-    'fusion'
+    'fusion',
+    'eq_dashboard',
+    'django_crontab'
 ]
 
 MIDDLEWARE = [
@@ -156,3 +158,7 @@ LOGOUT_REDIRECT_URL = '/'
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'portfolio.exception_handler.custom_exception_handler',
 }
+
+CRONJOBS = [
+    ('*/1 * * * *', 'eq_dashboard.cron.update_latest_eq_data')
+]

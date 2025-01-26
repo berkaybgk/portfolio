@@ -42,6 +42,9 @@ jobs:
             python3 manage.py migrate &&
             rm -rf /home/ubuntu/portfolio/portfolio/staticfiles &&
             python3 manage.py collectstatic --noinput &&
+            python manage.py crontab remove &&
+            python manage.py crontab add &&
+            python manage.py crontab show &&
             sudo systemctl restart gunicorn &&
             sudo systemctl restart nginx
           '
