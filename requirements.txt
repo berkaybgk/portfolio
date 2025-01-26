@@ -1,4 +1,6 @@
-chromadb==0.6.3
+# chromadb==0.6.3
+# Free tier suffers when more packages are installed :(
+
 Django==5.1.5
 djangorestframework==3.15.2
 python-dotenv==1.0.1

@@ -10,8 +10,8 @@ from django.http import JsonResponse
 import json
 
 from .models import Chat
-from .rag.main import handle_pdf_upload
-from .rag.vector_db_utils import VectorDbUtils
+# from .rag.main import handle_pdf_upload
+# from .rag.vector_db_utils import VectorDbUtils
 from .rag.main import handle_message
 from django.conf import settings
 
@@ -20,12 +20,24 @@ class FusionView(LoginRequiredMixin, View):
     template_name = 'fusion/fusion_home.html'
     login_url = '/login/'
 
+    # def get_real(self, request):
+    #     vdb = VectorDbUtils()
+    #     uploaded_pdfs_by_user = vdb.get_users_pdfs(request.user.username)
+    #     return render(request, self.template_name, {
+    #         'uploaded_pdfs': uploaded_pdfs_by_user
+    #     })
+
     def get(self, request):
-        vdb = VectorDbUtils()
-        uploaded_pdfs_by_user = vdb.get_users_pdfs(request.user.username)
+        dummy_pdfs = [
+            "dummy_pdf_1",
+            "dummy_pdf_2",
+            "dummy_pdf_3",
+        ]
+
         return render(request, self.template_name, {
-            'uploaded_pdfs': uploaded_pdfs_by_user
+            'uploaded_pdfs': dummy_pdfs
         })
+
 
     def post(self, request):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -83,21 +95,21 @@ class FusionView(LoginRequiredMixin, View):
                         destination.write(pdf_file.read())
 
                     try:
-                        # Call PDF handling function
-                        upload_success = handle_pdf_upload(
-                            username=username,
-                            pdf_name=pdf_name,
-                            pdf_description=pdf_description,
-                            pdf_path=pdf_path
-                        )
-
-                        if not upload_success:
-                            if os.path.exists(pdf_path):
-                                os.unlink(pdf_path)
-                            return JsonResponse({
-                                'success': False,
-                                'error': 'A PDF with this name already exists'
-                            })
+                        # # Call PDF handling function
+                        # upload_success = handle_pdf_upload(
+                        #     username=username,
+                        #     pdf_name=pdf_name,
+                        #     pdf_description=pdf_description,
+                        #     pdf_path=pdf_path
+                        # )
+                        #
+                        # if not upload_success:
+                        #     if os.path.exists(pdf_path):
+                        #         os.unlink(pdf_path)
+                        #     return JsonResponse({
+                        #         'success': False,
+                        #         'error': 'A PDF with this name already exists'
+                        #     })
 
                         return JsonResponse({
                             'success': True,
@@ -170,11 +182,6 @@ class FusionView(LoginRequiredMixin, View):
                 'error': 'Invalid action specified'
             })
 
-        vdb = VectorDbUtils()
-        uploaded_pdfs_by_user = vdb.get_users_pdfs(request.user.username)
-        return render(request, self.template_name, {
-            'uploaded_pdfs': uploaded_pdfs_by_user
-        })
 
 class DeletePDFView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
@@ -191,8 +198,8 @@ class DeletePDFView(LoginRequiredMixin, View):
 
             try:
 
-                vector_db = VectorDbUtils()
-                vector_db.delete_collection(pdf_name, request.user.username)
+                # vector_db = VectorDbUtils()
+                # vector_db.delete_collection(pdf_name, request.user.username)
 
                 return JsonResponse({
                     'success': True,
@@ -257,12 +264,41 @@ def get_messages(request):
 
 
 class UserPDFContentsView(LoginRequiredMixin, View):
+    # def get_real(self, request, *args, **kwargs):
+    #
+    #     vdb = VectorDbUtils()
+    #
+    #     # Get the pdfs of the user
+    #     user_pdfs = vdb.get_chunks_of_user(request.user.username)
+    #
+    #     return JsonResponse({
+    #         'success': True,
+    #         'data': user_pdfs
+    #     })
+
     def get(self, request, *args, **kwargs):
-
-        vdb = VectorDbUtils()
-
-        # Get the pdfs of the user
-        user_pdfs = vdb.get_chunks_of_user(request.user.username)
+        user_pdfs = {
+            "pdf1": [
+                {
+                    "id": "1",
+                    "content": "This is a test content for pdf1"
+                },
+                {
+                    "id": "2",
+                    "content": "This is another test content for pdf1"
+                }
+            ],
+            "pdf2": [
+                {
+                    "id": "1",
+                    "content": "This is a test content for pdf2"
+                },
+                {
+                    "id": "2",
+                    "content": "This is another test content for pdf2"
+                }
+            ]
+        }
 
         return JsonResponse({
             'success': True,
