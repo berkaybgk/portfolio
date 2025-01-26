@@ -160,5 +160,5 @@ REST_FRAMEWORK = {
 }
 
 CRONJOBS = [
-    ('*/1 * * * *', 'eq_dashboard.cron.update_latest_eq_data')
+    ('0 3 * * *', 'eq_dashboard.cron.update_latest_eq_data')
 ]
