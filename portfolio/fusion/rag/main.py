@@ -5,7 +5,7 @@ from ..models import Chat
 # load the environment variables
 load_dotenv()
 
-from .agentic_utils import QuestionAnsweringCrew
+# from .agentic_utils import QuestionAnsweringCrew
 from .vector_db_utils import VectorDbUtils
 from .pdf_utils import PDFUtils
 
@@ -50,17 +50,18 @@ def handle_message(user, current_message):
     except Exception as e:
         return "Sorry, I am having trouble since I am unable to retrieve the last messages. This is a temporary issue."
 
-    # Agentic part
-    print("Creating the crew")
-    crew_client = QuestionAnsweringCrew()
-    crew = crew_client.crew()
+    # # Agentic part
+    # print("Creating the crew")
+    # crew_client = QuestionAnsweringCrew()
+    # crew = crew_client.crew()
+    #
+    # print("Entering the crew")
+    # crew_output = crew.kickoff(current_message)
+    # print("Exiting the crew")
 
-    print("Entering the crew")
-    crew_output = crew.kickoff(current_message)
-    print("Exiting the crew")
+    return "In progress... Stay tuned!"
 
 
-    return crew_output.raw
 
 
 
