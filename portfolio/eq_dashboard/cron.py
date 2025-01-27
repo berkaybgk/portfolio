@@ -41,7 +41,7 @@ def get_eq_data(start_date, end_date) -> pd.DataFrame:
 def update_latest_eq_data():
     try:
         # Get the yesterday's date
-        yesterday = (datetime.datetime.today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d')
+        yesterday = (datetime.datetime.today() - datetime.timedelta(days=3)).strftime('%Y-%m-%d')
 
         # Get the date tomorrow
         tomorrow = (datetime.datetime.today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')

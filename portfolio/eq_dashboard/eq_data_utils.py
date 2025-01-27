@@ -12,16 +12,16 @@ class EqUtils:
     def get_data(self, lookback_days: int, min_magnitude: float = 4.0) -> pd.DataFrame:
         data = pd.read_csv(self.data_path)
 
-        data.drop(columns=[
-            'depthError', 'dmin', 'gap', 'horizontalError', 'id', 'magError', 'magNst',
-            'magSource', 'magType', 'net', 'nst', 'rms', 'status', 'type', 'updated', 'locationSource',
-        ], inplace=True)
-
         # Convert the time column to datetime
         data['time'] = pd.to_datetime(data['time'])
 
         # Get the earthquake data for the last lookback_days, 'time' column is in the format 'year-month-day'
         data = data[data['time'] >= pd.Timestamp.now().normalize() - pd.DateOffset(days=lookback_days)]
+
+        data.drop(columns=[
+            'depthError', 'dmin', 'gap', 'horizontalError', 'id', 'magError', 'magNst',
+            'magSource', 'magType', 'net', 'nst', 'rms', 'status', 'type', 'updated', 'locationSource',
+        ], inplace=True)
 
         # Filter the data based on the minimum magnitude
         data = data[data['mag'] >= min_magnitude]
