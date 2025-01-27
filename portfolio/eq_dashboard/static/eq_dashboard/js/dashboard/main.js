@@ -23,7 +23,9 @@ class DashboardManager {
             const lookbackDays = this.timeRange.value;
             console.log(`Fetching data for ${lookbackDays} days`);
 
-            const response = await fetch(`/eq-dashboard/api/data?lookback_days=${lookbackDays}`);
+            const response = await fetch(`/eq-dashboard/api/data/?lookback_days=${lookbackDays}`);
+
+            console.log('Response:', response.body);
 
             // Log the response details
             console.log('Response status:', response.status);
