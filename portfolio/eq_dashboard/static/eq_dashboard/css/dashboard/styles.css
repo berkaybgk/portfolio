@@ -1,7 +1,10 @@
+body.earthquake-dashboard {
+    background-color: rgba(255, 255, 255, 0.38); /* Replace with your desired background color */
+}
+
 .dashboard-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 2rem;
 }
 
 .dashboard-title-container {
@@ -35,7 +38,8 @@
     background: white;
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 3px solid #333; /* Outline with color #128b96 */
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 .mb-4 {
@@ -65,7 +69,7 @@
 /* Map Section */
 .map-container {
     position: relative;
-    height: 442px; /* Reduced from 600px */
+    height: 459px; /* Reduced from 600px */
     width: 100%;
 }
 
@@ -81,10 +85,12 @@
 .stat-card {
     flex: 1;
     background: white;
-    padding: 1.5rem;
+    border: 3px solid #c2db70; /* Outline with color #dc3545 */
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.1);
     transition: transform 0.2s;
+
 }
 
 .stat-card:hover {
@@ -225,13 +231,13 @@
 
 .custom-select:hover {
     background-color: #f1f1f1;
-    border-color: #007bff;
+    border-color: #c2db70;
 }
 
 .custom-select:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    border-color: #c2db70;
+    box-shadow: 0 0 5px #c2db70;
 }
 
 .custom-select-wrapper::after {

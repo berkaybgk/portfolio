@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block body_class %}earthquake-dashboard{% endblock %}
+
 {% block content %}
 <div class="dashboard-container">
 
@@ -29,7 +31,7 @@
     </div>
 
     <!-- Frequency Chart Row -->
-    <div class="content-card mb-4">
+    <div class="content-card mb-4" style="border: 3px solid #128b96">
         <h3 class="section-title">Earthquake Frequency</h3>
         <div class="frequency-chart-container">
             <canvas id="earthquakeChart"></canvas>
@@ -68,6 +70,7 @@
         </div>
 
     </div>
+
 </div>
 {% endblock %}
 
