@@ -24,16 +24,30 @@ class DashboardManager {
             const response = await fetch(`/eq-dashboard/api/data?lookback_days=${lookbackDays}`);
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Server error');
+                } else {
+                    const text = await response.text();
+                    console.error('Server returned non-JSON response:', text);
+                    throw new Error('Unexpected server response');
+                }
             }
 
             const data = await response.json();
+
+            if (!data.earthquakes || !Array.isArray(data.earthquakes)) {
+                throw new Error('Invalid data format received');
+            }
+
             this.updateStatistics(data.earthquakes);
             this.chart.updateChart(data.earthquakes, lookbackDays);
             this.map.updateMap(data.earthquakes);
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
-            // You might want to show an error message to the user
+            // Show error to user
+            alert(`Error updating dashboard: ${error.message}`);
         }
     }
 

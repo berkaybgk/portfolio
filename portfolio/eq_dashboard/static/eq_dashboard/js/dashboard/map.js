@@ -3,12 +3,11 @@ class EarthquakeMap {
     constructor(containerId) {
         this.map = L.map(containerId).setView([39.0, 35.0], 6); // Center on Turkey
 
-        // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(this.map);
 
-        this.markers = L.layerGroup().addTo(this.map);
+        this.markers = L.featureGroup().addTo(this.map);
     }
 
     parseDate(dateStr) {
@@ -24,11 +23,9 @@ class EarthquakeMap {
         try {
             this.markers.clearLayers();
 
-            if (earthquakes.length === 0) {
+            if (!earthquakes || earthquakes.length === 0) {
                 return;
             }
-
-            const latLngs = [];
 
             earthquakes.forEach(eq => {
                 const date = this.parseDate(eq.date);
@@ -54,20 +51,22 @@ class EarthquakeMap {
                 `);
 
                 this.markers.addLayer(marker);
-                latLngs.push([eq.latitude, eq.longitude]);
             });
 
-            // Use latLngBounds instead of trying to get bounds from the layer group
-            if (latLngs.length > 0) {
-                const bounds = L.latLngBounds(latLngs);
-                this.map.fitBounds(bounds);
+            // Only try to fit bounds if we have markers
+            if (this.markers.getLayers().length > 0) {
+                this.map.fitBounds(this.markers.getBounds());
             }
+
+        } catch (error) {
+            console.error('Error updating map:', error);
         } finally {
             if (this.loadingIndicator) {
                 this.loadingIndicator.style.display = 'none';
             }
         }
     }
+
 
     getColorByMagnitude(magnitude) {
         if (magnitude >= 6.0) return '#ff0000';
