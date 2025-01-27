@@ -25,11 +25,10 @@
                 </select>
             </div>
         </div>
-
     </div>
 
     <!-- Frequency Chart Row -->
-    <div class="content-card mb-4" style="border: 3px solid #128b96">
+    <div class="content-card mb-4">
         <h3 class="section-title">Earthquake Frequency</h3>
         <div class="frequency-chart-container">
             <canvas id="earthquakeChart"></canvas>
@@ -50,23 +49,34 @@
 
         <div class="stats-section">
             <div class="stat-card">
-                <h3 class="stat-title">Total Earthquakes</h3>
+                <div class="stat-header">
+                    <i class="fas fa-map-marker-alt stat-icon"></i>
+                    <h3 class="stat-title">Total Earthquakes</h3>
+                </div>
                 <div id="totalEarthquakes" class="stat-value">-</div>
             </div>
             <div class="stat-card">
-                <h3 class="stat-title">Strongest Magnitude</h3>
+                <div class="stat-header">
+                    <i class="fas fa-chart-line stat-icon"></i>
+                    <h3 class="stat-title">Strongest Magnitude</h3>
+                </div>
                 <div id="strongestMagnitude" class="stat-value">-</div>
             </div>
             <div class="stat-card">
-                <h3 class="stat-title">Average Magnitude</h3>
+                <div class="stat-header">
+                    <i class="fas fa-ruler stat-icon"></i>
+                    <h3 class="stat-title">Average Magnitude</h3>
+                </div>
                 <div id="averageMagnitude" class="stat-value">-</div>
             </div>
             <div class="stat-card">
-                <h3 class="stat-title">Earthquakes per Day</h3>
+                <div class="stat-header">
+                    <i class="fas fa-calendar-day stat-icon"></i>
+                    <h3 class="stat-title">Earthquakes per Day</h3>
+                </div>
                 <div id="earthquakesPerDay" class="stat-value">-</div>
             </div>
         </div>
-
     </div>
 
 </div>
