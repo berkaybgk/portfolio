@@ -29,7 +29,7 @@ class DashboardManager {
             console.log('Response status:', response.status);
             console.log('Response type:', response.headers.get('content-type'));
 
-            if (!response.ok) {
+            if (!response.ok) { //
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                     const errorData = await response.json();
