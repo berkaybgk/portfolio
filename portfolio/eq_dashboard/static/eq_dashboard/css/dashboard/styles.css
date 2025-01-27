@@ -1,0 +1,252 @@
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.dashboard-title-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between title and icon */
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.select-control {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 1rem;
+}
+
+.content-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+/* Frequency Chart Styles */
+.frequency-chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+/* Map and Stats Container */
+.map-stats-container {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Map Section */
+.map-container {
+    position: relative;
+    height: 442px; /* Reduced from 600px */
+    width: 100%;
+}
+
+/* Update stats section to be evenly spaced */
+.stats-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 400px; /* Match map height */
+    gap: 0.75rem; /* Reduced gap for 4 cards */
+}
+
+.stat-card {
+    flex: 1;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-title {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .map-stats-container {
+        grid-template-columns: 1fr;
+    }
+
+    .map-container {
+        height: 400px;
+    }
+
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .stats-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+.info-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 4px; /* Add some space between the title and the tooltip icon */
+    margin-bottom: 12px;
+}
+
+.info-icon {
+    font-size: 20px;
+    color: #333; /* Adjust the color as needed */
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 300px; /* Adjust width as needed */
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 8px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%; /* Position above the icon */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 12px; /* Adjust text size */
+    line-height: 1.5; /* Improve readability */
+}
+
+.tooltip-text::after {
+    content: '';
+    position: absolute;
+    top: 100%; /* Arrow pointing downwards */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent; /* Arrow color */
+}
+
+.info-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.time-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px; /* Space between label and dropdown */
+    margin-top: 1rem;
+}
+
+.time-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.custom-select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 200px; /* Adjust width as needed */
+}
+
+.custom-select {
+    appearance: none; /* Remove default browser styles */
+    width: 100%;
+    padding: 10px 12px; /* Padding for text */
+    padding-right: 36px; /* Extra space for the arrow */
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.custom-select:hover {
+    background-color: #f1f1f1;
+    border-color: #007bff;
+}
+
+.custom-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.custom-select-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+    pointer-events: none; /* Allow clicks through this arrow */
+}
+
+.custom-select:hover + .custom-select-wrapper::after {
+    border-color: #007bff transparent transparent transparent;
+}
+

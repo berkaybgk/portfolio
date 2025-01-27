@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <div class="dashboard-header">
+        <div class="dashboard-title-container">
+            <h1 class="dashboard-title">Turkey Earthquake Dashboard</h1>
+            <span class="info-tooltip">
+                <i class="fas fa-info-circle info-icon"></i>
+                <span class="tooltip-text">
+                    The data includes only the earthquakes with magnitude greater than 4.0.
+                    The source of the data is USGS's earthquake catalogue and it is updated daily.
+                </span>
+            </span>
+        </div>
+        <div class="time-selector">
+            <label for="timeRange" class="time-label">Select Time Range</label>
+            <div class="custom-select-wrapper">
+                <select id="timeRange" class="custom-select">
+                    <option value="30">Last 30 Days</option>
+                    <option value="365">Last Year</option>
+                    <option value="3650">Last 10 Years</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Frequency Chart Row -->
+    <div class="content-card mb-4">
+        <h3 class="section-title">Earthquake Frequency</h3>
+        <div class="frequency-chart-container">
+            <canvas id="earthquakeChart"></canvas>
+            <div id="chartLoading" class="loading-indicator">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Map and Stats Row -->
+    <div class="map-stats-container">
+        <div class="map-section">
+            <div class="content-card">
+                <h3 class="section-title">Location Map</h3>
+                <div id="map" class="map-container">
+                    <div id="mapLoading" class="loading-indicator">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stat-card">
+                <h3 class="stat-title">Total Earthquakes</h3>
+                <div id="totalEarthquakes" class="stat-value">-</div>
+            </div>
+            <div class="stat-card">
+                <h3 class="stat-title">Strongest Magnitude</h3>
+                <div id="strongestMagnitude" class="stat-value">-</div>
+            </div>
+            <div class="stat-card">
+                <h3 class="stat-title">Average Magnitude</h3>
+                <div id="averageMagnitude" class="stat-value">-</div>
+            </div>
+            <div class="stat-card">
+                <h3 class="stat-title">Earthquakes per Day</h3>
+                <div id="earthquakesPerDay" class="stat-value">-</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<link rel="stylesheet" href="{% static 'eq_dashboard/css/dashboard/styles.css' %}" />
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'eq_dashboard/js/dashboard/map.js' %}"></script>
+<script src="{% static 'eq_dashboard/js/dashboard/chart.js' %}"></script>
+<script src="{% static 'eq_dashboard/js/dashboard/main.js' %}"></script>
+{% endblock %}
