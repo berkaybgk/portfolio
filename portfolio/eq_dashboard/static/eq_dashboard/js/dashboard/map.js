@@ -24,20 +24,16 @@ class EarthquakeMap {
             this.markers.clearLayers();
 
             if (!earthquakes || earthquakes.length === 0) {
+                console.log('No earthquakes to display');
                 return;
             }
 
+            const bounds = [];
             earthquakes.forEach(eq => {
-                const date = this.parseDate(eq.date);
-                const formattedDate = date.toLocaleString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
+                const latLng = [eq.latitude, eq.longitude];
+                bounds.push(latLng);
 
-                const marker = L.circle([eq.latitude, eq.longitude], {
+                const marker = L.circle(latLng, {
                     color: this.getColorByMagnitude(eq.magnitude),
                     fillColor: this.getColorByMagnitude(eq.magnitude),
                     fillOpacity: 0.5,
@@ -46,16 +42,15 @@ class EarthquakeMap {
 
                 marker.bindPopup(`
                     <strong>Magnitude:</strong> ${eq.magnitude}<br>
-                    <strong>Date:</strong> ${formattedDate}<br>
+                    <strong>Date:</strong> ${this.parseDate(eq.date).toLocaleString('en-GB')}<br>
                     <strong>Depth:</strong> ${eq.depth} km
                 `);
 
                 this.markers.addLayer(marker);
             });
 
-            // Only try to fit bounds if we have markers
-            if (this.markers.getLayers().length > 0) {
-                this.map.fitBounds(this.markers.getBounds());
+            if (bounds.length > 0) {
+                this.map.fitBounds(L.latLngBounds(bounds));
             }
 
         } catch (error) {
