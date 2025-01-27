@@ -5,7 +5,6 @@ from .eq_data_utils import EqUtils
 
 eq_utils = EqUtils()
 
-
 class EarthquakeDashboardView(View):
     template_name = 'eq_dashboard/dashboard.html'
 
