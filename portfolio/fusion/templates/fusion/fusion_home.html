@@ -188,6 +188,16 @@
         40% { transform: translateY(-8px); }
     }
 
+    .disclaimer {
+        background: #668284;
+        font-size: 1.1rem;
+        color: black;
+        padding: 1.5rem 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
 </style>
 
 <div class="container-fluid">
@@ -197,16 +207,25 @@
         <p class="lead">Upload your PDF and start chatting!</p>
     </div>
 
+        <!-- Disclaimer -->
+    <div class="disclaimer">
+        <h2 class="h2" style="color: white;">Disclaimer</h2>
+        <p style="color: white">The structure of the app is present on the project repository. However, since the storage and network capacity of the free-tier EC2 instance I am using is limited, I can't host the app on this website.</p>
+        <div class="text-center">
+            <a href="https://github.com/berkaybgk/portfolio/tree/main/portfolio/fusion" class="btn btn-light">Repository of the project in GitHub</a>
+        </div>
+    </div>
+
     <div class="row main-container">
         <!-- File Upload Section - Left Side -->
         <div class="col-md-3">
             <div class="file-upload-section">
                 <h4>
                     Upload PDF
-                    <span class="info-tooltip">
-                        <i class="fas fa-info-circle info-icon"></i>
-                        <span class="tooltip-text">Large PDF files are currently not supported since the whole thing runs on a free tier ec2 instance.</span>
-                    </span>
+<!--                    <span class="info-tooltip">-->
+<!--                        <i class="fas fa-info-circle info-icon"></i>-->
+<!--                        <span class="tooltip-text">Large PDF files are currently not supported since the whole thing runs on a free tier ec2 instance.</span>-->
+<!--                    </span>-->
                 </h4>
                 <form method="post" enctype="multipart/form-data" id="pdf-upload-form">
                     {% csrf_token %}
