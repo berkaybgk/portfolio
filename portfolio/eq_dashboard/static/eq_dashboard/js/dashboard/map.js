@@ -24,6 +24,12 @@ class EarthquakeMap {
         try {
             this.markers.clearLayers();
 
+            if (earthquakes.length === 0) {
+                return;
+            }
+
+            const latLngs = [];
+
             earthquakes.forEach(eq => {
                 const date = this.parseDate(eq.date);
                 const formattedDate = date.toLocaleString('en-GB', {
@@ -48,10 +54,12 @@ class EarthquakeMap {
                 `);
 
                 this.markers.addLayer(marker);
+                latLngs.push([eq.latitude, eq.longitude]);
             });
 
-            const bounds = this.markers.getBounds();
-            if (bounds.isValid()) {
+            // Use latLngBounds instead of trying to get bounds from the layer group
+            if (latLngs.length > 0) {
+                const bounds = L.latLngBounds(latLngs);
                 this.map.fitBounds(bounds);
             }
         } finally {

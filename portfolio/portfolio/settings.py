@@ -117,11 +117,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-STATICFILES_DIRS = [BASE_DIR]
+# STATICFILES_DIRS = [BASE_DIR]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 
 # Internationalization
