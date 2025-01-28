@@ -7,11 +7,15 @@
     :root {
         --primary: #128b96;
         --secondary: #c2db70;
-        --dark: #343a40;
+        --dark: #e0e0e0;  /* Changed to light color for dark theme */
+        --card-bg: #2b2a2a;  /* New variable for card background */
+        --text-primary: #ffffff;
+        --text-secondary: #090909;
+        --text-custom-light: #f0f0f0;
     }
 
     .profile-section {
-        background: linear-gradient(135deg, rgba(18,139,150,0.2) 0%, rgba(212, 255, 0, 0.2) 100%);
+        background: linear-gradient(135deg, rgba(58, 253, 224, 0.84) 20%, rgba(178, 239, 87, 0.83) 100%);
         border-radius: 15px;
         padding: 2.5rem 2rem;
         margin-bottom: 2.5rem;
@@ -22,7 +26,7 @@
         font-size: 2.8rem;
         font-weight: 600;
         margin-bottom: 2rem;
-        color: #374647;
+        color: var(--text-secondary);  /* Changed to light text */
     }
 
     .lead {
@@ -30,7 +34,7 @@
         font-weight: 300;
         max-width: 800px;
         margin: 0 auto 0.75rem;
-        color: #1e1e1e;
+        color: var(--text-secondary);  /* Changed to secondary text color */
     }
 
     .contact-grid {
@@ -41,29 +45,30 @@
     }
 
     .contact-card {
-        background: white;
+        background: var(--card-bg);  /* Dark card background */
         border-radius: 12px;
         padding: 1.75rem;
-        box-shadow: 0 3px 5px rgba(0,0,0,0.08);
+        box-shadow: 0 3px 5px rgba(0,0,0,0.2);  /* Increased shadow opacity */
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         text-align: center;
+        border: 1px solid #333333;  /* Subtle border for definition */
     }
 
     .contact-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);  /* Darker shadow on hover */
     }
 
     .contact-icon {
         font-size: 2rem;
         margin-bottom: 0.75rem;
-        color: var(--primary);
+        color: var(--text-custom-light);  /* Keeping the teal accent */
     }
 
     .contact-title {
         font-size: 1.4rem;
         margin-bottom: 0.75rem;
-        color: var(--dark);
+        color: var(--dark);  /* Now using light color from --dark variable */
     }
 
     .contact-link {
@@ -84,12 +89,12 @@
 
     .contact-link:hover {
         background-color: var(--secondary);
-        color: var(--dark);
+        color: var(--text-secondary);
         transform: scale(1.02);
     }
 
     .email-link {
-        color: var(--primary);
+        color: var(--text-secondary);
         text-decoration: none;
         font-size: 1.2rem;
         transition: all 0.3s ease;
@@ -97,6 +102,11 @@
 
     .email-link:hover {
         color: var(--secondary);
+    }
+
+    .contact-card p {
+        color: var(--text-custom-light);  /* Secondary text color for better readability */
+        font-size: 1.1rem;
     }
 
     @media (max-width: 768px) {
@@ -134,8 +144,7 @@
             <h2 class="contact-title">GitHub</h2>
             <p>Check out my projects and contributions on GitHub</p>
             <a href="https://github.com/berkaybgk" target="_blank" class="contact-link">
-                <i class="fab fa-github"></i>
-                View Profile
+                Go to GitHub Profile
             </a>
         </div>
 
@@ -144,8 +153,7 @@
             <h2 class="contact-title">LinkedIn</h2>
             <p>Connect with me on LinkedIn</p>
             <a href="https://www.linkedin.com/in/berkay-bugra-gok-755414219/" target="_blank" class="contact-link">
-                <i class="fab fa-linkedin"></i>
-                Connect
+                Go to LinkedIn Profile
             </a>
         </div>
     </div>

@@ -3,8 +3,10 @@ class EarthquakeMap {
     constructor(containerId) {
         this.map = L.map(containerId).setView([39.0, 35.0], 6); // Center on Turkey
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
         }).addTo(this.map);
 
         this.markers = L.featureGroup().addTo(this.map);
