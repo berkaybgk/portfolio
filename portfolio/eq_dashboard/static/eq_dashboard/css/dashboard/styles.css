@@ -1,3 +1,11 @@
+.body {
+    background-color: #2b2a2a;
+    padding-left: -10rem;
+    padding-right: -10rem;
+    border-radius: 12px;
+    gap: 12px;
+}
+
 .dashboard-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -29,7 +37,7 @@
 }
 
 .content-card {
-    background: white;
+    background: #efeeee;
     padding: 1.5rem;
     border-radius: 12px;
     border: 2px solid #e0e0e0;
@@ -73,6 +81,7 @@
     height: 472px;
     width: 100%;
     border-radius: 12px;
+    border: 2px solid #403d3d;
     overflow: hidden;
 }
 
@@ -86,7 +95,7 @@
 
 .stat-card {
     flex: 1;
-    background: white;
+    background: #efeeee;
     border: 2px solid #e0e0e0;
     border-radius: 12px;
     padding: 1.5rem;
@@ -138,7 +147,7 @@
 .stat-value {
     font-size: 2rem;
     font-weight: 700;
-    color: #128b96;
+    color: black;
 }
 
 /* Colorful Gradients for Each Card */
@@ -217,7 +226,7 @@
 .time-label {
     font-size: 0.9rem;
     font-weight: 500;
-    color: #555;
+    color: black;
 }
 
 .custom-select-wrapper {

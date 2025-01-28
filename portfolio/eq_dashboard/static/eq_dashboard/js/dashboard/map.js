@@ -14,7 +14,9 @@ class EarthquakeMap {
 
     parseDate(dateStr) {
         const [day, month, year] = dateStr.split('-');
-        return new Date(`${year}-${month}-${day}`);
+        const date = new Date(`${year}-${month}-${day}`);
+        date.setHours(0, 0, 0, 0);  // Set hours, minutes, seconds, and milliseconds to 0
+        return date;
     }
 
     updateMap(earthquakes) {

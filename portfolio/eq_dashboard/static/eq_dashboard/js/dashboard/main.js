@@ -1,4 +1,3 @@
-
 class DashboardManager {
     constructor() {
         this.timeRange = document.getElementById('timeRange');
@@ -6,10 +5,14 @@ class DashboardManager {
         this.strongestMagnitude = document.getElementById('strongestMagnitude');
         this.earthquakesPerDay = document.getElementById('earthquakesPerDay');
         this.averageMagnitude = document.getElementById('averageMagnitude');
+        this.pieChartLoading = document.getElementById('pieChartLoading');
 
         // Initialize chart and map
         this.chart = new EarthquakeChart('earthquakeChart');
         this.map = new EarthquakeMap('map');
+
+        // Initialize pie chart
+        this.initializePieChart();
 
         // Bind events
         this.timeRange.addEventListener('change', () => this.updateDashboard());
@@ -18,20 +21,69 @@ class DashboardManager {
         this.updateDashboard();
     }
 
+    initializePieChart() {
+        const pieCtx = document.getElementById('magnitudePieChart').getContext('2d');
+        this.magnitudePieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['4.0-4.9', '5.0-5.9', '6.0+'],
+                datasets: [{
+                    data: [0, 0, 0],
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(255, 159, 64, 0.7)',
+                        'rgba(255, 0, 0, 0.7)'
+                    ],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const dataset = context.dataset;
+                                const total = dataset.data.reduce((acc, data) => acc + data, 0);
+                                const value = dataset.data[context.dataIndex];
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${context.label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    },
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            const dataset = ctx.dataset;
+                            const total = dataset.data.reduce((acc, data) => acc + data, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${percentage}%`;
+                        },
+                        color: '#000',
+                        anchor: 'end',
+                        align: 'start',
+                        offset: 8,
+                        display: function(context) {
+                            return context.dataset.data[context.dataIndex] > 0;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     async updateDashboard() {
         try {
-            const lookbackDays = this.timeRange.value;
-            console.log(`Fetching data for ${lookbackDays} days`);
+            if (this.pieChartLoading) {
+                this.pieChartLoading.style.display = 'block';
+            }
 
+            const lookbackDays = this.timeRange.value;
             const response = await fetch(`/eq-dashboard/api/data/?lookback_days=${lookbackDays}`);
 
-            console.log('Response:', response.body);
-
-            // Log the response details
-            console.log('Response status:', response.status);
-            console.log('Response type:', response.headers.get('content-type'));
-
-            if (!response.ok) { //
+            if (!response.ok) {
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                     const errorData = await response.json();
@@ -44,20 +96,29 @@ class DashboardManager {
             }
 
             const data = await response.json();
-            console.log(`Received ${data.earthquakes?.length || 0} earthquakes`);
 
             if (!data.earthquakes) {
                 throw new Error('No earthquake data received');
             }
 
+            // Update all visualizations and statistics
             this.updateStatistics(data.earthquakes);
+            this.updateMagnitudeDistribution(data.earthquakes);
+            this.updateTrendAnalysis(data.earthquakes, data.trend_earthquakes, lookbackDays);
             this.chart.updateChart(data.earthquakes, lookbackDays);
             this.map.updateMap(data.earthquakes);
+
+            if (this.pieChartLoading) {
+                this.pieChartLoading.style.display = 'none';
+            }
+
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
-            // You might want to show this error to the user in a more friendly way
+            if (this.pieChartLoading) {
+                this.pieChartLoading.style.display = 'none';
+            }
+
             if (error.message) {
-                // Add error display to your UI
                 const errorDiv = document.getElementById('error-message') || document.createElement('div');
                 errorDiv.id = 'error-message';
                 errorDiv.style.color = 'red';
@@ -83,6 +144,86 @@ class DashboardManager {
         const lookbackDays = parseInt(this.timeRange.value);
         const earthquakesPerDay = (earthquakes.length / lookbackDays).toFixed(3);
         this.earthquakesPerDay.textContent = earthquakesPerDay;
+    }
+
+    updateMagnitudeDistribution(earthquakes) {
+        const distribution = [0, 0, 0];
+        
+        earthquakes.forEach(eq => {
+            const mag = eq.magnitude;
+            if (mag >= 4.0 && mag < 5.0) distribution[0]++;
+            else if (mag >= 5.0 && mag < 6.0) distribution[1]++;
+            else if (mag >= 6.0) distribution[2]++;
+        });
+
+        this.magnitudePieChart.data.datasets[0].data = distribution;
+        this.magnitudePieChart.update();
+    }
+
+    updateTrendAnalysis(currentEarthquakes, previousEarthquakes, lookbackDays) {
+        // Calculate stats for current period
+        const currentPeriod = {
+            count: currentEarthquakes.length,
+            avgMagnitude: currentEarthquakes.reduce((sum, eq) => sum + eq.magnitude, 0) / currentEarthquakes.length || 0
+        };
+
+        // Calculate stats for previous period
+        const previousPeriod = {
+            count: previousEarthquakes.length,
+            avgMagnitude: previousEarthquakes.reduce((sum, eq) => sum + eq.magnitude, 0) / previousEarthquakes.length || 0
+        };
+
+        // Calculate percentage changes
+        const frequencyChange = previousPeriod.count > 0
+            ? ((currentPeriod.count - previousPeriod.count) / previousPeriod.count * 100).toFixed(1)
+            : 0;
+
+        const magnitudeChange = previousPeriod.avgMagnitude > 0
+            ? ((currentPeriod.avgMagnitude - previousPeriod.avgMagnitude) / previousPeriod.avgMagnitude * 100).toFixed(1)
+            : 0;
+
+        // Update the UI
+        document.getElementById('frequencyChange').textContent = `${Math.abs(frequencyChange)}%`;
+        document.getElementById('magnitudeChange').textContent = `${Math.abs(magnitudeChange)}%`;
+
+        // Update comparison period text
+        const periodText = this.getPeriodText(lookbackDays);
+        document.getElementById('frequencyComparisonPeriod').textContent = `vs previous ${periodText}`;
+        document.getElementById('magnitudeComparisonPeriod').textContent = `vs previous ${periodText}`;
+
+        // Update trend indicators
+        this.updateTrendIndicator(
+            document.querySelector('.trend-stat'),
+            parseFloat(frequencyChange)
+        );
+        this.updateTrendIndicator(
+            document.querySelectorAll('.trend-stat')[1],
+            parseFloat(magnitudeChange)
+        );
+    }
+
+    getPeriodText(lookbackDays) {
+        if (lookbackDays === '30') return 'month';
+        if (lookbackDays === '365') return 'year';
+        if (lookbackDays === '3650') return 'decade';
+        return `${lookbackDays} days`;
+    }
+
+    updateTrendIndicator(element, value) {
+        const direction = element.querySelector('.trend-direction');
+        if (value > 0) {
+            direction.innerHTML = '↑';
+            direction.style.color = '#ff4444';
+            direction.style.fontSize = '2em';
+        } else if (value < 0) {
+            direction.innerHTML = '↓';
+            direction.style.color = '#00C851';
+            direction.style.fontSize = '2em';
+        } else {
+            direction.innerHTML = '→';
+            direction.style.color = '#ffbb33';
+            direction.style.fontSize = '2em';
+        }
     }
 }
 

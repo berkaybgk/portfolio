@@ -1,3 +1,5 @@
+import datetime
+
 from django.views import View
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -29,11 +31,8 @@ class EarthquakeDataAPI(View):
                     'error': f'Invalid parameter value: {str(e)}'
                 }, status=400)
 
-            # Log the request parameters
-            logger.info(f"Fetching earthquake data with lookback_days={lookback_days}, min_magnitude={min_magnitude}")
-
             # Get the earthquake data
-            data = eq_utils.get_data(lookback_days, min_magnitude)
+            data, trend_data = eq_utils.get_data(lookback_days, min_magnitude)
 
             # Validate data
             if not isinstance(data, pd.DataFrame):
@@ -42,12 +41,19 @@ class EarthquakeDataAPI(View):
                     'error': 'Invalid data format returned'
                 }, status=500)
 
+            if not isinstance(trend_data, pd.DataFrame):
+                logger.error(f"Invalid trend data type returned: {type(trend_data)}")
+                return JsonResponse({
+                    'error': 'Invalid trend data format returned'
+                }, status=500)
+
             # Convert to records and return
             earthquakes = data.to_dict(orient='records')
-            logger.info(f"Successfully fetched {len(earthquakes)} earthquakes")
+            trend_earthquakes = trend_data.to_dict(orient='records')
 
             return JsonResponse({
-                'earthquakes': earthquakes
+                'earthquakes': earthquakes,
+                'trend_earthquakes': trend_earthquakes
             })
 
         except Exception as e:

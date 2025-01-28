@@ -18,7 +18,7 @@
         /* Updated gradient with darker colors but maintaining the teal/yellow theme */
         background: linear-gradient(135deg, rgba(58, 253, 224, 0.71) 20%, rgba(205, 239, 87, 0.7) 100%);
         border-radius: 15px;
-        padding: 2.5rem 2rem;
+        padding: 3rem 2rem;
         margin-bottom: 2.5rem;
         text-align: center;
         position: relative;
@@ -93,6 +93,11 @@
         box-shadow: 0 3px 5px rgba(0,0,0,0.2);  /* Increased shadow opacity */
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         border: 1px solid #333333;  /* Subtle border for definition */
+        display: flex;
+        flex-direction: column; /* Stack children vertically */
+        align-items: center; /* Center horizontally */
+        justify-content: center; /* Center vertically */
+        text-align: center; /* Ensure text is aligned in the center */
     }
 
     .project-card:hover {

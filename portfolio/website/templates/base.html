@@ -21,7 +21,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #1b1a1a;  /* Dark background */
+            background-color: rgb(23, 22, 22);  /* Dark background */
             color: #ffffff;  /* Light text */
         }
         .navbar-custom {
@@ -130,6 +130,12 @@
             }
         }
 
+        .custom-container {
+            padding-left: 10rem;
+            padding-right: 10rem;
+            padding-top: 2.5rem;
+        }
+
     </style>
 </head>
 <body>
@@ -173,7 +179,7 @@
     </nav>
 
     <!-- Content -->
-    <div class="container mt-5">
+    <div class="container-fluid custom-container">
         {% block content %}{% endblock %}
     </div>
 
