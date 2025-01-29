@@ -27,57 +27,6 @@
             </div>
         </div>
 
-        <!-- Frequency Chart Row -->
-        <div class="content-card mb-4">
-            <h3 class="section-title">Earthquake Frequency</h3>
-            <div class="frequency-chart-container">
-                <canvas id="earthquakeChart"></canvas>
-                <div id="chartLoading" class="loading-indicator">Loading...</div>
-            </div>
-        </div>
-
-       <!-- Magnitude Distribution and Change Statistics -->
-        <div class="analysis-container mb-4">
-
-            <!-- Magnitude Distribution Pie Chart -->
-            <div class="content-card magnitude-distribution">
-                <h3 class="section-title">Magnitude Distribution</h3>
-                <div class="pie-chart-container">
-                    <canvas id="magnitudePieChart"></canvas>
-                    <div id="pieChartLoading" class="loading-indicator">Loading...</div>
-                </div>
-            </div>
-
-            <!-- Change Statistics -->
-            <div class="content-card change-statistics">
-                <h3 class="section-title">Trend Analysis</h3>
-                <div class="trend-stats-container">
-                    <div class="trend-stat">
-                        <div class="trend-header">
-                            <h4 class="trend-title">% Change in Frequency</h4>
-                        </div>
-                        <div class="trend-value-container">
-                            <span id="frequencyChange" class="trend-value">-</span>
-                            <span id="frequencyChangeDirection" class="trend-direction"></span>
-                        </div>
-                        <div id="frequencyComparisonPeriod" class="comparison-period">vs previous period</div>
-                    </div>
-
-                    <div class="trend-stat">
-                        <div class="trend-header">
-                            <h4 class="trend-title">Average Magnitude Change</h4>
-                        </div>
-                        <div class="trend-value-container">
-                            <span id="magnitudeChange" class="trend-value">-</span>
-                            <span id="magnitudeChangeDirection" class="trend-direction"></span>
-                        </div>
-                        <div id="magnitudeComparisonPeriod" class="comparison-period">vs previous period</div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
         <!-- Map and Stats Row -->
         <div class="map-stats-container">
             <div class="map-section">
@@ -93,7 +42,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <i class="fas fa-map-marker-alt stat-icon"></i>
-                        <h3 class="stat-title">Total Earthquakes</h3>
+                        <h3 class="stat-title">Number of Earthquakes</h3>
                     </div>
                     <div id="totalEarthquakes" class="stat-value">-</div>
                 </div>
@@ -121,6 +70,60 @@
             </div>
         </div>
 
+        <div class="analysis-frequency-container mb-4">
+
+            <!-- Magnitude Distribution and Change Statistics -->
+            <div class="analysis-container mb-4">
+
+                <!-- Magnitude Distribution Pie Chart -->
+                <div class="content-card magnitude-distribution">
+                    <h3 class="section-title">Magnitude Distribution</h3>
+                    <div class="pie-chart-container">
+                        <canvas id="magnitudePieChart"></canvas>
+                        <div id="pieChartLoading" class="loading-indicator">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- Change Statistics -->
+                <div class="content-card change-statistics">
+                    <h3 class="section-title">Trend Analysis</h3>
+                    <div class="trend-stats-container">
+                        <div class="trend-stat">
+                            <div class="trend-header">
+                                <h4 class="trend-title">Percentage Change in Frequency</h4>
+                            </div>
+                            <div class="trend-value-container">
+                                <span id="frequencyChange" class="trend-value">-</span>
+                                <span id="frequencyChangeDirection" class="trend-direction"></span>
+                            </div>
+                            <div id="frequencyComparisonPeriod" class="comparison-period">vs previous period</div>
+                        </div>
+
+                        <div class="trend-stat">
+                            <div class="trend-header">
+                                <h4 class="trend-title">Average Magnitude Change</h4>
+                            </div>
+                            <div class="trend-value-container">
+                                <span id="magnitudeChange" class="trend-value">-</span>
+                                <span id="magnitudeChangeDirection" class="trend-direction"></span>
+                            </div>
+                            <div id="magnitudeComparisonPeriod" class="comparison-period">vs previous period</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Frequency Chart -->
+            <div class="content-card frequency-container">
+                <h3 class="section-title" style="margin-bottom: -1rem">Earthquake Frequency</h3>
+                <div class="frequency-chart-container">
+                    <canvas id="earthquakeChart"></canvas>
+                    <div id="chartLoading" class="loading-indicator">Loading...</div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
 </section>
@@ -131,15 +134,31 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <link rel="stylesheet" href="{% static 'eq_dashboard/css/dashboard/styles.css' %}" />
 <style>
+
+    /* New wrapper container */
+    .analysis-frequency-container {
+        display: grid;
+        grid-template-columns: 720px 1fr; /* Use your max-width as the first column width */
+        gap: 1.5rem;
+        width: 100%;
+    }
+
     .analysis-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
+        gap: 1rem;
+    }
+
+    /* Add responsive design */
+    @media (max-width: 1200px) {
+        .analysis-frequency-container {
+            grid-template-columns: 1fr;
+        }
     }
 
     .magnitude-distribution, .change-statistics {
         background-color: #efeeee;
-        padding: 1.5rem;
+        padding: 1rem;
         height: 100%;
         outline: #0f0f0f;
     }
@@ -154,11 +173,11 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
-        padding: 1rem 0;
+        padding: 0.4rem 0;
     }
 
     .trend-stat {
-        padding: 1rem;
+        padding: 0.4rem;
         border-radius: 8px;
         text-align: center;
     }
@@ -169,7 +188,7 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.2rem;
     }
 
     .trend-title {

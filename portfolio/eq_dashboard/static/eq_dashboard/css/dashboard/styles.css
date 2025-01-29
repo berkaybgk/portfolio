@@ -1,15 +1,21 @@
 .body {
     background-color: #2b2a2a;
-    padding-left: -10rem;
-    padding-right: -10rem;
+    margin-left: -11.2rem;
+    margin-right: -11.2rem;
+    margin-top: -2.2rem;
     border-radius: 12px;
     gap: 12px;
 }
 
 .dashboard-container {
-    max-width: 1400px;
+    max-width: 2000px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 1rem 1rem 0 1rem; /* Top Right Bottom Left - removes bottom padding */
+}
+
+/* And make sure the last child element doesn't add extra space */
+.dashboard-container > *:last-child {
+    margin-bottom: 1rem; /* This will maintain consistent spacing */
 }
 
 .dashboard-title-container {
@@ -22,8 +28,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    padding: 1rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
     background: #c2db70; /* Add background color lime*/
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -64,21 +70,31 @@
 /* Frequency Chart Styles */
 .frequency-chart-container {
     position: relative;
-    height: 300px;
+    height: 220px;
     width: 100%;
+}
+
+/* Style for the frequency chart container */
+.frequency-container {
+    background-color: #efeeee;
+    padding: 1rem;
+    height: 100%;
+    max-height: 290px;
 }
 
 /* Map and Stats Container */
 .map-stats-container {
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 2fr 1fr; /* Changed from 3fr to 2fr to make map narrower */
     gap: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 /* Map Section */
 .map-container {
     position: relative;
-    height: 472px;
+    height: 360px;
     width: 100%;
     border-radius: 12px;
     border: 2px solid #403d3d;
@@ -87,9 +103,9 @@
 
 /* Stats Section */
 .stats-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Changed to 2 columns */
+    grid-template-rows: repeat(2, 1fr);    /* 2 rows */
     gap: 1rem;
 }
 
@@ -103,11 +119,12 @@
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;
+    text-align: center;
     position: relative;
     overflow: hidden;
-    min-height: 100px; /* Further reduced height */
+    min-height: 140px; /* Further reduced height */
+    justify-content: space-between;
 }
 
 .stat-card::before {
@@ -131,23 +148,27 @@
     align-items: center; /* Align icon and heading horizontally */
     gap: 0.75rem; /* Space between icon and heading */
     margin-bottom: 0.5rem; /* Space between header and value */
+    width: 100%;
 }
 
 .stat-icon {
     font-size: 1.5rem;
     color: #128b96;
+    margin: auto;
 }
 
 .stat-title {
-    color: #666;
-    font-size: 1rem;
+    color: #373737;
+    font-size: 1.1rem;
     margin: 0; /* Remove default margin */
 }
 
 .stat-value {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: black;
+    margin: auto;
+    padding-bottom: 1rem;
 }
 
 /* Colorful Gradients for Each Card */
@@ -220,7 +241,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 4px;
 }
 
 .time-label {
@@ -274,7 +295,7 @@
     pointer-events: none;
 }
 
-/* Responsive Design */
+/* Adjust responsive breakpoint if needed */
 @media (max-width: 1024px) {
     .map-stats-container {
         grid-template-columns: 1fr;
@@ -285,8 +306,8 @@
     }
 
     .stats-section {
-        display: grid;
         grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
     }
 }
 
