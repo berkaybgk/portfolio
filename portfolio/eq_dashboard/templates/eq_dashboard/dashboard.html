@@ -16,13 +16,29 @@
                 </span>
             </div>
             <div class="time-selector">
-                <label for="timeRange" class="time-label">Select Time Range</label>
-                <div class="custom-select-wrapper">
-                    <select id="timeRange" class="custom-select">
-                        <option value="30">Last 30 Days</option>
-                        <option value="365">Last Year</option>
-                        <option value="3650">Last 10 Years</option>
-                    </select>
+                <div class="quick-select">
+                    <label for="timeRange" class="time-label">Quick Select</label>
+                    <div class="custom-select-wrapper">
+                        <select id="timeRange" class="custom-select">
+                            <option value="custom" selected>Custom Range</option>
+                            <option value="30" selected>Last 30 Days</option>
+                            <option value="365">Last Year</option>
+                            <option value="3650">Last 10 Years</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="custom-range" style="display: none;">
+                    <div class="date-inputs">
+                        <div class="date-input-group">
+                            <label for="start-date">Start Date</label>
+                            <input type="date" id="start-date" class="custom-date-input">
+                        </div>
+                        <div class="date-input-group">
+                            <label for="end-date">End Date</label>
+                            <input type="date" id="end-date" class="custom-date-input">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -224,6 +240,32 @@
     .mb-4 {
         margin-bottom: 1.5rem;
     }
+
+    .custom-range {
+        margin-top: 1rem;
+    }
+
+    .date-inputs {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .date-input-group {
+        flex: 1;
+        color: #0f0f0f;
+    }
+
+    .date-input-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .custom-date-input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 </style>
 {% endblock %}
 
@@ -232,6 +274,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{% static 'eq_dashboard/js/dashboard/map.js' %}"></script>
 <script src="{% static 'eq_dashboard/js/dashboard/chart.js' %}"></script>
+<script src="{% static 'eq_dashboard/js/dashboard/time_selector.js' %}"></script>
 <script src="{% static 'eq_dashboard/js/dashboard/main.js' %}"></script>
 
 {% endblock %}

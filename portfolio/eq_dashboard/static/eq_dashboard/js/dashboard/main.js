@@ -7,6 +7,8 @@ class DashboardManager {
         this.averageMagnitude = document.getElementById('averageMagnitude');
         this.pieChartLoading = document.getElementById('pieChartLoading');
 
+        this.timeSelector = new TimeSelector(() => this.updateDashboard());
+
         // Initialize chart and map
         this.chart = new EarthquakeChart('earthquakeChart');
         this.map = new EarthquakeMap('map');
@@ -80,8 +82,16 @@ class DashboardManager {
                 this.pieChartLoading.style.display = 'block';
             }
 
-            const lookbackDays = this.timeRange.value;
-            const response = await fetch(`/eq-dashboard/api/data/?lookback_days=${lookbackDays}`);
+            const { startDate, endDate } = this.timeSelector.getSelectedDates();
+            const minMagnitude = 4.0; // You can make this configurable if needed
+
+            const response = await fetch(`/eq-dashboard/api/data/?start_date=${startDate}&end_date=${endDate}&min_magnitude=${minMagnitude}`);
+
+            // Get the lookback days from the difference between the start and end date
+            // Dates are given as strings in the format 'YYYY-MM-DD'
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const lookbackDays = Math.floor((end - start) / (1000 * 60 * 60 * 24));
 
             if (!response.ok) {
                 const contentType = response.headers.get('content-type');
@@ -102,7 +112,7 @@ class DashboardManager {
             }
 
             // Update all visualizations and statistics
-            this.updateStatistics(data.earthquakes);
+            this.updateStatistics(data.earthquakes, lookbackDays);
             this.updateMagnitudeDistribution(data.earthquakes);
             this.updateTrendAnalysis(data.earthquakes, data.trend_earthquakes, lookbackDays);
             this.chart.updateChart(data.earthquakes, lookbackDays);
@@ -128,7 +138,7 @@ class DashboardManager {
         }
     }
 
-    updateStatistics(earthquakes) {
+    updateStatistics(earthquakes, lookbackDays) {
         // Total earthquakes
         this.totalEarthquakes.textContent = earthquakes.length;
 
@@ -141,7 +151,6 @@ class DashboardManager {
         this.averageMagnitude.textContent = average.toFixed(2);
 
         // Calculate earthquakes per day
-        const lookbackDays = parseInt(this.timeRange.value);
         const earthquakesPerDay = (earthquakes.length / lookbackDays).toFixed(3);
         this.earthquakesPerDay.textContent = earthquakesPerDay;
     }

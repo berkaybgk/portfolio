@@ -53,7 +53,7 @@ class EarthquakeMap {
                 this.markers.addLayer(marker);
             });
 
-            if (bounds.length > 0) {
+            if (bounds.length > 1) {
                 this.map.fitBounds(L.latLngBounds(bounds));
             }
 

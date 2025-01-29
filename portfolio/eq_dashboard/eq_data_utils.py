@@ -7,6 +7,17 @@ from django.db.models import QuerySet
 
 
 class EqUtils:
+    @staticmethod
+    def queryset_to_dataframe(queryset: QuerySet) -> pd.DataFrame:
+        # Convert QuerySet to DataFrame
+        df = pd.DataFrame(list(queryset))
+        if not df.empty:
+            # Rename mag to magnitude
+            df.rename(columns={'mag': 'magnitude', 'time': 'date'}, inplace=True)
+            # Format date
+            df['date'] = pd.to_datetime(df['date']).dt.strftime('%d-%m-%Y')
+        return df
+
     def get_data(self, lookback_days: int, min_magnitude: float = 4.0) -> Tuple[pd.DataFrame, pd.DataFrame]:
         # Calculate the cutoff dates
         current_time = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -28,23 +39,44 @@ class EqUtils:
             EarthquakeDataUSGS.objects
             .filter(
                 time__gte=trend_cutoff,
-                time__lt=lookback_cutoff,
+                time__lte=lookback_cutoff,
                 mag__gte=min_magnitude
             )
             .values('time', 'latitude', 'longitude', 'depth', 'mag', 'place')
         )
 
-        def queryset_to_dataframe(queryset: QuerySet) -> pd.DataFrame:
-            # Convert QuerySet to DataFrame
-            df = pd.DataFrame(list(queryset))
-            if not df.empty:
-                # Rename mag to magnitude
-                df.rename(columns={'mag': 'magnitude', 'time': 'date'}, inplace=True)
-                # Format date
-                df['date'] = pd.to_datetime(df['date']).dt.strftime('%d-%m-%Y')
-            return df
+        return self.queryset_to_dataframe(current_data), self.queryset_to_dataframe(trend_data)
 
-        return queryset_to_dataframe(current_data), queryset_to_dataframe(trend_data)
+    def get_interval_data(self, interval_start:str, interval_end:str, min_magnitude: float = 4.0) -> (pd.DataFrame, pd.DataFrame):
+        # Get data for the specified interval
+        data = (
+            EarthquakeDataUSGS.objects
+            .filter(
+                time__gte=interval_start,
+                time__lte=interval_end,
+                mag__gte=min_magnitude
+            )
+            .values('time', 'latitude', 'longitude', 'depth', 'mag', 'place')
+        )
+
+        # Calculate the previous period
+        interval_start = pd.to_datetime(interval_start)
+        interval_end = pd.to_datetime(interval_end)
+        previous_period_start = interval_start - (interval_end - interval_start)
+        previous_period_start = previous_period_start.strftime('%Y-%m-%d %H:%M:%S')
+
+        # Get data for the previous period
+        previous_data = (
+            EarthquakeDataUSGS.objects
+            .filter(
+                time__gte=previous_period_start,
+                time__lt=interval_start,
+                mag__gte=min_magnitude
+            )
+            .values('time', 'latitude', 'longitude', 'depth', 'mag', 'place')
+        )
+
+        return self.queryset_to_dataframe(data), self.queryset_to_dataframe(previous_data)
 
     def read_csv_into_db(self, data_path: str):
         try:

@@ -62,12 +62,12 @@ class EarthquakeChart {
         let counts = [];
 
         // Group data based on lookback period
-        if (lookbackDays <= 30) {
+        if (lookbackDays <= 30*6) {
             // Daily grouping for 30 days or less
             const dailyData = this.groupByDay(earthquakes);
             labels = dailyData.labels;
             counts = dailyData.counts;
-        } else if (lookbackDays <= 365) {
+        } else if (lookbackDays <= 365*6) {
             // Monthly grouping for a year
             const monthlyData = this.groupByMonth(earthquakes);
             labels = monthlyData.labels;
