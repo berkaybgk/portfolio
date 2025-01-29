@@ -1,57 +1,76 @@
+from django.utils import timezone
+from datetime import timedelta
+from .models import EarthquakeDataUSGS
+from typing import Tuple
 import pandas as pd
-import os
+from django.db.models import QuerySet
 
-# Get the absolute path to the resources directory
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # The directory of cron.py
-RESOURCES_DIR = os.path.join(BASE_DIR, 'resources')
 
 class EqUtils:
-    def __init__(self):
-        self.data_path = os.path.join(RESOURCES_DIR, 'eq_data.csv')
+    def get_data(self, lookback_days: int, min_magnitude: float = 4.0) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        # Calculate the cutoff dates
+        current_time = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        lookback_cutoff = current_time - timedelta(days=lookback_days)
+        trend_cutoff = current_time - timedelta(days=lookback_days * 2)
 
-    def get_data(self, lookback_days: int, min_magnitude: float = 4.0) -> (pd.DataFrame, pd.DataFrame):
-        data = pd.read_csv(self.data_path)
+        # Get current period data
+        current_data = (
+            EarthquakeDataUSGS.objects
+            .filter(
+                time__gte=lookback_cutoff,
+                mag__gte=min_magnitude
+            )
+            .values('time', 'latitude', 'longitude', 'depth', 'mag', 'place')
+        )
 
-        # Convert the time column to datetime
-        data['time'] = pd.to_datetime(data['time'])
+        # Get trend period data
+        trend_data = (
+            EarthquakeDataUSGS.objects
+            .filter(
+                time__gte=trend_cutoff,
+                time__lt=lookback_cutoff,
+                mag__gte=min_magnitude
+            )
+            .values('time', 'latitude', 'longitude', 'depth', 'mag', 'place')
+        )
 
-        # Get the earthquake data for the last lookback_days
-        current_time = pd.Timestamp.now().normalize()
-        lookback_cutoff = current_time - pd.DateOffset(days=lookback_days)
-        trend_cutoff = current_time - pd.DateOffset(days=lookback_days * 2)
+        def queryset_to_dataframe(queryset: QuerySet) -> pd.DataFrame:
+            # Convert QuerySet to DataFrame
+            df = pd.DataFrame(list(queryset))
+            if not df.empty:
+                # Rename mag to magnitude
+                df.rename(columns={'mag': 'magnitude', 'time': 'date'}, inplace=True)
+                # Format date
+                df['date'] = pd.to_datetime(df['date']).dt.strftime('%d-%m-%Y')
+            return df
 
-        # Filter current period data
-        data = data[data['time'] >= lookback_cutoff].copy()
+        return queryset_to_dataframe(current_data), queryset_to_dataframe(trend_data)
 
-        data.drop(columns=[
-            'depthError', 'dmin', 'gap', 'horizontalError', 'id', 'magError', 'magNst',
-            'magSource', 'magType', 'net', 'nst', 'rms', 'status', 'type', 'updated', 'locationSource',
-        ], inplace=True)
+    def read_csv_into_db(self, data_path: str):
+        try:
+            # Read the data
+            data = pd.read_csv(data_path)
 
-        # Filter the data based on the minimum magnitude
-        data = data[data['mag'] >= min_magnitude]
+            # Convert the time column to datetime
+            data['time'] = pd.to_datetime(data['time'])
 
-        # Rename the columns and format date
-        data.rename(columns={'time': 'date', 'mag': 'magnitude'}, inplace=True)
-        data['date'] = data['date'].dt.strftime('%d-%m-%Y')
+            # Save the data to the database
+            for _, row in data.iterrows():
 
-        # Filter trend period data
-        trend_data = data.copy()  # Start with a fresh copy
-        trend_data = pd.read_csv(self.data_path)
-        trend_data['time'] = pd.to_datetime(trend_data['time'])
+                if EarthquakeDataUSGS.objects.filter(csv_id=row['id']).exists():
+                    continue
 
-        # Create mask for trend period
-        trend_mask = (trend_data['time'] >= trend_cutoff) & (trend_data['time'] < lookback_cutoff)
-        trend_data = trend_data[trend_mask].copy()
+                # Create a new record
+                EarthquakeDataUSGS.objects.create(
+                    time=row['time'],
+                    latitude=row['latitude'],
+                    longitude=row['longitude'],
+                    depth=row['depth'],
+                    mag=row['mag'],
+                    place=row['place'],
+                    csv_id=row['id']
+                )
 
-        trend_data.drop(columns=[
-            'depthError', 'dmin', 'gap', 'horizontalError', 'id', 'magError', 'magNst',
-            'magSource', 'magType', 'net', 'nst', 'rms', 'status', 'type', 'updated', 'locationSource',
-        ], inplace=True)
+        except Exception as e:
+            print(f"Error in read_csv_into_db: {str(e)}")
 
-        trend_data = trend_data[trend_data['mag'] >= min_magnitude]
-
-        trend_data.rename(columns={'time': 'date', 'mag': 'magnitude'}, inplace=True)
-        trend_data['date'] = trend_data['date'].dt.strftime('%d-%m-%Y')
-
-        return data, trend_data

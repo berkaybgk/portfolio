@@ -38,10 +38,10 @@ def get_eq_data(start_date, end_date) -> pd.DataFrame:
 
     return df
 
-def update_latest_eq_data():
+def update_latest_eq_data(lookback_days: int = 14):
     try:
         # Get the yesterday's date
-        yesterday = (datetime.datetime.today() - datetime.timedelta(days=3)).strftime('%Y-%m-%d')
+        yesterday = (datetime.datetime.today() - datetime.timedelta(days=lookback_days)).strftime('%Y-%m-%d')
 
         # Get the date tomorrow
         tomorrow = (datetime.datetime.today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
@@ -75,4 +75,4 @@ def update_latest_eq_data():
 
 
 if __name__ == '__main__':
-    update_latest_eq_data()
+    update_latest_eq_data(30)
