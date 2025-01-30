@@ -9,3 +9,4 @@ portfolio/.chromadb_persist
 .ipynb_checkpoints
 portfolio/eq_dashboard/resources/eq_data.csv
 portfolio/eq_dashboard/resources/recent_data.csv
+used_cars/resources/vehicles.csv
