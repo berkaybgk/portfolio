@@ -98,6 +98,24 @@
     <p class="text-center text-muted mb-5">Explore my work with data science, including analysis, visualization, and model development.</p>
 
     <div class="row">
+
+        <!-- Project 0 -->
+        <div class="col-md-6 col-lg-6 mb-4" data-aos="fade-up">
+            <div class="card shadow-sm h-100">
+                <img src="{% static 'website/images/us_house.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
+                <div class="card-body">
+                    <h5 class="card-title">US House Price Prediction</h5>
+                    <p class="card-text">In this project, I have used the King County House Sales dataset to predict the house prices in the US. I have used
+                        Neural Networks which might seem like an overkill for this problem, but I wanted to try it out. I have compared the results with
+                        various other ML models which people got and achieved better results with the Neural Network model.
+                    </p>
+                    <div class="project-btn-wrapper">
+                        <a href="{% url 'project_detail' project_name='house_prices' %}" class="btn btn-custom">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Project 1 -->
         <div class="col-md-6 col-lg-6 mb-4" data-aos="fade-up">
             <div class="card shadow-sm h-100">
@@ -105,8 +123,8 @@
                 <div class="card-body">
                     <h5 class="card-title">Earthquake Analysis and Prediction</h5>
                     <p class="card-text">By using the earthquake data for Turkey after year 1990, I have tried to come up with a model that can predict
-                        if a significant earthquake will occur in the following 2 weeks. I first tried a few different ML methods, but I couldn't
-                        achieve a significant result. Then I tried to use the LSTM model and got pretty good results which I am happy to share.
+                        if a significant earthquake will occur in the following 2 weeks. This project is a work in progress and I am still working on it.
+                        There are a few blocking points like finding low magnitude earthquakes and applying LSTM for a time series data.
                     </p>
                     <div class="project-btn-wrapper">
                         <a href="{% url 'project_detail' project_name='earthquake' %}" class="btn btn-custom">View Project</a>
@@ -116,7 +134,7 @@
         </div>
 
         <!-- Project 2 -->
-        <div class="col-md-6 col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="col-md-6 col-lg-6 mx-auto mb-4" data-aos="fade-up" data-aos-delay="100">
             <div class="card shadow-sm h-100">
                 <img src="{% static 'website/images/mushrooms.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
                 <div class="card-body">
