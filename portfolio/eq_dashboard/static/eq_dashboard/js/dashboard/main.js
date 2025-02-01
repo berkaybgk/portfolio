@@ -7,6 +7,10 @@ class DashboardManager {
         this.averageMagnitude = document.getElementById('averageMagnitude');
         this.pieChartLoading = document.getElementById('pieChartLoading');
 
+        // Add magnitude slider elements
+        this.magnitudeSlider = document.getElementById('magnitudeRange');
+        this.magnitudeValue = document.getElementById('magnitudeValue');
+
         this.timeSelector = new TimeSelector(() => this.updateDashboard());
 
         // Initialize chart and map
@@ -18,6 +22,15 @@ class DashboardManager {
 
         // Bind events
         this.timeRange.addEventListener('change', () => this.updateDashboard());
+
+        // Add magnitude slider event listener
+        this.magnitudeSlider.addEventListener('input', (e) => {
+            this.magnitudeValue.textContent = e.target.value;
+        });
+
+        this.magnitudeSlider.addEventListener('change', () => {
+            this.updateDashboard();
+        });
 
         // Initial load
         this.updateDashboard();
@@ -81,9 +94,8 @@ class DashboardManager {
             if (this.pieChartLoading) {
                 this.pieChartLoading.style.display = 'block';
             }
-
             const { startDate, endDate } = this.timeSelector.getSelectedDates();
-            const minMagnitude = 4.0; // You can make this configurable if needed
+            const minMagnitude = parseFloat(this.magnitudeSlider.value); // Get value from slider
 
             const response = await fetch(`/eq-dashboard/api/data/?start_date=${startDate}&end_date=${endDate}&min_magnitude=${minMagnitude}`);
 
@@ -143,7 +155,9 @@ class DashboardManager {
         this.totalEarthquakes.textContent = earthquakes.length;
 
         // Strongest magnitude
-        const strongest = Math.max(...earthquakes.map(eq => eq.magnitude));
+        const strongest = earthquakes.length > 0
+            ? Math.max(...earthquakes.map(eq => eq.magnitude))
+            : 0;
         this.strongestMagnitude.textContent = strongest.toFixed(1);
 
         // Average magnitude

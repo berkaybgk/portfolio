@@ -11,21 +11,41 @@
                 <span class="info-tooltip">
                     <i class="fas fa-info-circle info-icon"></i>
                     <span class="tooltip-text">
-                        The data includes only the earthquakes with magnitude greater than 4.0.
+                        Adjust the filters below to customize your earthquake view.
                         The source of the data is USGS's earthquake catalogue and it is updated daily.
                     </span>
                 </span>
             </div>
-            <div class="time-selector">
-                <div class="quick-select">
-                    <label for="timeRange" class="time-label">Quick Select</label>
-                    <div class="custom-select-wrapper">
-                        <select id="timeRange" class="custom-select">
-                            <option value="custom" selected>Custom Range</option>
-                            <option value="30" selected>Last 30 Days</option>
-                            <option value="365">Last Year</option>
-                            <option value="3650">Last 10 Years</option>
-                        </select>
+
+            <div class="filter-section">
+                <div class="filter-row">
+                    <div class="time-selector">
+                        <div class="quick-select">
+                            <label for="timeRange" class="filter-label">Quick Select</label>
+                            <div class="custom-select-wrapper">
+                                <select id="timeRange" class="custom-select">
+                                    <option value="custom" selected>Custom Range</option>
+                                    <option value="30" selected>Last 30 Days</option>
+                                    <option value="365">Last Year</option>
+                                    <option value="3650">Last 10 Years</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="magnitude-selector">
+                        <label for="magnitudeRange" class="filter-label">
+                            Minimum Magnitude: <span id="magnitudeValue">4.0</span>
+                        </label>
+                        <input
+                            type="range"
+                            id="magnitudeRange"
+                            min="0"
+                            max="10"
+                            step="0.1"
+                            value="4.0"
+                            class="magnitude-slider"
+                        >
                     </div>
                 </div>
 
@@ -242,6 +262,63 @@
         margin-bottom: 1.5rem;
     }
 
+    .filter-section {
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .filter-row {
+        display: flex;
+        gap: 2rem;
+        align-items: flex-start;
+    }
+
+    .time-selector {
+        flex: 1;
+    }
+
+    .magnitude-selector {
+        flex: 1;
+    }
+
+    .filter-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #0f0f0f;
+    }
+
+    .magnitude-slider {
+        width: 100%;
+        height: 8px;
+        -webkit-appearance: none;
+        background: #ddd;
+        border-radius: 4px;
+        outline: none;
+        margin-top: 0.5rem;
+    }
+
+    .magnitude-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: #4CAF50;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .magnitude-slider::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        background: #4CAF50;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    /* Existing time selector styles */
     .custom-range {
         margin-top: 1rem;
     }
