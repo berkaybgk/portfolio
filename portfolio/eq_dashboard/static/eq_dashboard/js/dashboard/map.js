@@ -66,12 +66,11 @@ class EarthquakeMap {
         }
     }
 
-
     getColorByMagnitude(magnitude) {
         if (magnitude >= 6.0) return '#ff0000';
         if (magnitude >= 5.0) return '#ff6600';
         if (magnitude >= 4.0) return '#ffa500';
-        return '#ffcc00';
+        return '#bfe866';
     }
 
     getRadiusByMagnitude(magnitude) {

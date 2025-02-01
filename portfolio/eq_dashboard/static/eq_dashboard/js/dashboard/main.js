@@ -25,7 +25,7 @@ class DashboardManager {
 
         // Add magnitude slider event listener
         this.magnitudeSlider.addEventListener('input', (e) => {
-            this.magnitudeValue.textContent = e.target.value;
+            this.magnitudeValue.textContent = parseFloat(e.target.value).toFixed(1);
         });
 
         this.magnitudeSlider.addEventListener('change', () => {
@@ -41,10 +41,11 @@ class DashboardManager {
         this.magnitudePieChart = new Chart(pieCtx, {
             type: 'pie',
             data: {
-                labels: ['4.0-4.9', '5.0-5.9', '6.0+'],
+                labels: ['3.0-3.9', '4.0-4.9', '5.0-5.9', '6.0+'],
                 datasets: [{
-                    data: [0, 0, 0],
+                    data: [0, 0, 0, 0],
                     backgroundColor: [
+                        'rgba(191, 232, 102, 0.7)',
                         'rgba(255, 206, 86, 0.7)',
                         'rgba(255, 159, 64, 0.7)',
                         'rgba(255, 0, 0, 0.7)'
@@ -170,13 +171,14 @@ class DashboardManager {
     }
 
     updateMagnitudeDistribution(earthquakes) {
-        const distribution = [0, 0, 0];
+        const distribution = [0, 0, 0, 0];
         
         earthquakes.forEach(eq => {
             const mag = eq.magnitude;
-            if (mag >= 4.0 && mag < 5.0) distribution[0]++;
-            else if (mag >= 5.0 && mag < 6.0) distribution[1]++;
-            else if (mag >= 6.0) distribution[2]++;
+            if (mag >= 3.0 && mag < 4.0) distribution[0]++;
+            else if (mag >= 4.0 && mag < 5.0) distribution[1]++;
+            else if (mag >= 5.0 && mag < 6.0) distribution[2]++;
+            else if (mag >= 6.0) distribution[3]++;
         });
 
         this.magnitudePieChart.data.datasets[0].data = distribution;
