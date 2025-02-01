@@ -4,48 +4,68 @@
 
 {% block content %}
 <style>
+    :root {
+        --primary: #128b96;
+        --secondary: #c2db70;
+        --dark: #e0e0e0;
+        --card-bg: #2b2a2a;
+        --text-primary: #ffffff;
+        --text-secondary: #090909;
+        --text-custom-light: #f0f0f0;
+        --third-dark: #1a1a1a;
+    }
+
+    body {
+        color: var(--text-primary);
+    }
+
     .btn-custom {
-        background-color: #668284;
-        border-color: #000000;
+        background-color: var(--primary);
         color: white;
+        border: none;
+        padding: 0.6rem 1.25rem;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
     }
 
     .btn-custom:hover {
-        background-color: #c2db70;
-        border-color: #000000;
-        color: #000000;
+        background-color: var(--secondary);
+        color: #1a1a1a;
+        transform: scale(1.02);
     }
 
     .chat-container {
         height: 75vh;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        border: 1px solid #dee2e6;
+        background-color: var(--text-custom-light);
+        border-radius: 15px;
+        border: 1px solid #333333;
         overflow-y: auto;
         padding: 20px;
         margin-bottom: 20px;
     }
 
-    .input-group {
-        margin-top: 20px;
-    }
-
     .chat-header {
         margin-bottom: 30px;
+        color: var(--text-primary);
+    }
+
+    .chat-header h1 {
+        color: var(--dark);
+    }
+
+    .chat-header .lead {
+        color: var(--text-custom-light);
     }
 
     .file-upload-section {
         height: 100%;
         padding: 20px;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        border: 1px solid #dee2e6;
-    }
-
-    .chat-section {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        border: 1px solid #333333;
+        color: var(--text-primary);
     }
 
     .main-container {
@@ -70,15 +90,15 @@
         justify-content: space-between;
         align-items: center;
         padding: 8px 12px;
-        background-color: #fff;
-        border: 1px solid #dee2e6;
+        background-color: var(--third-dark);
+        border: 1px solid #333333;
         margin-bottom: 8px;
         border-radius: 5px;
         transition: all 0.2s ease;
     }
 
     .pdf-item:hover {
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
 
     .delete-pdf-btn {
@@ -98,10 +118,6 @@
         background-color: #c82333;
     }
 
-    .delete-pdf-btn i {
-        font-size: 1em;
-    }
-
     .info-tooltip {
         position: relative;
         display: inline-block;
@@ -109,18 +125,13 @@
         cursor: help;
     }
 
-    .info-icon {
-        color: #6c757d;
-        font-size: 0.8em;
-    }
-
     .tooltip-text {
-        visibility: hidden;  /* Start hidden */
-        opacity: 0;  /* Start fully transparent */
+        visibility: hidden;
+        opacity: 0;
         width: 250px;
         font-size: 0.55em;
-        background-color: #333;
-        color: #fff;
+        background-color: #1a1a1a;
+        color: var(--text-primary);
         text-align: center;
         border-radius: 6px;
         padding: 8px;
@@ -145,13 +156,14 @@
     }
 
     .user-message {
-        background-color: #128b96;
+        background-color: var(--primary);
         color: white;
         margin-left: 30rem;
     }
 
     .bot-message {
-        background-color: #c2db70;
+        background-color: var(--secondary);
+        color: var(--text-secondary);
         margin-right: 4rem;
     }
 
@@ -159,45 +171,78 @@
         margin: 10px;
         padding: 10px;
         border-radius: 10px;
-        background-color: #f8f9fa;
+        background-color: var(--card-bg);
         text-align: center;
-        color: #668284;
-    }
-
-    .typing-indicator {
-        display: inline-block;
-        margin-left: 5px;
+        color: var(--text-custom-light);
     }
 
     .typing-indicator span {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        background-color: #668284;
-        border-radius: 50%;
-        margin: 0 2px;
-        animation: bounce 1.4s infinite ease-in-out;
-    }
-
-    .typing-indicator span:nth-child(1) { animation-delay: 0s; }
-    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-        0%, 80%, 100% { transform: translateY(0); }
-        40% { transform: translateY(-8px); }
+        background-color: var(--text-custom-light);
     }
 
     .disclaimer {
-        background: #668284;
+        background: var(--card-bg);
         font-size: 1.1rem;
-        color: black;
-        padding: 1.5rem 1.5rem;
-        margin-bottom: 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        color: var(--text-custom-light);
+        padding: 2.5rem 2rem;
+        margin-bottom: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
+    .disclaimer h2 {
+        color: var(--text-custom-light);
+    }
+
+    .disclaimer p {
+        color: var(--text-custom-light);
+    }
+
+    /* Form styling */
+    .form-control {
+        background-color: var(--text-custom-light);
+        border: 1px solid #333333;
+        color: var(--text-secondary);
+    }
+
+    .form-control:focus {
+        background-color: #1a1a1a;
+        border-color: var(--primary);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.25rem rgba(18, 139, 150, 0.25);
+    }
+
+    .form-control::placeholder {
+        color: #666;
+        opacity: 0.75;
+    }
+
+    .form-label {
+        color: var(--text-custom-light);
+    }
+
+    /* Custom scrollbar */
+    .pdf-list::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .pdf-list::-webkit-scrollbar-track {
+        background: #1a1a1a;
+        border-radius: 4px;
+    }
+
+    .pdf-list::-webkit-scrollbar-thumb {
+        background: #666;
+        border-radius: 4px;
+    }
+
+    .pdf-list::-webkit-scrollbar-thumb:hover {
+        background: #888;
+    }
+
+    .text-muted {
+        color: #888 !important;
+    }
 </style>
 
 <div class="container-fluid">
@@ -207,12 +252,12 @@
         <p class="lead">Upload your PDF and start chatting!</p>
     </div>
 
-        <!-- Disclaimer -->
+    <!-- Disclaimer -->
     <div class="disclaimer">
-        <h2 class="h2" style="color: white;">Disclaimer</h2>
-        <p style="color: white">The structure of the app is present on the project repository. However, since the storage and network capacity of the free-tier EC2 instance I am using is limited, I can't host the app on this website.</p>
+        <h2 class="h2">Disclaimer</h2>
+        <p>The structure of the app is present on the project repository. However, since the storage and network capacity of the free-tier EC2 instance I am using is limited, I can't host the app on this website.</p>
         <div class="text-center">
-            <a href="https://github.com/berkaybgk/portfolio/tree/main/portfolio/fusion" class="btn btn-light">Repository of the project in GitHub</a>
+            <a href="https://github.com/berkaybgk/portfolio/tree/main/portfolio/fusion" class="btn btn-custom">Repository of the project in GitHub</a>
         </div>
     </div>
 
@@ -220,13 +265,7 @@
         <!-- File Upload Section - Left Side -->
         <div class="col-md-3">
             <div class="file-upload-section">
-                <h4>
-                    Upload PDF
-<!--                    <span class="info-tooltip">-->
-<!--                        <i class="fas fa-info-circle info-icon"></i>-->
-<!--                        <span class="tooltip-text">Large PDF files are currently not supported since the whole thing runs on a free tier ec2 instance.</span>-->
-<!--                    </span>-->
-                </h4>
+                <h4>Upload PDF</h4>
                 <form method="post" enctype="multipart/form-data" id="pdf-upload-form">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="upload_pdf">
@@ -238,12 +277,6 @@
                         <label for="pdf-description" class="form-label">Description</label>
                         <textarea class="form-control" id="pdf-description" name="pdf-description" rows="7"
                                   placeholder="Pay attention to writing good and concise descriptions for your PDFs as they will be used to determine the required resources to answer your questions." required></textarea>
-                        <style>
-                            #pdf-description::placeholder {
-                                opacity: 0.75; /* You can adjust this value between 0 and 1 */
-                                color: #6c757d; /* Bootstrap's default text-muted color */
-                            }
-                        </style>
                     </div>
                     <div class="mb-3">
                         <label for="pdf-file" class="form-label">Select PDF</label>
@@ -280,7 +313,6 @@
         </div>
 
     </div>
-
 </div>
 
 <!-- First: React and ReactDOM scripts -->

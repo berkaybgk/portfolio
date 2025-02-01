@@ -1,11 +1,29 @@
 {% extends 'base.html' %}
 
-{% block title %}Data Science Projects{% endblock %}
+{% block title %}Data Related Projects{% endblock %}
 {% load static %}
 
 {% block content %}
 
 <style>
+    :root {
+        --primary: #128b96;
+        --secondary: #c2db70;
+        --dark: #e0e0e0;
+        --card-bg: #2b2a2a;
+        --text-primary: #ffffff;
+        --text-secondary: #090909;
+        --text-custom-light: #f0f0f0;
+    }
+
+    .container {
+        color: var(--text-primary);
+    }
+
+    .text-muted {
+        color: #a0a0a0 !important;
+    }
+
     .custom-card-img {
         height: 360px;
         object-fit: cover;
@@ -15,13 +33,32 @@
         position: relative;
         display: flex;
         flex-direction: column;
+        background-color: var(--card-bg);
+        border: 1px solid #333333;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
     .card-body {
         flex: 1;
         display: flex;
         flex-direction: column;
-        padding-bottom: 70px; /* Make space for the button */
+        padding-bottom: 70px;
+    }
+
+    .card-title {
+        color: var(--dark);
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-text {
+        color: var(--text-custom-light);
+        font-size: 1.1rem;
     }
 
     .project-btn-wrapper {
@@ -31,12 +68,28 @@
     }
 
     .btn-custom {
-        background-color: #128b96;
+        background-color: var(--primary);
+        color: white;
         border: none;
+        padding: 0.6rem 1.25rem;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
     }
 
     .btn-custom:hover {
-        background-color: #0e6f78;
+        background-color: var(--secondary);
+        color: #1a1a1a;
+        transform: scale(1.02);
+    }
+
+    h1 {
+        color: var(--dark);
+        font-size: 2.8rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
     }
 </style>
 
@@ -45,9 +98,8 @@
     <p class="text-center text-muted mb-5">Explore my work with data science, including analysis, visualization, and model development.</p>
 
     <div class="row">
-
         <!-- Project 1 -->
-        <div class="col-md-6 col-lg-6 mb-4">
+        <div class="col-md-6 col-lg-6 mb-4" data-aos="fade-up">
             <div class="card shadow-sm h-100">
                 <img src="{% static 'website/images/earthquake.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
                 <div class="card-body">
@@ -57,14 +109,14 @@
                         achieve a significant result. Then I tried to use the LSTM model and got pretty good results which I am happy to share.
                     </p>
                     <div class="project-btn-wrapper">
-                        <a href="{% url 'project_detail' project_name='earthquake' %}" class="btn btn-primary btn-custom">View Project</a>
+                        <a href="{% url 'project_detail' project_name='earthquake' %}" class="btn btn-custom">View Project</a>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Project 2 -->
-        <div class="col-md-6 col-lg-6 mb-4">
+        <div class="col-md-6 col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="100">
             <div class="card shadow-sm h-100">
                 <img src="{% static 'website/images/mushrooms.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
                 <div class="card-body">
@@ -73,14 +125,21 @@
                         gilled mushrooms in the Agaricus and Lepiota Family Mushroom drawn from The Audubon Society Field Guide to North American
                         Mushrooms (1981). Each species is identified as definitely edible, definitely poisonous, or of unknown edibility and not recommended.</p>
                     <div class="project-btn-wrapper">
-                        <a href="{% url 'project_detail' project_name='mushroom' %}" class="btn btn-primary btn-custom">View Project</a>
+                        <a href="{% url 'project_detail' project_name='mushroom' %}" class="btn btn-custom">View Project</a>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
     </div>
 </div>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 50
+    });
+</script>
 {% endblock %}

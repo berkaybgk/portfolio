@@ -3,26 +3,70 @@
 {% block title %}Home - berkaybgk{% endblock %}
 
 {% block content %}
+
 <style>
     :root {
         --primary: #128b96;
         --secondary: #c2db70;
-        --dark: #343a40;
+        --dark: #e0e0e0;
+        --card-bg: #2b2a2a;
+        --text-primary: #ffffff;
+        --text-secondary: #090909;
+        --text-custom-light: #f0f0f0;
     }
 
     .profile-section {
-        background: linear-gradient(135deg, rgba(18,139,150,0.2) 0%, rgba(212, 255, 0, 0.2) 100%);
+        background: linear-gradient(135deg, rgba(58, 253, 224, 0.71) 20%, rgba(205, 239, 87, 0.7) 100%);
         border-radius: 15px;
-        padding: 2.5rem 2rem;
+        padding: 3rem 2rem;
         margin-bottom: 2.5rem;
         text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-section::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 150%;
+        height: 150%;
+        background: conic-gradient(
+            transparent,
+            var(--primary),
+            transparent,
+            var(--secondary),
+            transparent
+        );
+        animation: spin 8s linear infinite;
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    .profile-section::after {
+        content: '';
+        position: absolute;
+        inset: 8px;
+        background: linear-gradient(135deg, rgba(58, 253, 224, 1) 20%, rgba(205, 239, 87, 1) 100%);
+        border-radius: 15px;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: translate(-50%, -50%) rotate(0deg);
+        }
+        100% {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
     }
 
     .welcome-title {
         font-size: 2.8rem;
         font-weight: 600;
         margin-bottom: 2rem;
-        color: #374647;
+        color: var(--text-secondary);
+        position: relative;
+        z-index: 1; /* Ensure text is above the glow */
     }
 
     .lead {
@@ -30,7 +74,9 @@
         font-weight: 300;
         max-width: 1100px;
         margin: 0 auto 0.75rem;
-        color: #1e1e1e;
+        color: var(--text-secondary);
+        position: relative;
+        z-index: 1; /* Ensure text is above the glow */
     }
 
     .projects-grid {
@@ -41,16 +87,22 @@
     }
 
     .project-card {
-        background: white;
+        background: var(--card-bg);
         border-radius: 12px;
         padding: 1.75rem;
-        box-shadow: 0 3px 5px rgba(0,0,0,0.08);
+        box-shadow: 0 3px 5px rgba(0,0,0,0.2);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #333333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 
     .project-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
     .section-icon {
@@ -81,8 +133,13 @@
 
     .btn-custom:hover {
         background-color: var(--secondary);
-        color: var(--dark);
+        color: #1a1a1a;
         transform: scale(1.02);
+    }
+
+    .project-card p {
+        color: var(--text-custom-light);
+        font-size: 1.1rem;
     }
 
     @media (max-width: 768px) {
@@ -110,21 +167,21 @@
 
 <div class="projects-grid">
     <div class="project-card" data-aos="fade-up">
-        <p class="fas fa-earth section-icon" style="margin-bottom: 1.5rem"></p>
+        <p class="fas fa-earth section-icon" style="margin-bottom: 1rem; font-size: 2rem"></p>
         <h2 class="section-title">Earthquake Dashboard</h2>
         <p style="font-size: 1.1rem">Check out the dashboard I created for the earthquakes near Turkey. The data is retrieved from the USGS catalogue daily and several metrics are displayed as well as a map.</p>
         <a class="btn-custom" href="{% url 'eq_dashboard' %}">Go to Dashboard</a>
     </div>
 
     <div class="project-card" data-aos="fade-up">
-        <p class="fas fa-chart-bar section-icon" style="margin-bottom: 1.5rem"></p>
+        <p class="fas fa-chart-bar section-icon" style="margin-bottom: 1rem; font-size: 2rem"></p>
         <h2 class="section-title">Data Related Projects</h2>
         <p style="font-size: 1.1rem">Explore my collection of DS, ML, AI trial projects where I delve into data sets from various fields. I included code pieces from the actual notebooks which can be found in GitHub.</p>
         <a class="btn-custom" href="{% url 'ds_projects' %}">View Projects</a>
     </div>
 
     <div class="project-card" data-aos="fade-up" data-aos-delay="100">
-        <p class="fas fa-robot section-icon" style="margin-bottom: 1.5rem"></p>
+        <p class="fas fa-robot section-icon" style="margin-bottom: 1rem; font-size: 2rem"></p>
         <h2 class="section-title">Fusion Chatbot App</h2>
         <p style="font-size: 1.1rem">The trial project which uses AI agents and vector storage to answer questions from uploaded PDFs. Currently not hosted because of the limited resources of my server.</p>
         <a class="btn-custom" href="{% url 'fusion' %}">Try the App</a>

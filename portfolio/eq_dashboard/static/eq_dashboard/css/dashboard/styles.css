@@ -1,7 +1,21 @@
+.body {
+    background-color: #2b2a2a;
+    margin-left: -11.2rem;
+    margin-right: -11.2rem;
+    margin-top: -2.2rem;
+    border-radius: 12px;
+    gap: 12px;
+}
+
 .dashboard-container {
-    max-width: 1400px;
+    max-width: 2000px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 1rem 1rem 0 1rem; /* Top Right Bottom Left - removes bottom padding */
+}
+
+/* And make sure the last child element doesn't add extra space */
+.dashboard-container > *:last-child {
+    margin-bottom: 1rem; /* This will maintain consistent spacing */
 }
 
 .dashboard-title-container {
@@ -14,9 +28,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    padding: 1rem;
-    background: linear-gradient(135deg, rgba(18,139,150,0.2) 20%, rgba(137, 146, 102, 0.2) 100%);
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background: #c2db70; /* Add background color lime*/
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -29,7 +43,7 @@
 }
 
 .content-card {
-    background: white;
+    background: #efeeee;
     padding: 1.5rem;
     border-radius: 12px;
     border: 2px solid #e0e0e0;
@@ -49,44 +63,54 @@
 .section-title {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #333;
+    color: #222121;
     margin-bottom: 1.5rem;
 }
 
 /* Frequency Chart Styles */
 .frequency-chart-container {
     position: relative;
-    height: 300px;
+    height: 220px;
     width: 100%;
+}
+
+/* Style for the frequency chart container */
+.frequency-container {
+    background-color: #efeeee;
+    padding: 1rem;
+    height: 100%;
+    max-height: 290px;
 }
 
 /* Map and Stats Container */
 .map-stats-container {
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 2fr 1fr; /* Changed from 3fr to 2fr to make map narrower */
     gap: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 /* Map Section */
 .map-container {
     position: relative;
-    height: 472px;
+    height: 360px;
     width: 100%;
     border-radius: 12px;
+    border: 2px solid #403d3d;
     overflow: hidden;
 }
 
-/* Stats Section */
 .stats-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 1rem;
 }
 
 .stat-card {
     flex: 1;
-    background: white;
+    background: #efeeee;
     border: 2px solid #e0e0e0;
     border-radius: 12px;
     padding: 1.5rem;
@@ -94,11 +118,11 @@
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;
+    text-align: center;
     position: relative;
     overflow: hidden;
-    min-height: 100px; /* Further reduced height */
+    min-height: 140px;
 }
 
 .stat-card::before {
@@ -119,26 +143,31 @@
 
 .stat-header {
     display: flex;
-    align-items: center; /* Align icon and heading horizontally */
-    gap: 0.75rem; /* Space between icon and heading */
-    margin-bottom: 0.5rem; /* Space between header and value */
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.stat-title {
+    color: #373737;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: black;
+    margin: auto;
 }
 
 .stat-icon {
     font-size: 1.5rem;
     color: #128b96;
-}
-
-.stat-title {
-    color: #666;
-    font-size: 1rem;
-    margin: 0; /* Remove default margin */
-}
-
-.stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #128b96;
+    margin-top: auto;
+    margin-bottom: 1rem;
 }
 
 /* Colorful Gradients for Each Card */
@@ -167,7 +196,8 @@
 
 .info-icon {
     font-size: 20px;
-    color: #128b96;
+    color: #222121;
+    margin-bottom: 0.5rem;
 }
 
 .tooltip-text {
@@ -210,13 +240,13 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 4px;
 }
 
 .time-label {
     font-size: 0.9rem;
     font-weight: 500;
-    color: #555;
+    color: black;
 }
 
 .custom-select-wrapper {
@@ -264,7 +294,7 @@
     pointer-events: none;
 }
 
-/* Responsive Design */
+/* Adjust responsive breakpoint if needed */
 @media (max-width: 1024px) {
     .map-stats-container {
         grid-template-columns: 1fr;
@@ -275,8 +305,8 @@
     }
 
     .stats-section {
-        display: grid;
         grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
     }
 }
 

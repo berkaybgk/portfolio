@@ -1,6 +1,8 @@
-This is the project repository for my portfolio website.
+**This is the project repository for my portfolio website.**
 
-It features my data science projects, and the challenge was to gain experience with web development and deployment.
+It features a dashboard I created for the earthquakes near Turkey and my other projects. The challenge was to gain experience with web development and deployment while actively handling the reliability and security of the website using free services.
+
+The website is built using Django, and deployed on a free-tier AWS EC2 instance. Total amount spent for the project is $1.16, only for the domain name.
 
 ***The website is accessible at:***
 
@@ -12,47 +14,29 @@ www.berkaybgk.site
 
 In order to run the project on your local machine, you need to have Python and pip installed.
 
-1. Clone the repository to your local machine:
-
 ```bash
+# Clone the repository
 git clone https://github.com/berkaybgk/portfolio.git
-```
 
-2. Install the required libraries:
+# Change the directory
+cd portfolio
 
-```bash
+# Install the requirements
 pip install -r requirements.txt
-```
 
-3. Generate a new secret key for the Django project:
-
-```bash
+# Create a django secret key
 python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
-```
 
-4. Create a `.env` file in the root directory of the project and add the following line:
+# Create a .env file in the root directory and add the following lines
+SECRET_KEY=your_secret_key
 
-```bash
-DJANGO_SECRET_KEY= <your_secret_key>
-```
-
-5. Run the Django migrations:
-
-```bash
+# makemigrations and migrate
+python manage.py makemigrations
 python manage.py migrate
+
+# Run the server, collect static files
+python manage.py collectstatic --clear --noinput & python manage.py runserver
+
+# Open your browser and go to http://127.0.0.1:8000/
 ```
-
-6. Create a superuser:
-
-```bash
-python manage.py createsuperuser
-```
-
-7. Run the Django development server:
-
-```bash
-python manage.py runserver
-```
-
-8. Access the website at `http://127.0.0.1:8000/`
 

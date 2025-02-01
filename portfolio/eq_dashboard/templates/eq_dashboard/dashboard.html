@@ -1,90 +1,350 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}berkaybgk - Earthquake Dashboard{% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-
-    <div class="dashboard-header">
-        <div class="dashboard-title-container">
-            <h1 class="dashboard-title">Turkey Earthquake Dashboard</h1>
-            <span class="info-tooltip">
-                <i class="fas fa-info-circle info-icon"></i>
-                <span class="tooltip-text">
-                    The data includes only the earthquakes with magnitude greater than 4.0.
-                    The source of the data is USGS's earthquake catalogue and it is updated daily.
+<section class="body">
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="dashboard-title-container">
+                <h1 class="dashboard-title">Turkey Earthquake Dashboard</h1>
+                <span class="info-tooltip">
+                    <i class="fas fa-info-circle info-icon"></i>
+                    <span class="tooltip-text">
+                        Adjust the filters below to customize your earthquake view.
+                        The source of the data is USGS's earthquake catalogue and it is updated daily.
+                    </span>
                 </span>
-            </span>
-        </div>
-        <div class="time-selector">
-            <label for="timeRange" class="time-label">Select Time Range</label>
-            <div class="custom-select-wrapper">
-                <select id="timeRange" class="custom-select">
-                    <option value="30">Last 30 Days</option>
-                    <option value="365">Last Year</option>
-                    <option value="3650">Last 10 Years</option>
-                </select>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-row">
+                    <div class="time-selector">
+                        <div class="quick-select">
+                            <label for="timeRange" class="filter-label">Quick Select</label>
+                            <div class="custom-select-wrapper">
+                                <select id="timeRange" class="custom-select">
+                                    <option value="custom" selected>Custom Range</option>
+                                    <option value="30" selected>Last 30 Days</option>
+                                    <option value="365">Last Year</option>
+                                    <option value="3650">Last 10 Years</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="magnitude-selector">
+                        <label for="magnitudeRange" class="filter-label">
+                            Minimum Magnitude: <span id="magnitudeValue">4.0</span>
+                        </label>
+                        <input
+                            type="range"
+                            id="magnitudeRange"
+                            min="0"
+                            max="10"
+                            step="0.1"
+                            value="4.0"
+                            class="magnitude-slider"
+                        >
+                    </div>
+                </div>
+
+                <div class="custom-range" style="display: none;">
+                    <div class="date-inputs">
+                        <div class="date-input-group">
+                            <label for="start-date">Start Date</label>
+                            <input type="date" id="start-date" class="custom-date-input">
+                        </div>
+                        <div class="date-input-group">
+                            <label for="end-date">End Date</label>
+                            <input type="date" id="end-date" class="custom-date-input">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- Map and Stats Row -->
+        <div class="map-stats-container">
+            <div class="map-section">
+                <div class="content-card">
+                    <h3 class="section-title">Location Map</h3>
+                    <div id="map" class="map-container">
+                        <div id="mapLoading" class="loading-indicator">Loading...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i class="fas fa-map-marker-alt stat-icon"></i>
+                        <h3 class="stat-title">Total Earthquakes</h3>
+                    </div>
+                    <div id="totalEarthquakes" class="stat-value">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i class="fas fa-chart-line stat-icon"></i>
+                        <h3 class="stat-title">Strongest Magnitude</h3>
+                    </div>
+                    <div id="strongestMagnitude" class="stat-value">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i class="fas fa-ruler stat-icon"></i>
+                        <h3 class="stat-title">Average Magnitude</h3>
+                    </div>
+                    <div id="averageMagnitude" class="stat-value">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i class="fas fa-calendar-day stat-icon"></i>
+                        <h3 class="stat-title">Earthquakes per Day</h3>
+                    </div>
+                    <div id="earthquakesPerDay" class="stat-value">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="analysis-frequency-container mb-4">
+
+            <!-- Magnitude Distribution and Change Statistics -->
+            <div class="analysis-container mb-4">
+
+                <!-- Magnitude Distribution Pie Chart -->
+                <div class="content-card magnitude-distribution">
+                    <h3 class="section-title">Magnitude Distribution</h3>
+                    <div class="pie-chart-container">
+                        <canvas id="magnitudePieChart"></canvas>
+                        <div id="pieChartLoading" class="loading-indicator">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- Change Statistics -->
+                <div class="content-card change-statistics">
+                    <h3 class="section-title">Trend Analysis</h3>
+                    <div class="trend-stats-container">
+                        <div class="trend-stat">
+                            <div class="trend-header">
+                                <h4 class="trend-title">Percentage Change in Frequency</h4>
+                            </div>
+                            <div class="trend-value-container">
+                                <span id="frequencyChange" class="trend-value">-</span>
+                                <span id="frequencyChangeDirection" class="trend-direction"></span>
+                            </div>
+                            <div id="frequencyComparisonPeriod" class="comparison-period">vs previous period</div>
+                        </div>
+
+                        <div class="trend-stat">
+                            <div class="trend-header">
+                                <h4 class="trend-title">Average Magnitude Change</h4>
+                            </div>
+                            <div class="trend-value-container">
+                                <span id="magnitudeChange" class="trend-value">-</span>
+                                <span id="magnitudeChangeDirection" class="trend-direction"></span>
+                            </div>
+                            <div id="magnitudeComparisonPeriod" class="comparison-period">vs previous period</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Frequency Chart -->
+            <div class="content-card frequency-container">
+                <h3 class="section-title" style="margin-bottom: -1rem">Earthquake Frequency</h3>
+                <div class="frequency-chart-container">
+                    <canvas id="earthquakeChart"></canvas>
+                    <div id="chartLoading" class="loading-indicator">Loading...</div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
-    <!-- Frequency Chart Row -->
-    <div class="content-card mb-4">
-        <h3 class="section-title">Earthquake Frequency</h3>
-        <div class="frequency-chart-container">
-            <canvas id="earthquakeChart"></canvas>
-            <div id="chartLoading" class="loading-indicator">Loading...</div>
-        </div>
-    </div>
+</section>
 
-    <!-- Map and Stats Row -->
-    <div class="map-stats-container">
-        <div class="map-section">
-            <div class="content-card">
-                <h3 class="section-title">Location Map</h3>
-                <div id="map" class="map-container">
-                    <div id="mapLoading" class="loading-indicator">Loading...</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="stats-section">
-            <div class="stat-card">
-                <div class="stat-header">
-                    <i class="fas fa-map-marker-alt stat-icon"></i>
-                    <h3 class="stat-title">Total Earthquakes</h3>
-                </div>
-                <div id="totalEarthquakes" class="stat-value">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <i class="fas fa-chart-line stat-icon"></i>
-                    <h3 class="stat-title">Strongest Magnitude</h3>
-                </div>
-                <div id="strongestMagnitude" class="stat-value">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <i class="fas fa-ruler stat-icon"></i>
-                    <h3 class="stat-title">Average Magnitude</h3>
-                </div>
-                <div id="averageMagnitude" class="stat-value">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <i class="fas fa-calendar-day stat-icon"></i>
-                    <h3 class="stat-title">Earthquakes per Day</h3>
-                </div>
-                <div id="earthquakesPerDay" class="stat-value">-</div>
-            </div>
-        </div>
-    </div>
-
-</div>
 {% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <link rel="stylesheet" href="{% static 'eq_dashboard/css/dashboard/styles.css' %}" />
+<style>
+
+    /* New wrapper container */
+    .analysis-frequency-container {
+        display: grid;
+        grid-template-columns: 720px 1fr; /* Use your max-width as the first column width */
+        gap: 1.5rem;
+        width: 100%;
+    }
+
+    .analysis-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    /* Add responsive design */
+    @media (max-width: 1200px) {
+        .analysis-frequency-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .magnitude-distribution, .change-statistics {
+        background-color: #efeeee;
+        padding: 1rem;
+        height: 100%;
+        outline: #0f0f0f;
+    }
+
+    .pie-chart-container {
+        position: relative;
+        height: 200px;
+        outline: #0f0f0f;
+    }
+
+    .trend-stats-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        padding: 0.4rem 0;
+    }
+
+    .trend-stat {
+        padding: 0.4rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .trend-header {
+        color: #0f0f0f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .trend-title {
+        color: #0f0f0f;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .trend-value-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin: 0.5rem 0;
+    }
+
+    .trend-value {
+        color: #0f0f0f;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .trend-direction {
+        color: #0f0f0f;
+        font-size: 1rem;
+    }
+
+    .comparison-period {
+        font-size: 0.8rem;
+        color: #0f0f0f;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-section {
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .filter-row {
+        display: flex;
+        gap: 2rem;
+        align-items: flex-start;
+    }
+
+    .time-selector {
+        flex: 1;
+    }
+
+    .magnitude-selector {
+        flex: 1;
+    }
+
+    .filter-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #0f0f0f;
+    }
+
+    .magnitude-slider {
+        width: 100%;
+        height: 8px;
+        -webkit-appearance: none;
+        background: #ddd;
+        border-radius: 4px;
+        outline: none;
+        margin-top: 0.5rem;
+    }
+
+    .magnitude-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: #128b96;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .magnitude-slider::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        background: #128b96;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    /* Existing time selector styles */
+    .custom-range {
+        margin-top: 1rem;
+    }
+
+    .date-inputs {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .date-input-group {
+        flex: 1;
+        color: #0f0f0f;
+    }
+
+    .date-input-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .custom-date-input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+</style>
 {% endblock %}
 
 {% block extra_js %}
@@ -92,5 +352,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{% static 'eq_dashboard/js/dashboard/map.js' %}"></script>
 <script src="{% static 'eq_dashboard/js/dashboard/chart.js' %}"></script>
+<script src="{% static 'eq_dashboard/js/dashboard/time_selector.js' %}"></script>
 <script src="{% static 'eq_dashboard/js/dashboard/main.js' %}"></script>
+
 {% endblock %}
