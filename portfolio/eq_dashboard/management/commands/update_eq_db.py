@@ -21,7 +21,7 @@ class Command(BaseCommand):
         data_path = os.path.join(current_dir, data_path)
 
         eq_utils = EqUtils()
-        eq_utils.read_csv_into_db(data_path)
+        eq_utils.read_csv_into_db_usgs(data_path)
 
         self.stdout.write(self.style.SUCCESS('Successfully updated the earthquake database'))
 

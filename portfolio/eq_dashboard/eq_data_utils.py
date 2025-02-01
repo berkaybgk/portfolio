@@ -1,6 +1,6 @@
 from django.utils import timezone
 from datetime import timedelta
-from .models import EarthquakeDataUSGS
+from .models import EarthquakeDataUSGS, EarthquakeDataAFAD
 from typing import Tuple
 import pandas as pd
 from django.db.models import QuerySet
@@ -78,7 +78,7 @@ class EqUtils:
 
         return self.queryset_to_dataframe(data), self.queryset_to_dataframe(previous_data)
 
-    def read_csv_into_db(self, data_path: str):
+    def read_csv_into_db_usgs(self, data_path: str):
         try:
             # Read the data
             data = pd.read_csv(data_path)
@@ -104,5 +104,36 @@ class EqUtils:
                 )
 
         except Exception as e:
-            print(f"Error in read_csv_into_db: {str(e)}")
+            print(f"Error in read_csv_into_db_usgs: {str(e)}")
+
+    def read_csv_into_db_afad(self, data_path: str):
+        try:
+            # Read the data
+            data = pd.read_csv(data_path)
+
+            # Convert the time column to datetime
+            data['eventDate'] = pd.to_datetime(data['eventDate'])
+
+            # Rename date, id columns
+            data.rename(columns={'eventId': 'csv_id', 'eventDate': 'time'}, inplace=True)
+
+            # Save the data to the database
+            for _, row in data.iterrows():
+
+                if EarthquakeDataAFAD.objects.filter(csv_id=row['csv_id']).exists():
+                    continue
+
+                # Create a new record
+                EarthquakeDataAFAD.objects.create(
+                    time=row['time'],
+                    latitude=row['latitude'],
+                    longitude=row['longitude'],
+                    depth=row['depth'],
+                    mag=row['magnitude'],
+                    place=row['area'],
+                    csv_id=row['csv_id']
+                )
+
+        except Exception as e:
+            print(f"Error in read_csv_into_db_afad: {str(e)}")
 
