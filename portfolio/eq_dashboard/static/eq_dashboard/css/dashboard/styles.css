@@ -101,11 +101,10 @@
     overflow: hidden;
 }
 
-/* Stats Section */
 .stats-section {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Changed to 2 columns */
-    grid-template-rows: repeat(2, 1fr);    /* 2 rows */
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 1rem;
 }
 
@@ -123,8 +122,7 @@
     text-align: center;
     position: relative;
     overflow: hidden;
-    min-height: 140px; /* Further reduced height */
-    justify-content: space-between;
+    min-height: 140px;
 }
 
 .stat-card::before {
@@ -145,22 +143,17 @@
 
 .stat-header {
     display: flex;
-    align-items: center; /* Align icon and heading horizontally */
-    gap: 0.75rem; /* Space between icon and heading */
-    margin-bottom: 0.5rem; /* Space between header and value */
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-}
-
-.stat-icon {
-    font-size: 1.5rem;
-    color: #128b96;
-    margin: auto;
+    margin-bottom: 0.5rem;
 }
 
 .stat-title {
     color: #373737;
     font-size: 1.1rem;
-    margin: 0; /* Remove default margin */
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .stat-value {
@@ -168,7 +161,13 @@
     font-weight: 700;
     color: black;
     margin: auto;
-    padding-bottom: 1rem;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    color: #128b96;
+    margin-top: auto;
+    margin-bottom: 1rem;
 }
 
 /* Colorful Gradients for Each Card */
