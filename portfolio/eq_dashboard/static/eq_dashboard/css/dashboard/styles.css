@@ -5,7 +5,7 @@
     margin-bottom: -2rem;
 }
 
-/* Add this media query for the base container */
+/* Desktop styles - keep your original negative margins for desktop */
 @media (min-width: 768px) {
     .body {
         margin-left: -11.2rem;
@@ -13,6 +13,23 @@
         margin-top: -2.2rem;
     }
 }
+
+/* Mobile styles */
+@media (max-width: 767px) {
+    .body {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .dashboard-container {
+        width: 100vw;  /* Full viewport width */
+        margin-left: -1rem; /* Compensate for container padding */
+        margin-right: -1rem;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
+}
+
 .dashboard-container {
     max-width: 2000px;
     margin: 0 auto;

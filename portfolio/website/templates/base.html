@@ -225,6 +225,13 @@
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.5)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
 
+        @media (max-width: 767px) {
+            .dashboard-page {
+                padding: 0;
+                overflow-x: hidden;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -268,7 +275,7 @@
     </nav>
 
     <!-- Content -->
-    <div class="container" style="margin-top: 3rem">
+    <div class="container {% if request.path == '/eq-dashboard/' %}dashboard-page{% endif %}" style="margin-top: 3rem">
         {% block content %}{% endblock %}
     </div>
 
