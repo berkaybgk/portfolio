@@ -1,12 +1,18 @@
 .body {
     background-color: #2b2a2a;
-    margin-left: -11.2rem;
-    margin-right: -11.2rem;
-    margin-top: -2.2rem;
     border-radius: 12px;
     gap: 12px;
+    margin-bottom: -2rem;
 }
 
+/* Add this media query for the base container */
+@media (min-width: 768px) {
+    .body {
+        margin-left: -11.2rem;
+        margin-right: -11.2rem;
+        margin-top: -2.2rem;
+    }
+}
 .dashboard-container {
     max-width: 2000px;
     margin: 0 auto;
@@ -14,11 +20,6 @@
     width: 100%;
     box-sizing: border-box;
     overflow-x: hidden;
-}
-
-/* And make sure the last child element doesn't add extra space */
-.dashboard-container > *:last-child {
-    margin-bottom: 0.5rem; /* This will maintain consistent spacing */
 }
 
 .dashboard-title-container {
@@ -318,6 +319,7 @@
 @media (max-width: 768px) {
     .dashboard-container {
         padding: 0.5rem;  /* Reduced padding for mobile */
+        padding-bottom: -1rem; /* Removes bottom padding */
     }
     .dashboard-header {
         flex-direction: column;
