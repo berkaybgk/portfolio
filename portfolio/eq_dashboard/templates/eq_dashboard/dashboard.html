@@ -11,8 +11,8 @@
                 <span class="info-tooltip">
                     <i class="fas fa-info-circle info-icon"></i>
                     <span class="tooltip-text">
-                        Adjust the filters below to customize your earthquake view.
-                        The source of the data is USGS's earthquake catalogue and it is updated daily.
+                        The source of the data is USGS's earthquake catalogue and it is updated regularly.
+                        Currently, the data is limited to earthquakes with magnitude greater than 4.0 near Turkey.
                     </span>
                 </span>
             </div>
@@ -21,7 +21,7 @@
                 <div class="filter-row">
                     <div class="time-selector">
                         <div class="quick-select">
-                            <label for="timeRange" class="filter-label">Quick Select</label>
+                            <label for="timeRange" class="filter-label">Select Time Range</label>
                             <div class="custom-select-wrapper">
                                 <select id="timeRange" class="custom-select">
                                     <option value="custom" selected>Custom Range</option>
@@ -172,45 +172,96 @@
 <link rel="stylesheet" href="{% static 'eq_dashboard/css/dashboard/styles.css' %}" />
 <style>
 
-    /* New wrapper container */
+    /* Analysis and Frequency Container */
     .analysis-frequency-container {
         display: grid;
-        grid-template-columns: 720px 1fr; /* Use your max-width as the first column width */
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); /* Equal columns */
         gap: 1.5rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Analysis Container */
+    .analysis-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
         width: 100%;
     }
 
-    .analysis-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-    }
-
-    /* Add responsive design */
-    @media (max-width: 1200px) {
-        .analysis-frequency-container {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .magnitude-distribution, .change-statistics {
+    /* Analysis Cards */
+    .magnitude-distribution,
+    .change-statistics {
         background-color: #efeeee;
-        padding: 1rem;
-        height: 100%;
-        outline: #0f0f0f;
+        padding: 0.75rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        height: 290px; /* Adjust this value to your preferred height */
+        min-height: 240px; /* Optional: ensures a minimum height */
+    }
+
+    .section-title {
+        font-size: 1rem;
+        margin-bottom: 2.4rem;
     }
 
     .pie-chart-container {
         position: relative;
-        height: 200px;
-        outline: #0f0f0f;
+        height: 180px; /* Slightly smaller */
+        width: 100%;
     }
 
     .trend-stats-container {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        padding: 0.4rem 0;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        padding: 0.2rem 0;
+    }
+
+    .trend-stat {
+        background-color: #f7f7f7;
+        padding: 0.5rem;
+        border-radius: 6px;
+    }
+
+    /* Frequency Chart Container */
+    .frequency-container {
+        grid-column: 2; /* Explicitly place in right column */
+        background-color: #efeeee;
+        padding: 0.75rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .frequency-chart-container {
+        height: 220px;
+        width: 100%;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1200px) {
+        .analysis-frequency-container {
+            grid-template-columns: 1fr;
+        }
+
+        .frequency-container {
+            grid-column: auto; /* Reset column placement */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .analysis-frequency-container {
+            padding: 0 0.5rem;
+            gap: 1rem;
+        }
+
+        .analysis-container {
+            grid-template-columns: 1fr; /* Stack cards vertically on mobile */
+        }
+
+        .trend-stats-container {
+            grid-template-columns: 1fr; /* Stack trend stats vertically on mobile */
+        }
     }
 
     .trend-stat {

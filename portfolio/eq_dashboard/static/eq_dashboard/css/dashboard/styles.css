@@ -1,21 +1,42 @@
 .body {
     background-color: #2b2a2a;
-    margin-left: -11.2rem;
-    margin-right: -11.2rem;
-    margin-top: -2.2rem;
     border-radius: 12px;
     gap: 12px;
+    margin-bottom: -2rem;
+}
+
+/* Desktop styles - keep your original negative margins for desktop */
+@media (min-width: 768px) {
+    .body {
+        margin-left: -11.2rem;
+        margin-right: -11.2rem;
+        margin-top: -2.2rem;
+    }
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+    .body {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .dashboard-container {
+        width: 100vw;  /* Full viewport width */
+        margin-left: -1rem; /* Compensate for container padding */
+        margin-right: -1rem;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
 }
 
 .dashboard-container {
     max-width: 2000px;
     margin: 0 auto;
     padding: 1rem 1rem 0 1rem; /* Top Right Bottom Left - removes bottom padding */
-}
-
-/* And make sure the last child element doesn't add extra space */
-.dashboard-container > *:last-child {
-    margin-bottom: 1rem; /* This will maintain consistent spacing */
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 .dashboard-title-container {
@@ -49,6 +70,8 @@
     border: 2px solid #e0e0e0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .content-card:hover {
@@ -311,6 +334,10 @@
 }
 
 @media (max-width: 768px) {
+    .dashboard-container {
+        padding: 0.5rem;  /* Reduced padding for mobile */
+        padding-bottom: -1rem; /* Removes bottom padding */
+    }
     .dashboard-header {
         flex-direction: column;
         gap: 1rem;
@@ -320,4 +347,29 @@
     .stats-section {
         grid-template-columns: 1fr;
     }
+
+    .analysis-container {
+        grid-template-columns: 1fr;
+    }
+
+    /* Adjust content card padding for mobile */
+    .content-card {
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+
+    /* Make sure all charts and maps are responsive */
+    .map-container,
+    .pie-chart-container,
+    .frequency-chart-container {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+}
+
+/* Ensure proper scaling for charts */
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
 }

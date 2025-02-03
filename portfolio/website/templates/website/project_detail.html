@@ -143,7 +143,7 @@
         margin-bottom: 2rem;
     }
 
-    .nav-tabs .nav-link {
+    .nav-tabs .nav-link-custom {
         border: none;
         color: var(--text-custom-light);
         font-weight: 500;
@@ -153,12 +153,13 @@
         background: transparent;
     }
 
-    .nav-tabs .nav-link:hover {
+    .nav-tabs .nav-link-custom:hover {
         border: none;
         color: var(--secondary);
+        box-shadow: 0 0 10px rgba(194, 219, 112, 0.8); /* Soft glow effect */
     }
 
-    .nav-tabs .nav-link.active {
+    .nav-tabs .nav-link-custom.active {
         border: none;
         border-bottom: 2px solid var(--secondary);
         color: var(--secondary);
@@ -216,21 +217,21 @@
     <ul class="nav nav-tabs" id="projectTabs" role="tablist">
         {% if eda %}
         <li class="nav-item" role="presentation">
-            <button class="nav-link {% if eda %}active{% endif %}" id="eda-tab" data-bs-toggle="tab" data-bs-target="#eda" type="button" role="tab" aria-controls="eda" aria-selected="{% if eda %}true{% else %}false{% endif %}">
+            <button class="nav-link-custom {% if eda %}active{% endif %}" id="eda-tab" data-bs-toggle="tab" data-bs-target="#eda" type="button" role="tab" aria-controls="eda" aria-selected="{% if eda %}true{% else %}false{% endif %}">
                 Exploratory Data Analysis
             </button>
         </li>
         {% endif %}
         {% if main %}
         <li class="nav-item" role="presentation">
-            <button class="nav-link {% if not eda and main %}active{% endif %}" id="model-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="model" aria-selected="{% if not eda and main %}true{% else %}false{% endif %}">
+            <button class="nav-link-custom {% if not eda and main %}active{% endif %}" id="model-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="model" aria-selected="{% if not eda and main %}true{% else %}false{% endif %}">
                 Model Development
             </button>
         </li>
         {% endif %}
         {% if eval %}
         <li class="nav-item" role="presentation">
-            <button class="nav-link {% if not eda and not main and eval %}active{% endif %}" id="eval-tab" data-bs-toggle="tab" data-bs-target="#eval" type="button" role="tab" aria-controls="eval" aria-selected="{% if not eda and not main and eval %}true{% else %}false{% endif %}">
+            <button class="nav-link-custom {% if not eda and not main and eval %}active{% endif %}" id="eval-tab" data-bs-toggle="tab" data-bs-target="#eval" type="button" role="tab" aria-controls="eval" aria-selected="{% if not eda and not main and eval %}true{% else %}false{% endif %}">
                 Evaluation
             </button>
         </li>
