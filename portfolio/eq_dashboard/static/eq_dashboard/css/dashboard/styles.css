@@ -367,3 +367,9 @@
         overflow-x: hidden;
     }
 }
+
+/* Ensure proper scaling for charts */
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
