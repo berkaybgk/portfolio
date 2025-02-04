@@ -38,16 +38,17 @@ pdf_utils = PDFUtils()
 
 def handle_message(user, current_message):
 
-    try:
-        # Get the last 5 messages
-        chat_messages = Chat.objects.filter(user=user).order_by('-timestamp')[:5]
-
-        user_messages = list(chat_messages.values_list('message', flat=True))
-        ai_responses = list(chat_messages.values_list('response', flat=True))
-
-        last_messages = list(zip(user_messages, ai_responses))
-    except Exception as e:
-        return "Sorry, I am having trouble since I am unable to retrieve the last messages. This is a temporary issue."
+    # try:
+    #     # Get the last 5 messages
+    #     chat_messages = Chat.objects.filter(user=user).order_by('-timestamp')[:5]
+    #
+    #     user_messages = list(chat_messages.values_list('message', flat=True))
+    #     ai_responses = list(chat_messages.values_list('response', flat=True))
+    #
+    #     last_messages = list(zip(user_messages, ai_responses))
+    #
+    # except Exception as e:
+    #     return "Sorry, I am having trouble since I am unable to retrieve the last messages. This is a temporary issue."
 
     # # Agentic part
     # print("Creating the crew")
