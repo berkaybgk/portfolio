@@ -44,7 +44,6 @@ class FusionView(LoginRequiredMixin, View):
             action = request.POST.get('action')
 
             if action == 'upload_pdf':
-                # TODO: more than 1.2MB causes crash, need to fix
                 try:
                     # Get the file from request.FILES
                     pdf_file = request.FILES.get('pdf-file')
@@ -141,19 +140,6 @@ class FusionView(LoginRequiredMixin, View):
                             'success': False,
                             'error': 'Message cannot be empty'
                         })
-
-                    # Add a delay for 3 seconds if the users last message is within 2 seconds
-                    last_message = Chat.objects.filter(user=request.user).order_by('-timestamp').first()
-
-                    if last_message:
-                        current_time = datetime.now(timezone.utc)  # Get current time in UTC
-
-                        time_since_last = current_time - last_message.timestamp
-                        if time_since_last.total_seconds() < 3:
-                            return JsonResponse({
-                                'success': False,
-                                'error': 'Please wait 2 seconds between messages',
-                            })
 
                     # Save the message to the database
                     chat = Chat.objects.create(
