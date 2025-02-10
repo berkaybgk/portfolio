@@ -172,43 +172,88 @@
 <link rel="stylesheet" href="{% static 'eq_dashboard/css/dashboard/styles.css' %}" />
 <style>
 
-    /* Analysis and Frequency Container */
+    /* Update the analysis and frequency container styles */
     .analysis-frequency-container {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); /* Equal columns */
-        gap: 1.5rem;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1rem; /* Reduced from 1.5rem */
         width: 100%;
         box-sizing: border-box;
     }
 
-    /* Analysis Container */
     .analysis-container {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+        gap: 0.75rem; /* Reduced from 1rem */
         width: 100%;
     }
 
-    /* Analysis Cards */
+    /* Adjust card heights */
     .magnitude-distribution,
     .change-statistics {
-        background-color: #efeeee;
-        padding: 0.75rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        height: 290px; /* Adjust this value to your preferred height */
-        min-height: 240px; /* Optional: ensures a minimum height */
+        height: 260px; /* Reduced from 290px */
+        min-height: 220px; /* Reduced from 240px */
+    }
+
+    .pie-chart-container {
+        height: 160px; /* Reduced from 180px */
+    }
+
+    /* Adjust responsive breakpoints */
+    @media (max-width: 1200px) {
+        .analysis-frequency-container {
+            gap: 0.75rem;
+        }
+        
+        .magnitude-distribution,
+        .change-statistics {
+            height: 240px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .analysis-frequency-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .magnitude-distribution,
+        .change-statistics {
+            height: 220px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .analysis-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .trend-stats-container {
+            gap: 0.5rem;
+        }
+        
+        .trend-value {
+            font-size: 1.25rem;
+        }
+        
+        .trend-title {
+            font-size: 0.8rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .magnitude-distribution,
+        .change-statistics {
+            height: 200px;
+        }
+        
+        .pie-chart-container {
+            height: 140px;
+        }
     }
 
     .section-title {
         font-size: 1rem;
         margin-bottom: 2.4rem;
-    }
-
-    .pie-chart-container {
-        position: relative;
-        height: 180px; /* Slightly smaller */
-        width: 100%;
     }
 
     .trend-stats-container {
@@ -236,81 +281,6 @@
     .frequency-chart-container {
         height: 220px;
         width: 100%;
-    }
-
-    /* Responsive Breakpoints */
-    @media (max-width: 1200px) {
-        .analysis-frequency-container {
-            grid-template-columns: 1fr;
-        }
-
-        .frequency-container {
-            grid-column: auto; /* Reset column placement */
-        }
-    }
-
-    @media (max-width: 768px) {
-        .analysis-frequency-container {
-            padding: 0 0.5rem;
-            gap: 1rem;
-        }
-
-        .analysis-container {
-            grid-template-columns: 1fr; /* Stack cards vertically on mobile */
-        }
-
-        .trend-stats-container {
-            grid-template-columns: 1fr; /* Stack trend stats vertically on mobile */
-        }
-    }
-
-    .trend-stat {
-        padding: 0.4rem;
-        border-radius: 8px;
-        text-align: center;
-    }
-
-    .trend-header {
-        color: #0f0f0f;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-bottom: 0.2rem;
-    }
-
-    .trend-title {
-        color: #0f0f0f;
-        font-size: 0.9rem;
-        margin: 0;
-    }
-
-    .trend-value-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        margin: 0.5rem 0;
-    }
-
-    .trend-value {
-        color: #0f0f0f;
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-
-    .trend-direction {
-        color: #0f0f0f;
-        font-size: 1rem;
-    }
-
-    .comparison-period {
-        font-size: 0.8rem;
-        color: #0f0f0f;
-    }
-
-    .mb-4 {
-        margin-bottom: 1.5rem;
     }
 
     .filter-section {

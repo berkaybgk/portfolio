@@ -2,41 +2,79 @@
     background-color: #2b2a2a;
     border-radius: 12px;
     gap: 12px;
-    margin-bottom: -2rem;
+    margin: 0 auto;
+    width: 100%; /* Take full width */
+    max-width: 2000px;
+    padding: 1rem;
 }
 
-/* Desktop styles - keep your original negative margins for desktop */
+/* Desktop styles */
 @media (min-width: 768px) {
     .body {
-        margin-left: -11.2rem;
-        margin-right: -11.2rem;
-        margin-top: -2.2rem;
+        margin: 1rem auto;
+        padding: 1.5rem;
+        width: 95%; /* Use 95% of the available width on desktop */
     }
 }
 
 /* Mobile styles */
 @media (max-width: 767px) {
     .body {
-        margin: 0;
+        padding: 0.5rem;
         border-radius: 0;
+        width: 100%;
     }
 
     .dashboard-container {
-        width: 100vw;  /* Full viewport width */
-        margin-left: -1rem; /* Compensate for container padding */
-        margin-right: -1rem;
-        padding: 1rem;
-        box-sizing: border-box;
+        padding: 0.5rem;
     }
 }
 
 .dashboard-container {
     max-width: 2000px;
     margin: 0 auto;
-    padding: 1rem 1rem 0 1rem; /* Top Right Bottom Left - removes bottom padding */
+    padding: 1rem 1rem 0 1rem;
     width: 100%;
     box-sizing: border-box;
     overflow-x: hidden;
+    max-height: 100vh;
+    overflow-y: auto;
+
+    /* Customize scrollbar for webkit browsers (Chrome, Safari, etc.) */
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: #2b2a2a;
+        border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #444;
+        border-radius: 4px;
+        transition: background 0.2s ease;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    
+    /* Customize scrollbar for Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #444 #2b2a2a;
+}
+
+/* Optional: Hide scrollbar when not scrolling but keep functionality */
+.dashboard-container {
+    &::-webkit-scrollbar {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    &:hover::-webkit-scrollbar {
+        opacity: 1;
+    }
 }
 
 .dashboard-title-container {
@@ -84,16 +122,16 @@
 }
 
 .section-title {
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #222121;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 /* Frequency Chart Styles */
 .frequency-chart-container {
     position: relative;
-    height: 220px;
+    height: 240px; /* Adjusted to account for padding and title */
     width: 100%;
 }
 
@@ -101,23 +139,47 @@
 .frequency-container {
     background-color: #efeeee;
     padding: 1rem;
-    height: 100%;
-    max-height: 290px;
+    height: 290px; /* Reset to original height */
+}
+
+/* Analysis Cards */
+.magnitude-distribution,
+.change-statistics {
+    height: 290px; /* Exactly match frequency container */
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.pie-chart-container {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    min-height: 180px; /* Adjusted for better proportion */
+}
+
+/* Trend stats container adjustments */
+.trend-stats-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    padding: 0.5rem 0;
 }
 
 /* Map and Stats Container */
 .map-stats-container {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* Changed from 3fr to 2fr to make map narrower */
-    gap: 1.5rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
 }
 
 /* Map Section */
 .map-container {
     position: relative;
-    height: 360px;
+    height: 320px;
     width: 100%;
     border-radius: 12px;
     border: 2px solid #403d3d;
@@ -136,7 +198,7 @@
     background: #efeeee;
     border: 2px solid #e0e0e0;
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex;
@@ -145,7 +207,7 @@
     text-align: center;
     position: relative;
     overflow: hidden;
-    min-height: 140px;
+    min-height: 120px;
 }
 
 .stat-card::before {
@@ -180,7 +242,7 @@
 }
 
 .stat-value {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: black;
     margin: auto;
@@ -318,53 +380,112 @@
 }
 
 /* Adjust responsive breakpoint if needed */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .map-stats-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 3fr 2fr;
+    }
+    
+    .stat-card {
+        min-height: 110px;
+    }
+    
+    .stat-value {
+        font-size: 1.8rem;
     }
 
-    .map-container {
-        height: 400px;
+    .magnitude-distribution,
+    .change-statistics {
+        height: 300px;
     }
+    
+    .frequency-chart-container {
+        height: 180px;
+    }
+    
+    .pie-chart-container {
+        min-height: 180px;
+    }
+}
 
-    .stats-section {
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(2, 1fr);
+@media (max-width: 992px) {
+    .magnitude-distribution,
+    .change-statistics {
+        height: 300;
+    }
+    
+    .frequency-chart-container {
+        height: 180px;
+    }
+    
+    .pie-chart-container {
+        min-height: 160px;
     }
 }
 
 @media (max-width: 768px) {
     .dashboard-container {
-        padding: 0.5rem;  /* Reduced padding for mobile */
-        padding-bottom: -1rem; /* Removes bottom padding */
+        padding: 0.5rem;
     }
-    .dashboard-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
+    
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+    
+    .map-container {
+        height: 250px;
+    }
+    
+    .stats-section {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .stat-title {
+        font-size: 0.9rem;
     }
 
+    .magnitude-distribution,
+    .change-statistics {
+        height: 300px;
+    }
+    
+    .frequency-chart-container {
+        height: 180px;
+    }
+    
+    .pie-chart-container {
+        min-height: 140px;
+    }
+}
+
+@media (max-width: 480px) {
     .stats-section {
         grid-template-columns: 1fr;
     }
-
-    .analysis-container {
-        grid-template-columns: 1fr;
+    
+    .stat-card {
+        min-height: 90px;
+    }
+    
+    .dashboard-header {
+        padding: 0.25rem;
     }
 
-    /* Adjust content card padding for mobile */
-    .content-card {
-        padding: 1rem;
-        margin: 0.5rem 0;
+    .magnitude-distribution,
+    .change-statistics {
+        height: 300px;
     }
-
-    /* Make sure all charts and maps are responsive */
-    .map-container,
-    .pie-chart-container,
+    
     .frequency-chart-container {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
+        height: 160px;
+    }
+    
+    .pie-chart-container {
+        min-height: 120px;
     }
 }
 
@@ -372,4 +493,82 @@
 canvas {
     max-width: 100% !important;
     height: auto !important;
+}
+
+/* Update trend stat styles */
+.trend-stat {
+    background-color: #f7f7f7;
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+.trend-header {
+    margin-bottom: 0.2rem;
+}
+
+.trend-title {
+    color: #333;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.trend-value-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    margin: 0.25rem 0;
+}
+
+.trend-value {
+    color: #222;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.trend-direction {
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.comparison-period {
+    font-size: 0.75rem;
+    color: #444;
+}
+
+/* Update media queries for trend stats */
+@media (max-width: 768px) {
+    .trend-value {
+        font-size: 1.1rem;
+    }
+    
+    .trend-title {
+        font-size: 0.8rem;
+    }
+    
+    .trend-direction {
+        font-size: 0.8rem;
+    }
+    
+    .comparison-period {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .trend-value {
+        font-size: 1rem;
+    }
+    
+    .trend-title {
+        font-size: 0.75rem;
+    }
+}
+
+/* Override container width for dashboard page */
+.dashboard-page {
+    max-width: 100% !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
 }
