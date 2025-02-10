@@ -430,35 +430,43 @@
     .dashboard-title {
         font-size: 1.5rem;
     }
-    
-    .map-container {
-        height: 250px;
+
+    /* Stack map and stats vertically */
+    .map-stats-container {
+        grid-template-columns: 1fr;
     }
     
+    /* Adjust map height for mobile */
+    .map-container {
+        height: 300px;
+    }
+    
+    /* Make stats grid 2 columns on medium screens */
     .stats-section {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.75rem;
     }
-    
-    .stat-value {
-        font-size: 1.5rem;
-    }
-    
-    .stat-title {
-        font-size: 0.9rem;
+
+    /* Stack analysis and frequency sections vertically */
+    .analysis-frequency-container {
+        grid-template-columns: 1fr;
     }
 
+    /* Stack magnitude distribution and change statistics vertically */
+    .analysis-container {
+        grid-template-columns: 1fr;
+    }
+
+    /* Adjust heights for mobile */
     .magnitude-distribution,
     .change-statistics {
-        height: 300px;
+        height: auto;
+        min-height: 260px;
     }
     
-    .frequency-chart-container {
-        height: 180px;
-    }
-    
-    .pie-chart-container {
-        min-height: 140px;
+    .frequency-container {
+        height: auto;
+        min-height: 260px;
     }
 }
 
@@ -470,22 +478,22 @@
     .stat-card {
         min-height: 90px;
     }
-    
-    .dashboard-header {
-        padding: 0.25rem;
+
+    /* Adjust filter section for mobile */
+    .filter-row {
+        flex-direction: column;
+        gap: 1rem;
     }
 
-    .magnitude-distribution,
-    .change-statistics {
-        height: 300px;
+    .time-selector,
+    .magnitude-selector {
+        width: 100%;
     }
-    
-    .frequency-chart-container {
-        height: 160px;
-    }
-    
-    .pie-chart-container {
-        min-height: 120px;
+
+    /* Adjust trend stats for mobile */
+    .trend-stats-container {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
     }
 }
 
