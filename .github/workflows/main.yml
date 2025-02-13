@@ -34,6 +34,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/ec2_key.pem ubuntu@3.233.127.111 '
             cd /home/ubuntu/portfolio &&
+            git restore . &&
             git pull origin main &&
             source .venv/bin/activate &&
             pip install -r requirements.txt &&
