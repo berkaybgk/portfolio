@@ -189,41 +189,55 @@ class DashboardManager {
         // Calculate stats for current period
         const currentPeriod = {
             count: currentEarthquakes.length,
-            avgMagnitude: currentEarthquakes.reduce((sum, eq) => sum + eq.magnitude, 0) / currentEarthquakes.length || 0
+            avgMagnitude: currentEarthquakes.length > 0 
+                ? currentEarthquakes.reduce((sum, eq) => sum + eq.magnitude, 0) / currentEarthquakes.length 
+                : null
         };
 
         // Calculate stats for previous period
         const previousPeriod = {
             count: previousEarthquakes.length,
-            avgMagnitude: previousEarthquakes.reduce((sum, eq) => sum + eq.magnitude, 0) / previousEarthquakes.length || 0
+            avgMagnitude: previousEarthquakes.length > 0
+                ? previousEarthquakes.reduce((sum, eq) => sum + eq.magnitude, 0) / previousEarthquakes.length
+                : null
         };
 
-        // Calculate percentage changes
-        const frequencyChange = previousPeriod.count > 0
-            ? ((currentPeriod.count - previousPeriod.count) / previousPeriod.count * 100).toFixed(1)
-            : 0;
+        // Calculate percentage changes with proper error handling
+        let frequencyChange = 0;
+        let magnitudeChange = 0;
 
-        const magnitudeChange = previousPeriod.avgMagnitude > 0
-            ? ((currentPeriod.avgMagnitude - previousPeriod.avgMagnitude) / previousPeriod.avgMagnitude * 100).toFixed(1)
-            : 0;
+        if (previousPeriod.count > 0) {
+            frequencyChange = ((currentPeriod.count - previousPeriod.count) / previousPeriod.count * 100).toFixed(1);
+        } else if (currentPeriod.count > 0) {
+            frequencyChange = 100; // Represent increase from 0 to some value as 100%
+        }
 
-        // Update the UI
-        document.getElementById('frequencyChange').textContent = `${Math.abs(frequencyChange)}%`;
-        document.getElementById('magnitudeChange').textContent = `${Math.abs(magnitudeChange)}%`;
+        if (previousPeriod.avgMagnitude !== null && currentPeriod.avgMagnitude !== null) {
+            magnitudeChange = ((currentPeriod.avgMagnitude - previousPeriod.avgMagnitude) / previousPeriod.avgMagnitude * 100).toFixed(1);
+        }
+
+        // Update the UI with proper "No Data" handling
+        document.getElementById('frequencyChange').textContent = previousPeriod.count === 0 && currentPeriod.count === 0 
+            ? 'No Data' 
+            : `${Math.abs(frequencyChange)}%`;
+        
+        document.getElementById('magnitudeChange').textContent = previousPeriod.avgMagnitude === null || currentPeriod.avgMagnitude === null
+            ? 'No Data'
+            : `${Math.abs(magnitudeChange)}%`;
 
         // Update comparison period text
         const periodText = this.getPeriodText(lookbackDays);
         document.getElementById('frequencyComparisonPeriod').textContent = `vs previous ${periodText}`;
         document.getElementById('magnitudeComparisonPeriod').textContent = `vs previous ${periodText}`;
 
-        // Update trend indicators
+        // Update trend indicators with proper null checks
         this.updateTrendIndicator(
             document.querySelector('.trend-stat'),
-            parseFloat(frequencyChange)
+            previousPeriod.count === 0 && currentPeriod.count === 0 ? null : parseFloat(frequencyChange)
         );
         this.updateTrendIndicator(
             document.querySelectorAll('.trend-stat')[1],
-            parseFloat(magnitudeChange)
+            previousPeriod.avgMagnitude === null || currentPeriod.avgMagnitude === null ? null : parseFloat(magnitudeChange)
         );
     }
 
@@ -236,7 +250,11 @@ class DashboardManager {
 
     updateTrendIndicator(element, value) {
         const direction = element.querySelector('.trend-direction');
-        if (value > 0) {
+        if (value === null) {
+            direction.innerHTML = '-';
+            direction.style.color = '#999';
+            direction.style.fontSize = '2em';
+        } else if (value > 0) {
             direction.innerHTML = '↑';
             direction.style.color = '#ff4444';
             direction.style.fontSize = '2em';
