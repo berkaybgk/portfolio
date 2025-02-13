@@ -77,4 +77,3 @@ class EarthquakeAnalysisUtils():
         result_df = result_df[result_df.index >= cutoff_date]
         
         return result_df
-
