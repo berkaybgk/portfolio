@@ -42,13 +42,31 @@ class GoogleDocsConverterView(APIView):
             })
     
     def _fix_markdown_numbering(self, content):
+        # First, clean HTML comments
         lines = content.split('\n')
+        cleaned_lines = []
+        in_comment = False
+        
+        for line in lines:
+            # Check for comment start
+            if '<!-----' in line:
+                in_comment = True
+                continue
+            # Check for comment end
+            elif '----->' in line:
+                in_comment = False
+                continue
+            # Skip lines while in comment block
+            elif not in_comment:
+                cleaned_lines.append(line)
+        
+        # Process the cleaned content for markdown numbering
         result = []
         counters = {}
         current_indent = 0
         found_requirements = False
         
-        for line in lines:
+        for line in cleaned_lines:
             if not line.strip():
                 result.append(line)
                 continue
