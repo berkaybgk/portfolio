@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Text to Markdown Converter - berkaybgk{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #128b96;
+        --secondary: #c2db70;
+        --dark: #e0e0e0;
+        --card-bg: #2b2a2a;
+        --text-primary: #ffffff;
+        --text-secondary: #090909;
+        --text-custom-light: #f0f0f0;
+    }
+
+    .converter-container {
+        max-width: 900px;
+        margin: 4rem auto;
+    }
+
+    .converter-header {
+        margin-bottom: 2.5rem;
+        text-align: center;
+    }
+
+    .converter-header h1 {
+        color: var(--dark);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .converter-card {
+        background: var(--card-bg);
+        padding: 2.5rem;
+        border-radius: 15px;
+        border: 1px solid #333333;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control {
+        background-color: #ffffff;
+        border: 1px solid #333333;
+        color: #000000;
+        border-radius: 8px;
+        padding: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        background-color: #ffffff;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.25rem rgba(18, 139, 150, 0.25);
+        color: #000000;
+    }
+
+    .form-label {
+        color: var(--text-custom-light);
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .btn-custom {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: var(--secondary);
+        color: #1a1a1a;
+        transform: scale(1.02);
+    }
+
+    .btn-copy {
+        background-color: #333333;
+        color: var(--text-custom-light);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-copy:hover {
+        background-color: #444444;
+        transform: scale(1.02);
+    }
+
+    .result-section {
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 1px solid #333333;
+    }
+
+    .alert-custom {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        margin-top: 1.5rem;
+    }
+</style>
+
+<div class="converter-container">
+    <div class="converter-header">
+        <h1>Text to Markdown Converter</h1>
+    </div>
+    
+    <div class="converter-card">
+        <form method="post" id="converter-form">
+            {% csrf_token %}
+            <div class="form-group mb-4">
+                <label for="input_text" class="form-label">Input Text</label>
+                <textarea class="form-control" 
+                          id="input_text" 
+                          name="input_text" 
+                          placeholder="Enter your text here..." 
+                          rows="10" 
+                          required></textarea>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-custom">Convert to Markdown</button>
+            </div>
+        </form>
+
+        {% if markdown_content %}
+        <div class="result-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="text-light mb-0">Converted Markdown</h3>
+                <button class="btn btn-copy" onclick="copyToClipboard()">
+                    <i class="fas fa-copy me-2"></i>Copy to Clipboard
+                </button>
+            </div>
+            <textarea class="form-control" 
+                      id="markdown-result" 
+                      rows="10" 
+                      readonly>{{ markdown_content }}</textarea>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="alert alert-custom" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function copyToClipboard() {
+    var markdownText = document.getElementById('markdown-result');
+    markdownText.select();
+    document.execCommand('copy');
+}
+</script>
+{% endblock %}

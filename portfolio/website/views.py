@@ -5,6 +5,7 @@ from django.http import Http404
 from .misc.parse_ds_project_info import parse_ds_project_info
 from .misc.parse_analysis_content import parse_analysis_content
 from django.shortcuts import render, redirect
+import re
 
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
@@ -15,6 +16,79 @@ class HomeView(APIView):
     def get(self, request, format=None):
         data = {'page_title': 'Home'}
         return render(request, 'website/index.html', data)
+
+class GoogleDocsConverterView(APIView):
+    def get(self, request, format=None):
+        return render(request, 'website/gdoc_converter.html')
+    
+    def post(self, request, format=None):
+        try:
+            input_text = request.POST.get('input_text')
+            
+            # Validate input
+            if not input_text:
+                raise ValueError('Please provide some text to convert')
+            
+            # Fix markdown numbering
+            markdown_content = self._fix_markdown_numbering(input_text)
+            
+            return render(request, 'website/gdoc_converter.html', {
+                'markdown_content': markdown_content
+            })
+            
+        except Exception as e:
+            return render(request, 'website/gdoc_converter.html', {
+                'error': str(e)
+            })
+    
+    def _fix_markdown_numbering(self, content):
+        lines = content.split('\n')
+        result = []
+        counters = {}
+        current_indent = 0
+        found_requirements = False
+        
+        for line in lines:
+            if not line.strip():
+                result.append(line)
+                continue
+
+            # Check for Requirements Specification in bold format
+            if not found_requirements and '***Requirements Specification***' in line:
+                result.append('# Requirements Specification')
+                found_requirements = True
+                continue
+
+            # Calculate indentation level
+            indent = len(line) - len(line.lstrip())
+            text = line.lstrip()
+            
+            # Check if this is a numbered list item
+            if re.match(r'^\d+\.\s+', text):
+                # Extract the content after the number
+                content = re.sub(r'^\d+\.\s+', '', text)
+                
+                # Reset counters for deeper levels when indent changes
+                if indent > current_indent:
+                    current_indent = indent
+                elif indent < current_indent:
+                    # Clear counters for all deeper levels
+                    counters = {k: v for k, v in counters.items() if k <= indent}
+                    current_indent = indent
+                
+                # Initialize or increment counter for this level
+                if indent not in counters:
+                    counters[indent] = 1
+                else:
+                    counters[indent] += 1
+                
+                # Create the line with correct numbering
+                spaces = ' ' * indent
+                result.append(f'{spaces}{counters[indent]}. {content}')
+            else:
+                result.append(line)
+        
+        return '\n'.join(result)
 
 class IndexView(APIView):
     def get(self, request, format=None):
