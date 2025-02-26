@@ -31,6 +31,11 @@ class GoogleDocsConverterView(APIView):
             
             # Fix markdown numbering
             markdown_content = self._fix_markdown_numbering(input_text)
+
+            # Convert markdown format
+            markdown_content = self._reformat_markdown_enumeration(markdown_content)
+
+            markdown_content = markdown_content.replace("==Don’t delete this, useful when parsing==", "----")
             
             return render(request, 'website/gdoc_converter.html', {
                 'markdown_content': markdown_content
@@ -40,6 +45,80 @@ class GoogleDocsConverterView(APIView):
             return render(request, 'website/gdoc_converter.html', {
                 'error': str(e)
             })
+
+    def _reformat_markdown_enumeration(self, markdown_text):
+        """
+        Reformat markdown enumeration from the format:
+            1. Top Level
+                1. Second Level
+                    1. Third Level
+        
+        To the format:
+            1. Top Level
+                1.1. Second Level
+                    1.1.1. Third Level
+        
+        Args:
+            markdown_text (str): The markdown text to reformat
+            
+        Returns:
+            str: Reformatted markdown text
+        """
+        # Split the text into lines
+        lines = markdown_text.split('\n')
+        
+        # Track the current numbering at each level
+        current_numbers = []
+        
+        # Store the reformatted lines
+        reformatted_lines = []
+        
+        for line in lines:
+            # Skip empty lines
+            if not line.strip():
+                reformatted_lines.append(line)
+                continue
+            
+            # Determine the indentation level (number of spaces)
+            leading_spaces = len(line) - len(line.lstrip())
+            
+            # Use integer division to determine the level (4 spaces per level)
+            level = leading_spaces // 4
+            
+            # Extract the actual content of the line
+            line_content = line.strip()
+            
+            # Check if the line starts with a number and period (markdown enumeration)
+            enum_match = re.match(r'(\d+)\.\s+(.*)', line_content)
+            
+            if enum_match:
+                # It's an enumerated item
+                number = int(enum_match.group(1))
+                content = enum_match.group(2)
+                
+                # Update the current_numbers list based on the level
+                if level >= len(current_numbers):
+                    # Add new level
+                    current_numbers.append(number)
+                else:
+                    # Adjust current_numbers to the current level
+                    current_numbers = current_numbers[:level]
+                    current_numbers.append(number)
+                
+                # Build the new enumeration format
+                new_enum = '.'.join(str(num) for num in current_numbers)
+                
+                # Construct the reformatted line
+                spaces = ' ' * (4 * level)
+                reformatted_line = f"{spaces}- {new_enum}. {content}" 
+                reformatted_lines.append(reformatted_line)
+            else:
+                # Not an enumerated item, keep as is
+                reformatted_lines.append(line)
+        
+        # Join the lines back together
+        return '\n'.join(reformatted_lines)
+
     
     def _fix_markdown_numbering(self, content):
         # First, clean HTML comments
