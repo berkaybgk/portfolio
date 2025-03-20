@@ -4,6 +4,7 @@ from django.conf import settings
 from django.http import Http404
 from .misc.parse_ds_project_info import parse_ds_project_info
 from .misc.parse_analysis_content import parse_analysis_content
+from .misc.make_it_list import process_markdown
 from django.shortcuts import render, redirect
 import re
 
@@ -36,6 +37,8 @@ class GoogleDocsConverterView(APIView):
             markdown_content = self._reformat_markdown_enumeration(markdown_content)
 
             markdown_content = markdown_content.replace("==Don’t delete this, useful when parsing==", "----")
+
+            markdown_content = process_markdown(markdown_content)
             
             return render(request, 'website/gdoc_converter.html', {
                 'markdown_content': markdown_content
