@@ -29,6 +29,8 @@ class GoogleDocsConverterView(APIView):
             # Validate input
             if not input_text:
                 raise ValueError('Please provide some text to convert')
+
+            glossary_part = input_text.split("==Don’t delete this, useful when parsing==")[1]
             
             # Fix markdown numbering
             markdown_content = self._fix_markdown_numbering(input_text)
@@ -39,6 +41,8 @@ class GoogleDocsConverterView(APIView):
             markdown_content = markdown_content.replace("==Don’t delete this, useful when parsing==", "----")
 
             markdown_content = process_markdown(markdown_content)
+
+            markdown_content = markdown_content + "\n\n----" + "\n" + glossary_part
             
             return render(request, 'website/gdoc_converter.html', {
                 'markdown_content': markdown_content
