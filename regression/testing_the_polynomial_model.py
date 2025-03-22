@@ -53,21 +53,14 @@ def load_and_preprocess(test_size=0.2, add_noise=False, noise_scale=1.0):
         return None, None, None, None
 
 
-if __name__ == "__main__":
-    x_train, x_test, y_train, y_test = load_and_preprocess()
-
-    if x_train is not None:
-        print(f"Number of features: {x_train.shape[1]}")
-        print(f"Number of training samples: {x_train.shape[0]}")
-
-        # Start with a simple model
+def predict_polynomial(x_train, x_test, y_train, y_test):
+    try:
         lr = Regression(x_train, y_train)
 
         # Use degree 3
-        degree = 3
+        degree = 2
         print(f"Training with polynomial degree {degree}")
         betas = lr.compute_betas_polynomial(degree)
-        print(f"Number of coefficients: {len(betas)}")
 
         # Use the updated predict method
         y_pred = lr.predict_polynomial(x_test, betas)
@@ -94,3 +87,34 @@ if __name__ == "__main__":
 
         plt.tight_layout()
         plt.show()
+
+    except Exception as e:
+        print(e)
+
+
+def predict_multilinear(x_train, x_test, y_train, y_test):
+
+    try:
+        lr = Regression(x_train, y_train)
+
+        y_pred = lr.predict_linear(x_test)
+
+        mse = lr.mean_squared_error(y_test, y_pred)
+        print(f"Mean Squared Error on Test Data: {mse}")
+
+        plt.scatter(y_test, y_pred)
+        plt.xlabel('Actual Values')
+        plt.ylabel('Predicted Values')
+        plt.title('Actual vs Predicted')
+        plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--')
+        plt.show()
+
+    except Exception as e:
+        print(e)
+
+if __name__ == "__main__":
+    x_train, x_test, y_train, y_test = load_and_preprocess()
+
+    predict_polynomial(x_train, x_test, y_train, y_test)
+
+    # predict_multilinear(x_train, x_test, y_train, y_test)

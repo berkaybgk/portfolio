@@ -1,10 +1,9 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 from regression import Regression
 
-def load_and_preprocess(test_size=0.2, add_noise=False, noise_scale=1.0):
+def load_and_preprocess(target_col: str, test_size=0.2, add_noise=False, noise_scale=1.0):
     """
     Returns X_train, X_test, y_train, y_test
 
@@ -24,35 +23,32 @@ def load_and_preprocess(test_size=0.2, add_noise=False, noise_scale=1.0):
     cutoff = int(test_size * df.shape[0])
 
     # Shuffle the rows of the DataFrame
-    df = df.sample(frac=1, random_state=35).reset_index(drop=True)
+    df = df.sample(frac=1).reset_index(drop=True)
 
     test, train = df[:cutoff], df[cutoff:]
 
-    x_train = train.drop(columns=["Y"])
-    x_test = test.drop(columns=["Y"])
+    x_train = train.drop(columns=[target_col])
+    x_test = test.drop(columns=[target_col])
 
-    y_train = train["Y"]
-    y_test = test["Y"]
+    y_train = train[target_col]
+    y_test = test[target_col]
 
     return x_train, x_test, y_train, y_test
 
 
 if __name__ == "__main__":
-    x_train, x_test, y_train, y_test = load_and_preprocess()
+    x_train, x_test, y_train, y_test = load_and_preprocess(target_col="Y")
 
     lr = Regression(x_train, y_train)
 
-    betas = lr.compute_betas_linear()
-    print(f"Beta coefficients: {betas}")
+    # betas = lr.compute_betas_linear()
+    # print(f"Beta coefficients: {betas}")
 
     y_pred = lr.predict_linear(x_test)
 
     mse = lr.mean_squared_error(y_test, y_pred)
     print(f"Mean Squared Error on Test Data: {mse}")
 
-    # For multivariate data, plotting becomes more complex
-    # You might want to plot predicted vs. actual values instead
-    import matplotlib.pyplot as plt
     plt.scatter(y_test, y_pred)
     plt.xlabel('Actual Values')
     plt.ylabel('Predicted Values')

@@ -3,7 +3,11 @@ import numpy as np
 
 class Regression:
 
-    def __init__(self, x:np.array, y:np.array):
+    def __init__(self, x, y):
+        """
+        x is the feature set from a dataframe
+        y is a column of a dataframe, target variables
+        """
         self.x = x.values
         self.y = y.values
 
@@ -16,7 +20,7 @@ class Regression:
 
         X_with_intercept = np.column_stack((np.ones(X.shape[0]), X))
 
-        # Calculate betas: (X^T X)^(-1) X^T y
+        # Calculate betas with normal eq: (X^T X)^(-1) X^T y
         betas = np.linalg.inv(X_with_intercept.T.dot(X_with_intercept)).dot(X_with_intercept.T).dot(y)
 
         return betas
@@ -66,13 +70,7 @@ class Regression:
         except (np.linalg.LinAlgError, ValueError) as e:
             print(f"Error during coefficient calculation: {e}")
             print("Falling back to simpler model...")
-            # Fall back to a simpler model (OLS with just first degree terms)
-            X_simple = np.column_stack((np.ones(len(y)), x))
-            beta_simple = np.linalg.lstsq(X_simple, y, rcond=1e-3)[0]
-            # Pad with zeros to match expected coefficient count
-            beta_padded = np.zeros(1 + x.shape[1] * degree)
-            beta_padded[:len(beta_simple)] = beta_simple
-            return beta_padded
+
 
 
 
@@ -157,29 +155,21 @@ class Regression:
 
         # Handle missing values
         if isinstance(x, pd.DataFrame):
-            x = x.fillna(0)  # Replace NaN with zeros
+            x = x.fillna(0)
         else:
-            x = np.nan_to_num(x)  # Replace NaN with zeros for numpy arrays
-
-        # Robust normalization - use median and IQR instead of mean/std
-        # to be less affected by outliers
-        x_centered = x - np.median(x, axis=0)
-        iqr = np.percentile(x, 75, axis=0) - np.percentile(x, 25, axis=0)
-        # Avoid division by zero
-        iqr = np.where(iqr < 1e-10, 1.0, iqr)
-        x_normalized = x_centered / iqr
+            x = np.nan_to_num(x)
 
         # Start with a column of ones for the intercept
         X_poly = np.ones((n_samples, 1))
 
         # Add the original features
-        X_poly = np.column_stack((X_poly, x_normalized))
+        X_poly = np.column_stack((X_poly, x))
 
         # For degree 2 and higher
         for d in range(2, degree + 1):
-            for col in range(x_normalized.shape[1]):
+            for col in range(x.shape[1]):
                 # Clip to prevent extreme values
-                col_data = np.clip(x_normalized[:, col], -5, 5)
+                col_data = np.clip(x[:, col], -5, 5)
                 col_powered = np.power(col_data, d).reshape(-1, 1)
                 X_poly = np.column_stack((X_poly, col_powered))
 
@@ -192,36 +182,4 @@ class Regression:
             X_poly = np.column_stack((X_poly, x_safe))
 
         return X_poly
-
-
-
-def load_and_preprocess(test_size = 0.2):
-    """
-    Returns
-    X_train, X_test, y_train, y_test
-    """
-    df = pd.read_csv("resources/cancer_reg.csv")
-
-    cutoff = int(test_size * df.shape[0])
-
-    # Shuffle the rows of the DataFrame
-    df = df.sample(frac=1, random_state=28).reset_index(drop=True)
-
-    test, train = df[:cutoff], df[cutoff:]
-
-    x_train = train.drop(columns=["target_death_rate"])
-    x_test = test.drop(columns=["target_death_rate"])
-
-    y_train = train["target_death_rate"]
-    y_test = test["target_death_rate"]
-
-    return x_train, x_test, y_train, y_test
-
-
-if __name__ == "__main__":
-
-    x_train, x_test, y_train, y_test = load_and_preprocess()
-
-
-
 
