@@ -72,8 +72,6 @@ class Regression:
             print("Falling back to simpler model...")
 
 
-
-
     def predict_linear(self, x_test: np.array) -> np.array:
         """
         Returns the predicted values for multivariate linear regression
