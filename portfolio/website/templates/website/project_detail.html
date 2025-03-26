@@ -222,6 +222,7 @@
             </button>
         </li>
         {% endif %}
+
         {% if main %}
         <li class="nav-item" role="presentation">
             <button class="nav-link-custom {% if not eda and main %}active{% endif %}" id="model-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="model" aria-selected="{% if not eda and main %}true{% else %}false{% endif %}">
@@ -229,10 +230,19 @@
             </button>
         </li>
         {% endif %}
+
         {% if eval %}
         <li class="nav-item" role="presentation">
             <button class="nav-link-custom {% if not eda and not main and eval %}active{% endif %}" id="eval-tab" data-bs-toggle="tab" data-bs-target="#eval" type="button" role="tab" aria-controls="eval" aria-selected="{% if not eda and not main and eval %}true{% else %}false{% endif %}">
                 Evaluation
+            </button>
+        </li>
+        {% endif %}
+
+        {% if model_impl %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link-custom {% if not eda and main %}active{% endif %}" id="impl-tab" data-bs-toggle="tab" data-bs-target="#impl" type="button" role="tab" aria-controls="impl" aria-selected="{% if not eda and main %}true{% else %}false{% endif %}">
+                Model Implementation
             </button>
         </li>
         {% endif %}
@@ -275,6 +285,19 @@
                 </div>
                 <div class="code-section-content">
                     <pre><code class="language-python">{{ eval }}</code></pre>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if model_impl %}
+        <div class="tab-pane fade {% if not eda and not main and eval %}show active{% endif %}" id="impl" role="tabpanel" aria-labelledby="impl-tab">
+            <div class="code-section">
+                <div class="code-section-header">
+                    <h2 class="h4">Model Implementation</h2>
+                </div>
+                <div class="code-section-content">
+                    <pre><code class="language-python">{{ model_impl }}</code></pre>
                 </div>
             </div>
         </div>

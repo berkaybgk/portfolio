@@ -143,6 +143,26 @@ class Regression:
         mse = (1/len(y_true)) * np.sum((y_true - y_pred) ** 2)
         return mse
 
+    def r2_score(self, y_test, y_pred):
+        try:
+            nominator = 0
+            if len(y_test) != len(y_pred):
+                raise ValueError
+
+            for i in range(len(y_test)):
+                nominator += (y_test[i]-y_pred[i])**2
+
+            denominator = 0
+            test_mean = np.asarray(y_test).mean()
+            for i in range(len(y_test)):
+                denominator += (y_test[i] - test_mean)**2
+
+            return 1 - (nominator / denominator)
+
+        except:
+            print("Couldn't calculate the R2 score")
+
+
 
     def create_polynomial_features(self, degree: int) -> np.array:
         """

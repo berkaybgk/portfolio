@@ -97,8 +97,8 @@
 </style>
 
 <div class="container my-5">
-    <h1 class="text-center mb-4">Data Related Projects</h1>
-    <p class="text-center text-muted mb-5">Explore my work with data science, including analysis, visualization, and model development.</p>
+    <h1 class="text-center mb-4">DS/ML Projects</h1>
+    <p class="text-center text-muted mb-5">Explore my work with data science and ML, including analysis, visualization, and model development.</p>
 
     <div class="row">
 
@@ -119,8 +119,25 @@
             </div>
         </div>
 
-        <!-- Project 1 -->
+        <!-- Project 3 -->
         <div class="col-md-6 col-lg-6 mb-4" data-aos="fade-up">
+            <div class="card shadow-sm h-100">
+                <img src="{% static 'website/images/regression.png' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
+                <div class="card-body">
+                    <h5 class="card-title">Regression Development and Analysis</h5>
+                    <p class="card-text">
+                        I have developed my own regression implementation which features Simple Linear Regression and Polynomial Linear regression. I have used the
+                        normal equation while implementing the model instead of a stochastic approach. Then, I used several datasets to evaluate the performance of my model.
+                    </p>
+                    <div class="project-btn-wrapper">
+                        <a href="{% url 'project_detail' project_name='regression' %}" class="btn btn-custom">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 1 -->
+        <div class="col-md-6 col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="100">
             <div class="card shadow-sm h-100">
                 <img src="{% static 'website/images/earthquake.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
                 <div class="card-body">
@@ -137,7 +154,7 @@
         </div>
 
         <!-- Project 2 -->
-        <div class="col-md-6 col-lg-6 mx-auto mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="col-md-6 col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="100">
             <div class="card shadow-sm h-100">
                 <img src="{% static 'website/images/mushrooms.jpg' %}" class="card-img-top img-fluid custom-card-img" alt="Project Image">
                 <div class="card-body">
@@ -151,6 +168,10 @@
                 </div>
             </div>
         </div>
+
+
+
+
     </div>
 </div>
 

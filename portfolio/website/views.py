@@ -240,6 +240,22 @@ class ProjectDetailView(APIView):
         project_name, project_description, url = parse_ds_project_info(readme_file_path)
         eda, main, eval_content = parse_analysis_content(project_folder_path)
 
+        model_impl = ""
+        model_impl_header = ""
+        if "Regression Dev" in project_name:
+            try:
+                regression_file_path = os.path.join(project_folder_path, "regression.py")
+                with open(regression_file_path, "r", encoding="utf-8") as main_file:
+                    model_impl = main_file.read()
+                model_impl_header = "Simple and Polynomial Regression"
+
+            except Exception as e:
+                return render(request, 'error.html', {
+                    'error_code': 404,
+                    'error_message': str(e),
+                    'error_description': 'The requested resource was not found.',
+                })
+
         # Prepare context to send to the template
         context = {
             'project_endpoint': project_endpoint,
@@ -248,7 +264,9 @@ class ProjectDetailView(APIView):
             'url': url,
             'eda': eda,
             'main': main,
-            'eval': eval_content
+            'eval': eval_content,
+            'model_impl': model_impl,
+            'model_impl_header': model_impl_header
         }
 
         return render(request, 'website/project_detail.html', context)
