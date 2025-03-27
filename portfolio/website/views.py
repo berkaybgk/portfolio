@@ -29,21 +29,22 @@ class GoogleDocsConverterView(APIView):
             # Validate input
             if not input_text:
                 raise ValueError('Please provide some text to convert')
-
-            glossary_part = input_text.split("==Don’t delete this, useful when parsing==")[1]
-            
+                
             # Fix markdown numbering
             markdown_content = self._fix_markdown_numbering(input_text)
 
             # Convert markdown format
             markdown_content = self._reformat_markdown_enumeration(markdown_content)
 
-            markdown_content = markdown_content.replace("==Don’t delete this, useful when parsing==", "----")
+            markdown_content = markdown_content.replace("==Don’t delete this, useful when parsing==", "</blockquote>\n</details>")
 
             markdown_content = process_markdown(markdown_content)
-
-            markdown_content = markdown_content + "\n\n----" + "\n" + glossary_part
             
+            markdown_content = markdown_content.strip("\n")
+            markdown_content = markdown_content.strip("</details>")
+
+            markdown_content = markdown_content.replace("**Glossary:**", "\n\n----\n\n\n**Glossary:**")
+
             return render(request, 'website/gdoc_converter.html', {
                 'markdown_content': markdown_content
             })
