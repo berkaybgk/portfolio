@@ -27,3 +27,10 @@ def handler400(request, exception):
         'error_message': 'Bad Request',
         'error_description': 'The request could not be processed. Please try again.'
     }, status=400)
+
+def handler405(request, exception):
+    return render(request, 'errors/error.html', {
+        'error_code': '405',
+        'error_message': 'Method Not Allowed',
+        'error_description': 'The method is not allowed for the requested URL.'
+    }, status=405)
