@@ -9,6 +9,7 @@ portfolio/.chromadb_persist
 .ipynb_checkpoints
 portfolio/eq_dashboard/resources/eq_data.csv
 portfolio/eq_dashboard/resources/recent_data.csv
+portfolio/watch_data/resources/cleaned_watches_data_fixed.csv
 portfolio/staticfiles
 eq_data.csv
 recent_data.csv
