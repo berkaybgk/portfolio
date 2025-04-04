@@ -131,10 +131,10 @@ def predict_price(model, input_data):
 def get_predictions(n):
     save_dir = "important_models"
 
-    df = get_model_df()
+    df = get_model_df("../resources/single_instance.csv")
 
     # Get a random sample of 5 rows from the DataFrame
-    sample_df = df.sample(n=n)
+    sample_df = df.copy()
 
     # Preprocess the data
     X, y = pre_process_data(sample_df)

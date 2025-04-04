@@ -122,9 +122,9 @@ def prepare_model_features(df: pd.DataFrame) -> pd.DataFrame:
     return df_features
 
 
-def get_model_df():
+def get_model_df(path = "../resources/cleaned_watches_data_fixed.csv"):
     # Read the cleaned watches data
-    df = pd.read_csv("../resources/cleaned_watches_data_fixed.csv")
+    df = pd.read_csv(path)
 
     # Prepare the model features
     df_features = prepare_model_features(df)
