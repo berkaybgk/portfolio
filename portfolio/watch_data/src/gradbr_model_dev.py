@@ -157,4 +157,4 @@ if __name__ == '__main__':
     # Train the model
     # train_model()
 
-    get_predictions(10)
+    get_predictions(1)
