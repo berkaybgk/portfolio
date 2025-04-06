@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'website',
     'fusion',
+    'watch_data',
     'eq_dashboard',
     'django_crontab'
 ]

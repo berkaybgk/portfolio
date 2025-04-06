@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('website.urls')),
     path('', include('fusion.urls')),
     path('', include('eq_dashboard.urls')),
+    path('', include('watch_data.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page=''), name='logout'),
 ]

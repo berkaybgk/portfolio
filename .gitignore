@@ -2,6 +2,7 @@
 *.pem
 .venv
 .idea
+.DS_Store
 portfolio/db.sqlite3
 db.sqlite3
 portfolio/.chromadb_persist

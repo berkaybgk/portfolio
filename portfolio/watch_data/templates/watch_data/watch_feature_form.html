@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #128b96;
+        --secondary: #c2db70;
+        --dark: #e0e0e0;
+        --card-bg: #2b2a2a;
+        --text-primary: #ffffff;
+        --text-secondary: #090909;
+        --text-custom-light: #f0f0f0;
+    }
+
+    .card {
+        background: var(--card-bg);
+        border: 1px solid #333333;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: var(--primary);
+        border-bottom: 1px solid #333333;
+    }
+
+    .card-body {
+        color: var(--text-custom-light);
+    }
+
+    .form-label {
+        color: var(--text-custom-light);
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .form-select, .form-control {
+        background-color: #ffffff;
+        border: 1px solid #333333;
+        color: #000000;
+        border-radius: 8px;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-select:focus, .form-control:focus {
+        background-color: #ffffff;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.25rem rgba(18, 139, 150, 0.25);
+        color: #000000;
+    }
+
+    .btn-primary {
+        background-color: var(--primary);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--secondary);
+        color: #1a1a1a;
+        transform: scale(1.02);
+    }
+
+    .alert-success {
+        background-color: #198754;
+        color: white;
+        border: none;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0 text-white">Watch Price Predictor</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="watchFeatureForm">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.brand.id_for_label }}" class="form-label">Brand</label>
+                                {{ form.brand }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.model.id_for_label }}" class="form-label">Model</label>
+                                {{ form.model }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.movement.id_for_label }}" class="form-label">Movement</label>
+                                {{ form.movement }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.case_material.id_for_label }}" class="form-label">Case Material</label>
+                                {{ form.case_material }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.case_diameter.id_for_label }}" class="form-label">Case Diameter (mm)</label>
+                                {{ form.case_diameter }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.year_of_production.id_for_label }}" class="form-label">Year of Production</label>
+                                {{ form.year_of_production }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.condition.id_for_label }}" class="form-label">Condition</label>
+                                {{ form.condition }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.scope_of_delivery.id_for_label }}" class="form-label">Scope of Delivery</label>
+                                {{ form.scope_of_delivery }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.country_code.id_for_label }}" class="form-label">Country</label>
+                                {{ form.country_code }}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Predict Price</button>
+                        </div>
+                    </form>
+
+                    {% if predicted_price %}
+                    <div class="mt-4">
+                        <div class="alert alert-success">
+                            <h4 class="alert-heading">Predicted Price</h4>
+                            <p class="mb-0">The estimated price for this watch is: ${{ predicted_price|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    let brandModels = {};
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            brandModels = JSON.parse('{{ brand_models|escapejs }}');
+            
+            const brandSelect = document.getElementById('brand');
+            const modelSelect = document.getElementById('model');
+            
+            if (!brandSelect || !modelSelect) {
+                console.error('Could not find brand or model select elements');
+                return;
+            }
+            
+            function updateModels() {
+                const selectedBrand = brandSelect.value;
+                modelSelect.innerHTML = '';
+                
+                // Add default option
+                const defaultOption = new Option('Select a model', '');
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                modelSelect.add(defaultOption);
+                
+                if (selectedBrand && brandModels[selectedBrand]) {
+                    const models = brandModels[selectedBrand];
+                    models.forEach(model => {
+                        const option = new Option(model, model);
+                        modelSelect.add(option);
+                    });
+                    modelSelect.disabled = false;
+                } else {
+                    modelSelect.disabled = true;
+                }
+            }
+            
+            // Initialize model select as disabled
+            modelSelect.disabled = true;
+            
+            // Update models when brand changes
+            brandSelect.addEventListener('change', updateModels);
+            
+            // Initial population of models
+            updateModels();
+        } catch (error) {
+            console.error('Error parsing brand_models:', error);
+        }
+    });
+</script>
+{% endblock %}
