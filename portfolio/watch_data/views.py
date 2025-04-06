@@ -21,8 +21,6 @@ def watch_feature_form(request):
                 'scope_of_delivery': form.cleaned_data['scope_of_delivery'],
                 'country_code': form.cleaned_data['country_code']
             }
-
-            print(watch_features)
             
             # Get price prediction
             predicted_price = 11200.45

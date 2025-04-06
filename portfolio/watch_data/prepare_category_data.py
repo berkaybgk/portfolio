@@ -251,14 +251,14 @@ def get_brand_model_options():
         "Zenith": ["El Primero", "Defy", "Chronomaster"],
         "Zodiac": ["Super Sea Wolf", "Olympos", "Grandrally"]
     }
-    # path = os.path.join(os.path.dirname(__file__), "resources", "brand_models.csv")
-    # df = pd.read_csv(path)
-    # brand_model = {}
-    # for brand in df["brand"].unique():
-    #     # Clean and sanitize the model names
-    #     models = df[df["brand"] == brand]["model"].unique().tolist()
-    #     cleaned_models = [str(model).strip() for model in models if pd.notna(model)]
-    #     brand_model[str(brand).strip()] = cleaned_models
+    path = os.path.join(os.path.dirname(__file__), "resources", "brand_models.csv")
+    df = pd.read_csv(path)
+    brand_model = {}
+    for brand in df["brand"].unique():
+        # Clean and sanitize the model names
+        models = df[df["brand"] == brand]["model"].unique().tolist()
+        cleaned_models = [str(model).strip() for model in models if pd.notna(model)]
+        brand_model[str(brand).strip()] = cleaned_models
     return brand_model
 
     
