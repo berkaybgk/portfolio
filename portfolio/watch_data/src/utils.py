@@ -203,16 +203,24 @@ def save_brand_avg_prices():
     avg_prices.to_csv(csv_path, index=False)
 
 def save_model_avg_prices():
-    # get the path of the currently working file
+    # Get the path of the currently working file
     base_dir = os.path.dirname(os.path.abspath(__file__))
     csv_path = os.path.join(base_dir, "..", "resources", "model_avg_prices.csv")
 
     # Read the cleaned watches data
     df = get_model_df()
-    # Calculate the average price per brand
+
+    # Calculate the average price per model
     avg_prices = df.groupby('model')['price'].mean().reset_index()
-    # Save the average prices to a CSV file
-    avg_prices.to_csv(csv_path, index=False)
+
+    # Get one product_url per model (first occurrence)
+    urls = df.groupby('model')['product_url'].first().reset_index()
+
+    # Merge the two DataFrames on 'model'
+    result = pd.merge(avg_prices, urls, on='model')
+
+    # Save the result to a CSV file
+    result.to_csv(csv_path, index=False)
 
 def get_model_avg_price(model, brand):
     try:

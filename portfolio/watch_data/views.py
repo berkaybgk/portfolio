@@ -21,12 +21,16 @@ def watch_feature_form(request):
             scope_of_delivery = form.cleaned_data['scope_of_delivery']
             country_code = form.cleaned_data['country_code']
 
-            predicted_price = predict_watch_price(
-                brand, model, movement,
-                case_material, year_of_production, condition,
-                country_code, scope_of_delivery, case_diameter
-            )
-            
+            try:
+                predicted_price = predict_watch_price(
+                    brand, model, movement,
+                    case_material, year_of_production, condition,
+                    country_code, scope_of_delivery, case_diameter
+                )
+            except Exception as e:
+                # Handle prediction error
+                predicted_price = "Error in prediction: " + str(e)
+
             # Render form with prediction
             return render(request, 'watch_data/watch_feature_form.html', {
                 'form': form,
