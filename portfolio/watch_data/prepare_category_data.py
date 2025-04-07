@@ -169,88 +169,6 @@ def get_case_material_options():
     return case_materials
 
 def get_brand_model_options():
-    # Temporarily, return a hardcoded mapping for these brands
-    brand_model = {
-        "A.Lange & Söhne": ["Lange 1", "Zeitwerk", "Saxonia"],
-        "Alpina": ["Seastrong", "Startimer", "Alpiner"],
-        "Audemars Piguet": ["Royal Oak", "Royal Oak Offshore", "Code 11.59"],
-        "Bell & Ross": ["BR 01", "BR 03", "BR V2"],
-        "Blancpain": ["Fifty Fathoms", "Villeret", "L-Evolution"],
-        "Breguet": ["Classique", "Marine", "Tradition"],
-        "Breitling": ["Navitimer", "Chronomat", "Superocean"],
-        "Bulova": ["Lunar Pilot", "Precisionist", "Marine Star"],
-        "Baume & Mercier": ["Clifton", "Hampton", "Classima"],
-        "Bulgari": ["Octo Finissimo", "Serpenti", "Bvlgari Bvlgari"],
-        "Casio": ["G-Shock", "Edifice", "Pro Trek"],
-        "Chanel": ["J12", "Première", "Monsieur"],
-        "Christopher Ward": ["C60 Trident", "C65 Aquitaine", "C1 Moonglow"],
-        "Citizen": ["Eco-Drive", "Promaster", "Satellite Wave"],
-        "Chopard": ["Happy Sport", "L.U.C", "Mille Miglia"],
-        "Cartier": ["Tank", "Santos", "Ballon Bleu"],
-        "Certina": ["DS Action", "DS PH200M", "DS Podium"],
-        "Chronoswiss": ["Opus", "Flying Regulator", "Sirius"],
-        "Corum": ["Admiral", "Bubble", "Golden Bridge"],
-        "Doxa": ["SUB 300", "SUB 200", "SUB 1500T"],
-        "Davosa": ["Ternos", "Argonautic", "Vireo"],
-        "Ebel": ["1911 BTR", "Wave", "Discovery"],
-        "Eberhard & Co.": ["Chrono 4", "Scafograf", "Extra-Fort"],
-        "Franck Muller": ["Vanguard", "Crazy Hours", "Long Island"],
-        "Fredrique Constant": ["Classics", "Horological Smartwatch", "Highlife"],
-        "Girard-Perregaux": ["Laureato", "Vintage 1945", "Bridges"],
-        "Glashütte Original": ["Senator", "PanoMatic", "SeaQ"],
-        "Gucci": ["G-Timeless", "Grip", "Dive"],
-        "Grand Seiko": ["Snowflake", "Spring Drive", "Heritage"],
-        "Heuer": ["Autavia", "Carrera", "Monaco"],
-        "Hamilton": ["Khaki Field", "Jazzmaster", "Ventura"],
-        "Hermès": ["Arceau", "Cape Cod", "H08"],
-        "Hublot": ["Big Bang", "Classic Fusion", "Spirit of Big Bang"],
-        "IWC": ["Portuguese", "Pilot's Watch", "Ingenieur"],
-        "Jaeger-LeCoultre": ["Reverso", "Master Control", "Polaris"],
-        "Jacob & Co.": ["Astronomia", "Epic X", "Five Time Zone"],
-        "Junghans": ["Max Bill", "Meister", "Form"],
-        "Longines": ["HydroConquest", "Master Collection", "DolceVita"],
-        "Luminox": ["Navy SEAL", "Bear Grylls", "Atacama"],
-        "Lorus": ["Sports", "Classic", "Digital"],
-        "Maurice Lacroix": ["Aikon", "Pontos", "Eliros"],
-        "Montblanc": ["1858", "Star Legacy", "Heritage"],
-        "Mido": ["Ocean Star", "Commander", "Baroncelli"],
-        "Movado": ["Museum Classic", "Bold", "Series 800"],
-        "Meistersinger": ["Neo", "Perigraph", "Circularis"],
-        "NOMOS": ["Tangente", "Metro", "Orion"],
-        "Omega": ["Speedmaster", "Seamaster", "Constellation"],
-        "Oris": ["Aquis", "Big Crown", "Divers Sixty-Five"],
-        "Orient": ["Bambino", "Mako", "Kamasu"],
-        "Paul Picot": ["Chronograph", "Firshire", "Technograph"],
-        "Piaget": ["Altiplano", "Polo S", "Limelight"],
-        "Panerai": ["Luminor", "Radiomir", "Submersible"],
-        "Patek Philippe": ["Nautilus", "Aquanaut", "Calatrava"],
-        "Porsche Design": ["Chronotimer", "1919 Collection", "Monobloc Actuator"],
-        "Rado": ["Captain Cook", "True Square", "Ceramica"],
-        "Raymond Weil": ["Tango", "Freelancer", "Maestro"],
-        "Richard Mille": ["RM 011", "RM 07-01", "RM 035"],
-        "Rolex": ["Submariner", "Daytona", "Datejust"],
-        "Seiko": ["Presage", "Prospex", "Astron"],
-        "Sinn": ["U1", "104", "EZM 3"],
-        "Swatch": ["Big Bold", "Skin", "MoonSwatch"],
-        "Spinnaker": ["Bradner", "Spence", "Hull"],
-        "Swiss Military": ["Hanowa", "Chronograph", "Naviforce"],
-        "Squale": ["20 Atmos", "1521", "Sub-39"],
-        "Steinhart": ["Ocean One", "Nav B-Uhr", "Apollon"],
-        "TAG Heuer": ["Carrera", "Monaco", "Aquaracer"],
-        "Tissot": ["Le Locle", "PRX", "Seastar"],
-        "Timex": ["Weekender", "Marlin", "Expedition"],
-        "Tudor": ["Black Bay", "Pelagos", "Royal"],
-        "Ulysse Nardin": ["Diver", "Freak", "Marine"],
-        "Vacheron Constantin": ["Overseas", "Patrimony", "Historiques"],
-        "Venezianico": ["Nereide", "Redentore", "Ulisse"],
-        "Versace": ["V-Race", "Greca", "Palazzo"],
-        "Vostok": ["Amphibia", "Komandirskie", "Europe"],
-        "Victorinox Swiss Army": ["I.N.O.X.", "Maverick", "Alliance"],
-        "Vulcain": ["Cricket", "50s Presidents", "Nautical"],
-        "Yema": ["Superman", "Rallygraf", "Navygraf"],
-        "Zenith": ["El Primero", "Defy", "Chronomaster"],
-        "Zodiac": ["Super Sea Wolf", "Olympos", "Grandrally"]
-    }
     path = os.path.join(os.path.dirname(__file__), "resources", "brand_models.csv")
     df = pd.read_csv(path)
     brand_model = {}
@@ -259,9 +177,11 @@ def get_brand_model_options():
         models = df[df["brand"] == brand]["model"].unique().tolist()
         cleaned_models = [str(model).strip() for model in models if pd.notna(model)]
         brand_model[str(brand).strip()] = cleaned_models
-    return brand_model
 
-    
+    # Sort the brand_model dictionary by brand names
+    brand_model = dict(sorted(brand_model.items(), key=lambda item: item[0]))
+
+    return brand_model
 
 
 if __name__ == "__main__":
