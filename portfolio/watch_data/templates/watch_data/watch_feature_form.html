@@ -75,11 +75,40 @@
         border: none;
         border-radius: 8px;
     }
+
+    .info-column {
+        background: var(--card-bg);
+        border: 1px solid #333333;
+        border-radius: 8px;
+        padding: 1.5rem;
+        height: 100%;
+        color: var(--text-custom-light);
+    }
+
+    .info-column h4 {
+        color: var(--dark);
+        margin-bottom: 1.5rem;
+    }
+
+    .info-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .info-section h5 {
+        color: var(--secondary);
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 991.98px) {
+        .info-column {
+            margin-top: 2rem;
+        }
+    }
 </style>
 
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row">
+        <div class="col-lg-8">
             <div class="card">
                 <div class="card-header">
                     <h3 class="mb-0 text-white">Watch Price Predictor</h3>
@@ -149,10 +178,55 @@
                         <div class="alert alert-success">
                             <h4 class="alert-heading">Predicted Price</h4>
                             <p class="mb-0">The estimated price for this watch is: ${{ predicted_price|floatformat:2 }}</p>
+                            <p class="mb-0">The watch you selected was {{brand_name }} - {{ model_name }}</p>
                         </div>
                     </div>
                     {% endif %}
+
+                    <div class="mt-4">
+                        <div class="info-section">
+                            <h5 style="color: var(--secondary)">GitHub Repository</h5>
+                            <p>
+                                <a href="https://github.com/berkaybgk/portfolio/tree/main/portfolio/watch_data" target="_blank" class="text-light">View the project on GitHub</a>
+                                <br>
+                                Check out the implementation details, data processing steps, and model training code.
+                            </p>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="info-column">
+                <h4>About the Watch Price Predictor</h4>
+                <div class="info-section">
+                    <h5>How it Works</h5>
+                    <p>This is my first end-to-end machine learning project. I am personally interested in the world of watches, 
+                        and I wanted to see if I could create a tool that would allow me to predict the price of a watch.
+                    </p>
+                </div>
+                <div class="info-section">
+                    <h5>About the Data</h5>
+                    <p>
+                        I first started with scraping data from the Chrono24 website. I ended up with nearly 500k watches for sale.
+                        Then, I had to do data cleaning and imputation quite a bit.
+                        I ended up with a dataset consisting of nearly 350k watches. I then used several machine learning algorithms to train the model.
+                    </p>
+                </div>
+                <div class="info-section">
+                    <h5>Model Results</h5>
+                    I have reached a Mean Absolute Error (MAE) of nearly 2000$ and an R^2 of 0.90 using the Gradient Boosting Regressor.
+                    The model is then deployed on a web application using Django. The application is hosted on a free-tier EC2 instance.
+                </div>
+                <div class="info-section">
+                    <h5>Data Sources</h5>
+                    <p>
+                        <a href="https://www.chrono24.com/watches/mens-watches--62.htm" target="_blank">Chrono24 Website</a>
+                        <br>
+                        Feel free to visit the marketplace and try out the tool for the models you are interested in.
+                    </p>
+                </div>
+                
             </div>
         </div>
     </div>

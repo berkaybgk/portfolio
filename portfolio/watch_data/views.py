@@ -35,7 +35,9 @@ def watch_feature_form(request):
             return render(request, 'watch_data/watch_feature_form.html', {
                 'form': form,
                 'predicted_price': predicted_price,
-                'brand_models': json.dumps(get_brand_model_options(), cls=DjangoJSONEncoder, ensure_ascii=False)
+                'brand_models': json.dumps(get_brand_model_options(), cls=DjangoJSONEncoder, ensure_ascii=False),
+                'brand_name': brand,
+                'model_name': model
             })
     else:
         form = WatchFeatureForm()

@@ -18,8 +18,8 @@
     .profile-section {
         background: linear-gradient(135deg, rgba(58, 253, 224, 0.71) 20%, rgba(205, 239, 87, 0.7) 100%);
         border-radius: 15px;
-        padding: 3rem 2rem;
-        margin-bottom: 2.5rem;
+        padding: 2rem 1rem;
+        margin-bottom: 2rem;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -186,6 +186,14 @@
         <p style="font-size: 1.1rem">The trial project which uses AI agents and vector storage to answer questions from uploaded PDFs. Currently not hosted because of the limited resources of my server.</p>
         <a class="btn-custom" href="{% url 'fusion' %}">Try the App</a>
     </div>
+
+    <div class="project-card" data-aos="fade-up" data-aos-delay="250">
+        <p class="fas fa-clock section-icon" style="margin-bottom: 1rem; font-size: 2rem"></p>
+        <h2 class="section-title">Watch Price Predictor</h2>
+        <p style="font-size: 1.1rem">An end-to-end machine learning project to predict the watch prices for certain brands and models based on several other features. The data is scraped from the Chrono24 website.</p>
+        <a class="btn-custom" href="{% url 'watch_data:watch_feature_form' %}">Try the Model</a>
+    </div>
+
 </div>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
