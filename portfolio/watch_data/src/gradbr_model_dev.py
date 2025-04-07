@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import joblib
 import os
-from main import get_model_df
+from .utils import get_model_df
 
 def pre_process_data(df_original):
     df = df_original.copy()
@@ -129,9 +129,10 @@ def predict_price(model, input_data):
 
 
 def get_predictions(n):
-    save_dir = "important_models"
+    save_dir = os.path.join(os.path.dirname(__file__), "important_models")
 
-    df = get_model_df("../resources/single_instance.csv")
+    path = os.path.join(os.path.dirname(__file__), "..", "resources", "single_instance.csv")
+    df = get_model_df(path)
 
     # Get a random sample of 5 rows from the DataFrame
     sample_df = df.copy()
