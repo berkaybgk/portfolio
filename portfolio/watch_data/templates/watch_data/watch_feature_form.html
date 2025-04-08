@@ -92,7 +92,7 @@
     }
 
     .info-section {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
     }
 
     .info-section h5 {
@@ -194,7 +194,7 @@
                                 <br>
                                 Also, you can reach the data from this Google Drive link:
 
-                                <a href="https://drive.google.com/file/d/1U7buy14TKfODY_65RFUlBC-g5V8ri6iX/view?usp=sharing" target="_blank">
+                                <a href="https://drive.google.com/file/d/1U7buy14TKfODY_65RFUlBC-g5V8ri6iX/view?usp=sharing" target="_blank" style="color:#128b96">
                                     Watch Data
                                 </a>
                             </p>
@@ -205,34 +205,33 @@
         </div>
         <div class="col-lg-4">
             <div class="info-column">
-                <h4>About the Watch Price Predictor</h4>
-                <div class="info-section">
-                    <h5>How it Works</h5>
-                    <p>This is my first end-to-end machine learning project. I am personally interested in the world of watches, 
+                <h5 style="color: #c2db70">About the Watch Price Predictor</h5>
+                <p>This is my first end-to-end machine learning project. I am personally interested in the world of watches,
                         and I wanted to see if I could create a tool that would allow me to predict the price of a watch.
-                    </p>
-                </div>
+                </p>
                 <div class="info-section">
                     <h5>About the Data</h5>
                     <p>
                         I first started with scraping data from the Chrono24 website. I ended up with nearly 500k watches for sale.
                         Then, I had to do data cleaning and imputation quite a bit.
-                        I ended up with a dataset consisting of nearly 350k watches. I then used several machine learning algorithms to train the model.
+                        I ended up with a dataset consisting of nearly 350k watches.
                     </p>
                 </div>
                 <div class="info-section">
                     <h5>Model Results</h5>
+                    I tried applying different machine learning algorithms to predict the price of a watch.
                     I have reached a Mean Absolute Error (MAE) of nearly 2000$ and an R^2 of 0.90 using the Gradient Boosting Regressor.
-                    The model is then deployed on a web application using Django. The application is hosted on a free-tier EC2 instance.
+                    Then, the model is deployed on my free tier EC2 instance on AWS using Django.
                 </div>
                 <div class="info-section">
                     <h5>Data Sources</h5>
                     <p>
-                        <a href="https://www.chrono24.com/watches/mens-watches--62.htm" target="_blank">Chrono24 Website</a>
+                        <a href="https://www.chrono24.com/watches/mens-watches--62.htm" target="_blank" style="color:#128b96">Chrono24 Website</a>
                         <br>
                         Feel free to visit the marketplace and try out the tool for the models you are interested in. Finally,
                         it should be noted that there are many more unrepresented features for the watches which causes a big
-                        variance for the same models and they require a more detailed scraping process. So the model is open to improvement.
+                        variance even within a single model and they require a more detailed scraping process.
+                        So the model is open to improvement and maybe I will visit it in the future again.
                     </p>
                 </div>
                 
