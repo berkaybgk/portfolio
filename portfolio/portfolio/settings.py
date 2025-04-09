@@ -66,6 +66,7 @@ MIDDLEWARE = [
 
 CSRF_TRUSTED_ORIGINS = [
     'https://www.berkaybgk.site',
+    'https://berkaybgk.site',
     'http://127.0.0.1',
     'http://localhost',
 ]
@@ -100,6 +101,7 @@ DATABASES = {
     }
 }
 
+CSRF_FAILURE_VIEW = 'portfolio.views.csrf_failure'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

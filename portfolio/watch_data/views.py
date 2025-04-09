@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.core.serializers.json import DjangoJSONEncoder
+from django.views.decorators.cache import never_cache
 import json
 from .forms import WatchFeatureForm
 from .prepare_category_data import get_brand_model_options
 from .main import predict_watch_price
-# from .src.main import predict_watch_price
 
+@never_cache
 def watch_feature_form(request):
     if request.method == 'POST':
         form = WatchFeatureForm(request.POST)

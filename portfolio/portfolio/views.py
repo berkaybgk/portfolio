@@ -21,6 +21,13 @@ def handler403(request, exception):
         'error_description': 'You do not have permission to access this page.'
     }, status=403)
 
+def csrf_failure(request, reason=""):
+    return render(request, 'errors/error.html', {
+        'error_code': '403',
+        'error_message': 'CSRF Verification Failed',
+        'error_description': 'For security reasons, we could not verify your request. Please try again from a new tab.'
+    }, status=403)
+
 def handler400(request, exception):
     return render(request, 'errors/error.html', {
         'error_code': '400',
