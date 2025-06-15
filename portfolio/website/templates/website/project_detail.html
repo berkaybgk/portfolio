@@ -20,6 +20,35 @@
         color: var(--text-primary);
     }
 
+    .back-button {
+        position: fixed;
+        top: 7rem;
+        left: 2rem;
+        z-index: 1000;
+        background: var(--card-bg);
+        color: var(--text-primary);
+        border: 1px solid #333333;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .back-button:hover {
+        background: var(--secondary);
+        color: var(--text-secondary);
+        transform: scale(1.02);
+        text-decoration: none;
+    }
+
+    .back-button:before {
+        content: "← ";
+        margin-right: 0.5rem;
+    }
+
     .project-header {
         background: #c2db70;
         color: var(--text-secondary);
@@ -202,6 +231,10 @@
         </div>
         {% endif %}
     </div>
+
+    <!-- Back Button -->
+    <a href="{% url 'ds_projects' %}" class="back-button">Back to Projects</a>
+    
 
     <!-- Disclaimer -->
     <div class="disclaimer">
