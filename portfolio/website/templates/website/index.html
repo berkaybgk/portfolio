@@ -31,7 +31,7 @@
         top: 50%;
         left: 50%;
         width: 150%;
-        height: 150%;
+        height: 60%;
         background: conic-gradient(
             transparent,
             var(--primary),
@@ -41,6 +41,8 @@
         );
         animation: spin 8s linear infinite;
         transform: translate(-50%, -50%) rotate(0deg);
+        filter: blur(2px);
+        opacity: 0.8;
     }
 
     .profile-section::after {
@@ -48,8 +50,9 @@
         position: absolute;
         inset: 8px;
         background: linear-gradient(135deg, rgba(58, 253, 224, 1) 20%, rgba(205, 239, 87, 1) 100%);
-        border-radius: 15px;
+        border-radius: calc(15px - 8px);
     }
+
 
     @keyframes spin {
         0% {
